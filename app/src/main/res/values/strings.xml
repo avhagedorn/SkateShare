@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SkateShare</string>
+
+    <string name="hint_username">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="register_prompt">Don\'t have an account?</string>
+    <string name="register_hint">Register here.</string>
+    <string name="missing_email">Please enter a email!</string>
+    <string name="missing_password">Please enter a password!</string>
+    <string name="short_password">Password must be at least 8 characters!</string>
+
+    <string name="register_btn">Register</string>
+    <string name="login_prompt">Already have an account?</string>
+    <string name="login_hint">Login here.</string>
+</resources>

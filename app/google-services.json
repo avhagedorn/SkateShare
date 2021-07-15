@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "469072651113",
+    "project_id": "skateshare-b768a",
+    "storage_bucket": "skateshare-b768a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469072651113:android:57f30884c098675a0213f8",
+        "android_client_info": {
+          "package_name": "com.skateshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "469072651113-4mjslkcd1b83raidvipelvvfn0ebkefl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skateshare",
+            "certificate_hash": "b55aa76c45f641b74ef2e3af47a6912442d406c6"
+          }
+        },
+        {
+          "client_id": "469072651113-di3hm67icfo4i1fihcmd9v7ighlukofu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-pyigrHEM7Q2Z52orVP0Driram7xQS6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "469072651113-di3hm67icfo4i1fihcmd9v7ighlukofu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
