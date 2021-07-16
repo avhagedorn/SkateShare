@@ -1,5 +1,7 @@
 package com.skateshare.Authentication
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.skateshare.MainActivity
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRegisterBinding
 
@@ -54,12 +57,9 @@ class RegisterFragment : Fragment() {
                         .addOnCompleteListener(
                             OnCompleteListener<AuthResult> { task ->
                                 if (task.isSuccessful) {
-
-                                    // TODO: Pass this data to another activity
-                                    val user: FirebaseUser = task.result!!.user!!
-                                    val userID = user.uid
-
-                                    Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show()
+                                    updateLoginStatus()
+                                    startActivity(Intent(requireActivity(), MainActivity::class.java))
+                                    requireActivity().finish()
 
                                 } else {
                                     Toast.makeText(
@@ -73,12 +73,17 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
-
         return view
     }
 
     private fun goToLogin() {
         val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
         findNavController().navigate(action)
+    }
+
+    // TODO: Combine with loginfragment function
+    private fun updateLoginStatus() {
+        requireActivity().getSharedPreferences("userData", Context.MODE_PRIVATE)
+            .edit().putBoolean("isLoggedIn", true).apply()
     }
 }

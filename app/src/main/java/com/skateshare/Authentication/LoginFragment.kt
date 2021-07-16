@@ -1,6 +1,7 @@
 package com.skateshare.Authentication
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.skateshare.MainActivity
 import com.skateshare.R
 import com.skateshare.databinding.FragmentLoginBinding
 
@@ -55,8 +57,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         .addOnCompleteListener(
                             OnCompleteListener<AuthResult> { task ->
                                 if (task.isSuccessful) {
-                                    // Pass UserID as FirebaseAuth.getInstance.currentUser!!.id
-                                    Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show()
+                                    updateLoginStatus()
+                                    startActivity(Intent(requireActivity(), MainActivity::class.java))
+                                    requireActivity().finish()
+
                                 } else {
                                     Toast.makeText(
                                         context,
@@ -73,7 +77,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
             }
         }
-
         return view
     }
 
@@ -82,8 +85,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         findNavController().navigate(action)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    // TODO: Combine with registerfragment function
+    private fun updateLoginStatus() {
+        requireActivity().getSharedPreferences("userData", Context.MODE_PRIVATE)
+            .edit().putBoolean("isLoggedIn", true).apply()
     }
-
 }
