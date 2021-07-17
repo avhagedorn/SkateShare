@@ -48,6 +48,7 @@ class RegisterFragment : Fragment() {
                     viewModel.register(
                         email=binding.emailInput.text.toString(),
                         password = binding.passwordInput.text.toString())
+                    binding.progressBar.visibility = View.VISIBLE
                 }
             }
         }
@@ -59,6 +60,7 @@ class RegisterFragment : Fragment() {
                 viewModel.updateLoginStatus(true)
                 goToMainActivity()
             } else {
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), response.exception!!.message.toString(), Toast.LENGTH_LONG).show()
             }
         })

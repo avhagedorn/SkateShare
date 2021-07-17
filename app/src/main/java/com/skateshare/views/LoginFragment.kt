@@ -46,6 +46,7 @@ class LoginFragment : Fragment() {
                     viewModel.login(
                         email = binding.emailInput.text.toString(),
                         password = binding.passwordInput.text.toString())
+                    binding.progressBar.visibility = View.VISIBLE
                 }
             }
         }
@@ -57,6 +58,7 @@ class LoginFragment : Fragment() {
                 viewModel.updateLoginStatus(true)
                 goToMainActivity()
             } else {
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), response.exception!!.message.toString(), Toast.LENGTH_LONG).show()
             }
         })
