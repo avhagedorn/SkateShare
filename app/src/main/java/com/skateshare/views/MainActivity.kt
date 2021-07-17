@@ -1,16 +1,12 @@
-package com.skateshare
+package com.skateshare.views
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.skateshare.Authentication.AuthenticationActivity
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.skateshare.R
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val user = FirebaseAuth.getInstance().currentUser!!.uid
-        Toast.makeText(this, user, Toast.LENGTH_SHORT).show()
+        val db = Firebase.firestore
 
         findViewById<Button>(R.id.logout).setOnClickListener {
             FirebaseAuth.getInstance().signOut()

@@ -1,15 +1,9 @@
-package com.skateshare.Authentication
+package com.skateshare.views
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.skateshare.MainActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.skateshare.R
 
 class AuthenticationActivity : AppCompatActivity() {
