@@ -13,4 +13,9 @@
     <string name="register_btn">Register</string>
     <string name="login_prompt">Already have an account?</string>
     <string name="login_hint">Login here.</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+    </string>
+
 </resources>

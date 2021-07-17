@@ -32,25 +32,11 @@ class RegisterFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
 
         binding.submitRegistration.setOnClickListener {
-            when {
-                binding.emailInput.text.toString().trim{it<=' '}.isEmpty() -> {
-                    Toast.makeText(context, R.string.missing_email, Toast.LENGTH_SHORT).show()
-                }
-
-                binding.passwordInput.text.toString().trim{it<=' '}.isEmpty() -> {
-                    Toast.makeText(context, R.string.missing_password, Toast.LENGTH_SHORT).show()
-                }
-
-                binding.passwordInput.text.toString().length < 8 -> {
-                    Toast.makeText(context, R.string.short_password, Toast.LENGTH_LONG).show()
-                }
-                else -> {
-                    viewModel.register(
-                        email=binding.emailInput.text.toString(),
-                        password = binding.passwordInput.text.toString())
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-            }
+            viewModel.register(
+                email=binding.emailInput.text.toString(),
+                password = binding.passwordInput.text.toString(),
+                context = context)
+            binding.progressBar.visibility = View.VISIBLE
         }
 
         binding.registerHint.setOnClickListener { goToLogin() }

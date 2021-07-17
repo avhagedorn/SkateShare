@@ -1,4 +1,4 @@
-package com.skateshare.models
+package com.skateshare.repostitories
 
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.OnCompleteListener
@@ -8,24 +8,21 @@ import com.google.firebase.auth.FirebaseAuth
 
 class AuthRepository {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     var _loginResponse = MutableLiveData<Task<AuthResult>>()
 
     fun register(email: String, password: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(
                 OnCompleteListener<AuthResult> { task ->
                     _loginResponse.value = task
-                }
-            )
+                })
     }
 
     fun login(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(
                 OnCompleteListener<AuthResult> { task ->
                     _loginResponse.value = task
-                }
-            )
+                })
     }
 }

@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /*
         val user = FirebaseAuth.getInstance().currentUser!!.uid
         val db = Firebase.firestore
 
@@ -21,10 +22,8 @@ class MainActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signOut()
             logoutUpdate()
         }
+         */
     }
 
-    private fun logoutUpdate() {
-        this.getSharedPreferences("userData", Context.MODE_PRIVATE).edit()
-            .putBoolean("isLoggedIn", false).apply()
-    }
+
 }

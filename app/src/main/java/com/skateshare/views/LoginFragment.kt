@@ -32,23 +32,11 @@ class LoginFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
 
         binding.submitLogin.setOnClickListener {
-            when {
-
-                binding.emailInput.text.toString().trim{it<=' '}.isEmpty() -> {
-                    Toast.makeText(context, R.string.missing_email, Toast.LENGTH_SHORT).show()
-                }
-
-                binding.passwordInput.text.toString().trim{it<=' '}.isEmpty() -> {
-                    Toast.makeText(context, R.string.missing_password, Toast.LENGTH_SHORT).show()
-                }
-
-                else -> {
-                    viewModel.login(
-                        email = binding.emailInput.text.toString(),
-                        password = binding.passwordInput.text.toString())
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-            }
+            viewModel.login(
+                email = binding.emailInput.text.toString(),
+                password = binding.passwordInput.text.toString(),
+                context = context)
+            binding.progressBar.visibility = View.VISIBLE
         }
 
         binding.registerHint.setOnClickListener { goToAuthentication() }
@@ -72,7 +60,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun goToAuthentication() {
-        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-        findNavController().navigate(action)
+        findNavController().navigate(
+            LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
