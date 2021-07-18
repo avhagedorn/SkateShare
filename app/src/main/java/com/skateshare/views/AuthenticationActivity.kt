@@ -9,6 +9,7 @@ import com.skateshare.R
 class AuthenticationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_SkateShare)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
 
