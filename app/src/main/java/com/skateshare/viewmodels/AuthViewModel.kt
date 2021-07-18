@@ -1,60 +1,48 @@
 package com.skateshare.viewmodels
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.skateshare.R
 import com.skateshare.repostitories.AuthRepository
+import java.lang.ref.WeakReference
 
-class AuthViewModelFactory(private val sharedPreferences: SharedPreferences)
-    : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AuthViewModel::class.java))
-            return AuthViewModel(sharedPreferences) as T
-        throw IllegalArgumentException("Unknown view model class!")
-    }
-}
-
-class AuthViewModel(private val sharedPreferences: SharedPreferences) : ViewModel() {
+class AuthViewModel : ViewModel() {
 
     private val authRepository = AuthRepository()
     val loginResponse: LiveData<Task<AuthResult>> = authRepository._loginResponse
+    private val _checkCredentialsEmpty = MutableLiveData<EventResponse>()
+    val checkCredentialsEmpty: LiveData<EventResponse> = _checkCredentialsEmpty
 
-    fun register(email: String, password: String, context: Context?) {
-        if (credentialsAreValid(email, password, context))
+    fun register(email: String, password: String) {
+        val verification = credentialsAreValid(email, password)
+        if (verification.passes)
             authRepository.register(email, password)
+        else
+            _checkCredentialsEmpty.value = verification
     }
 
-    fun login(email: String, password: String, context: Context?) {
-        if (credentialsAreValid(email, password, context))
+    fun login(email: String, password: String) {
+        val verification = credentialsAreValid(email, password)
+        if (verification.passes)
             authRepository.login(email, password)
+        else
+            _checkCredentialsEmpty.value = verification
     }
 
-    fun updateLoginStatus(newStatus: Boolean) {
-        sharedPreferences.edit().putBoolean("isLoggedIn", newStatus).apply()
-    }
-
-    fun getLoginStatus() : Boolean {
-        return sharedPreferences.getBoolean("isLoggedIn", false)
-    }
-
-    private fun credentialsAreValid(email: String, password: String, context: Context?) : Boolean {
+    private fun credentialsAreValid(email: String, password: String) : EventResponse {
         return when {
             email.trim{it<=' '}.isEmpty() -> {
-                Toast.makeText(context, R.string.missing_email, Toast.LENGTH_SHORT).show()
-                false
+                EventResponse(R.string.missing_email, false)
             }
             password.trim{it<=' '}.isEmpty() -> {
-                Toast.makeText(context, R.string.missing_password, Toast.LENGTH_SHORT).show()
-                false
+                EventResponse(R.string.missing_password, false)
             }
-            else -> true
+            else -> EventResponse(R.string.event_passes, true)
         }
     }
 

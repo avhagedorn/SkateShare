@@ -14,17 +14,5 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_SkateShare)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        /*
-        val user = FirebaseAuth.getInstance().currentUser!!.uid
-        val db = Firebase.firestore
-
-        findViewById<Button>(R.id.logout).setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            logoutUpdate()
-        }
-         */
     }
-
-
 }

@@ -11,13 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import coil.imageLoader
 import androidx.lifecycle.ViewModelProvider
-import coil.load
-import coil.request.ImageRequest
-import coil.size.ViewSizeResolver
-import coil.transform.CircleCropTransformation
-import coil.transform.RoundedCornersTransformation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy

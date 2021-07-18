@@ -10,45 +10,44 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRegisterBinding
 import com.skateshare.viewmodels.AuthViewModel
-import com.skateshare.viewmodels.AuthViewModelFactory
 
 class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
-    private val viewModel: AuthViewModel by viewModels(
-        factoryProducer = {
-            AuthViewModelFactory(requireContext().getSharedPreferences(
-                "userData", Context.MODE_PRIVATE)) }
-    )
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
-
-        binding.submitRegistration.setOnClickListener {
-            viewModel.register(
-                email=binding.emailInput.text.toString(),
-                password = binding.passwordInput.text.toString(),
-                context = context)
-            binding.progressBar.visibility = View.VISIBLE
-        }
+        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
         binding.registerHint.setOnClickListener { goToLogin() }
 
+        binding.submitRegistration.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
+            viewModel.register(
+                email=binding.emailInput.text.toString(),
+                password = binding.passwordInput.text.toString())
+        }
+
+        viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
+            if (!event.passes)
+                displayError(getString(event.response))
+        })
+
         viewModel.loginResponse.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful) {
-                viewModel.updateLoginStatus(true)
+                saveLoginStatus()
                 goToMainActivity()
-            } else {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), response.exception!!.message.toString(), Toast.LENGTH_LONG).show()
-            }
+            } else
+                displayError(response.exception!!.message.toString())
         })
 
         return binding.root
@@ -62,5 +61,15 @@ class RegisterFragment : Fragment() {
     private fun goToLogin() {
         val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
         findNavController().navigate(action)
+    }
+
+    private fun saveLoginStatus() {
+        requireContext().getSharedPreferences("userSettings", Context.MODE_PRIVATE)
+            .edit().putBoolean("isLoggedIn", true).apply()
+    }
+
+    private fun displayError(error: String) {
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
     }
 }

@@ -10,45 +10,44 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentLoginBinding
 import com.skateshare.viewmodels.AuthViewModel
-import com.skateshare.viewmodels.AuthViewModelFactory
 
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    private val viewModel: AuthViewModel by viewModels(
-        factoryProducer = {
-            AuthViewModelFactory(requireContext().getSharedPreferences(
-                "userData", Context.MODE_PRIVATE)) }
-    )
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+
+        binding.registerHint.setOnClickListener { goToRegister() }
 
         binding.submitLogin.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
             viewModel.login(
                 email = binding.emailInput.text.toString(),
-                password = binding.passwordInput.text.toString(),
-                context = context)
-            binding.progressBar.visibility = View.VISIBLE
+                password = binding.passwordInput.text.toString())
         }
 
-        binding.registerHint.setOnClickListener { goToAuthentication() }
+        viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
+            if (!event.passes)
+                displayError(getString(event.response))
+        })
 
         viewModel.loginResponse.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful) {
-                viewModel.updateLoginStatus(true)
+                saveLoginStatus()
                 goToMainActivity()
-            } else {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), response.exception!!.message.toString(), Toast.LENGTH_LONG).show()
-            }
+            } else
+                displayError(response.exception!!.message.toString())
         })
 
         return binding.root
@@ -59,12 +58,18 @@ class LoginFragment : Fragment() {
         requireActivity().finish()
     }
 
-    private fun goToAuthentication() {
+    private fun goToRegister() {
         findNavController().navigate(
             LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    private fun saveLoginStatus() {
+        requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE)
+            .edit().putBoolean("isLoggedIn", true).apply()
+    }
+
+    private fun displayError(error: String) {
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
     }
 }
