@@ -25,6 +25,10 @@ class AuthViewModel : ViewModel() {
     private val _checkCredentialsEmpty = MutableLiveData<EventResponse>()
     val checkCredentialsEmpty: LiveData<EventResponse> = _checkCredentialsEmpty
 
+    init {
+        Log.i("AuthViewModel", "Created")
+    }
+
     fun register(email: String, password: String, username: String) {
         val verification = credentialsAreValid(email, password, username)
         if (verification.success) {
@@ -68,5 +72,14 @@ class AuthViewModel : ViewModel() {
             }
             else -> EventResponse(R.string.event_passes, true)
         }
+    }
+
+    fun resetCredentialsEmpty() {
+        _checkCredentialsEmpty.value = EventResponse(R.string.event_passes, true)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.i("AuthViewModel", "Cleared")
     }
 }

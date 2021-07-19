@@ -26,7 +26,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
 
         binding.registerHint.setOnClickListener { goToRegister() }
 
@@ -59,6 +59,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun goToRegister() {
+        viewModel.resetCredentialsEmpty()
         findNavController().navigate(
             LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
     }
