@@ -73,4 +73,9 @@ class RegisterFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.unbind()
+    }
 }

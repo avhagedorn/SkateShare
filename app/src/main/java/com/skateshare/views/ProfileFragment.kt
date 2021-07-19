@@ -74,4 +74,9 @@ class ProfileFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.unbind()
+    }
 }
