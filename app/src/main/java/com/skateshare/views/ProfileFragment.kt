@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.R
 import com.skateshare.databinding.FragmentProfileBinding
 import com.skateshare.viewmodels.ProfileViewModel
@@ -28,11 +29,6 @@ class ProfileFragment : Fragment() {
 
     lateinit var binding: FragmentProfileBinding
     private lateinit var viewModel: ProfileViewModel
-    /*
-    private val viewModel: ProfileViewModel by viewModels(
-        factoryProducer = { ProfileViewModelFactory() }
-    )
-     */
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +45,7 @@ class ProfileFragment : Fragment() {
         binding.logout.setOnClickListener {
             requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE).edit()
                 .putBoolean("isLoggedIn", false).apply()
+            FirebaseAuth.getInstance().signOut()
         }
 
         viewModel.user.observe(viewLifecycleOwner, { userData ->
@@ -57,13 +54,17 @@ class ProfileFragment : Fragment() {
                 .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .listener(object: RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    override fun onLoadFailed(
+                        e: GlideException?, model: Any?, target: Target<Drawable>?,
+                        isFirstResource: Boolean): Boolean {
                         binding.progress.visibility = View.GONE
                         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
                         return false
                     }
 
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    override fun onResourceReady(
+                        resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                        dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                         binding.progress.visibility = View.GONE
                         return false
                     }

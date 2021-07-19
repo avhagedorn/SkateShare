@@ -2,6 +2,8 @@ package com.skateshare.models
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 data class User (
     val username: String,
@@ -13,18 +15,17 @@ data class User (
 
         fun DocumentSnapshot.toUser() : User {
             return try {
-                val username = getString("username")!!
-                val name = getString("name")!!
-                val bio = getString("bio")!!
-                val profilePicture = getString("profilePicture")!!
-                Log.d("User", username)
-                User(username, name, bio, profilePicture)
+                User(
+                    username = getString("username")!!,
+                    name = getString("name")!!,
+                    bio = getString("bio")!!,
+                    profilePicture = getString("profilePicture")!!)
             } catch (e: Exception) {
                 Log.e("User", e.toString())
                 newDefaultUser()
             }
         }
 
-        fun newDefaultUser() = User("", "", "", "")
+        fun newDefaultUser() = User("defaultname", "", "", "")
     }
 }

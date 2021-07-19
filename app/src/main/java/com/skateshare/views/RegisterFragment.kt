@@ -34,20 +34,21 @@ class RegisterFragment : Fragment() {
             binding.progressBar.visibility = View.VISIBLE
             viewModel.register(
                 email=binding.emailInput.text.toString(),
-                password = binding.passwordInput.text.toString())
+                password=binding.passwordInput.text.toString(),
+                username=binding.usernameInput.text.toString())
         }
 
         viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
-            if (!event.passes)
+            if (!event.success)
                 displayError(getString(event.response))
         })
 
-        viewModel.loginResponse.observe(viewLifecycleOwner, { response ->
-            if (response.isSuccessful) {
+        viewModel.loginResponse.observe(viewLifecycleOwner, { errorResponse ->
+            if (errorResponse == null) {
                 saveLoginStatus()
                 goToMainActivity()
             } else
-                displayError(response.exception!!.message.toString())
+                displayError(errorResponse)
         })
 
         return binding.root

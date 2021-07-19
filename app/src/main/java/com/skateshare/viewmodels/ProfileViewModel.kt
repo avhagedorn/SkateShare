@@ -5,6 +5,9 @@ import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.repostitories.FirestoreService
 import com.skateshare.models.User
+import com.squareup.okhttp.Dispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class ProfileViewModelFactory() : ViewModelProvider.Factory {
@@ -19,13 +22,14 @@ class ProfileViewModelFactory() : ViewModelProvider.Factory {
 class ProfileViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
+    val defaultProfilePicture = ""
 
     init {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("ProfileViewModel", uid.toString())
 
-        viewModelScope.launch {
-            _user.value = FirestoreService.getUserData(uid.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            _user.postValue(FirestoreService.getUserData(uid.toString()))
         }
     }
 }

@@ -1,28 +1,34 @@
 package com.skateshare.repostitories
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 
 class AuthRepository {
 
-    var _loginResponse = MutableLiveData<Task<AuthResult>>()
+    private val _authError = MutableLiveData<String>()
+    val authError: LiveData<String> = _authError
 
-    fun register(email: String, password: String) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(
-                OnCompleteListener<AuthResult> { task ->
-                    _loginResponse.value = task
-                })
+    suspend fun register(email: String, password: String) {
+        try {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()
+            _authError.postValue(null)
+        } catch(e: Exception){
+            _authError.postValue(e.message)
+        }
     }
 
-    fun login(email: String, password: String) {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(
-                OnCompleteListener<AuthResult> { task ->
-                    _loginResponse.value = task
-                })
+    suspend fun login(email: String, password: String) {
+        try {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+            _authError.postValue(null)
+        } catch(e: Exception){
+            _authError.postValue(e.message)
+        }
     }
 }

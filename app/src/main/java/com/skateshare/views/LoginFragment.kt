@@ -38,16 +38,16 @@ class LoginFragment : Fragment() {
         }
 
         viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
-            if (!event.passes)
+            if (!event.success)
                 displayError(getString(event.response))
         })
 
-        viewModel.loginResponse.observe(viewLifecycleOwner, { response ->
-            if (response.isSuccessful) {
+        viewModel.loginResponse.observe(viewLifecycleOwner, { result ->
+            if (result == null) {
                 saveLoginStatus()
                 goToMainActivity()
             } else
-                displayError(response.exception!!.message.toString())
+                displayError(result)
         })
 
         return binding.root
