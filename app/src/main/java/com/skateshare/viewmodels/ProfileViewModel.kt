@@ -17,12 +17,16 @@ class ProfileViewModelFactory(private val profileUid: String?) : ViewModelProvid
 }
 
 class ProfileViewModel(private var profileUid: String?) : ViewModel() {
+    private val currentUserUid = FirebaseAuth.getInstance().uid
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
+    var profileUserIsCurrentUser = false
 
     init {
-        if (profileUid == null)
-            profileUid = FirebaseAuth.getInstance().uid
+        if (profileUid == null || profileUid == currentUserUid) {
+            profileUid = currentUserUid
+            profileUserIsCurrentUser = true
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
             _user.postValue(FirestoreService.getUserData(profileUid!!))

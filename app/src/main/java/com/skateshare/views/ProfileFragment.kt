@@ -19,25 +19,25 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.R
+import com.skateshare.databinding.FragmentLoginBinding
 import com.skateshare.databinding.FragmentProfileBinding
 import com.skateshare.viewmodels.ProfileViewModel
 import com.skateshare.viewmodels.ProfileViewModelFactory
 
 class ProfileFragment : Fragment() {
 
-    lateinit var binding: FragmentProfileBinding
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: ProfileViewModel
     private lateinit var factory: ProfileViewModelFactory
-    private var profileUserIsCurrentUser = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
 
         val profileUid = ProfileFragmentArgs.fromBundle(requireArguments()).profileUid
-        profileUserIsCurrentUser = profileUid == null
         factory = ProfileViewModelFactory(profileUid)
         viewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
@@ -53,7 +53,6 @@ class ProfileFragment : Fragment() {
                     override fun onLoadFailed(
                         e: GlideException?, model: Any?, target: Target<Drawable>?,
                         isFirstResource: Boolean): Boolean {
-                        binding.progress.visibility = View.GONE
                         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
                         return false
                     }
@@ -65,14 +64,8 @@ class ProfileFragment : Fragment() {
                         return false
                     }
                 }).into(binding.profilePicture)
+            showProfile()
         })
-
-        // TODO: MOVE ME TO SETTINGS
-        binding.logout.setOnClickListener {
-            requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE).edit()
-                .putBoolean("isLoggedIn", false).apply()
-            FirebaseAuth.getInstance().signOut()
-        }
 
         setHasOptionsMenu(true)
         return binding.root
@@ -80,7 +73,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (profileUserIsCurrentUser)
+        if (viewModel.profileUserIsCurrentUser)
             inflater.inflate(R.menu.profile_options, menu)
     }
 
@@ -89,8 +82,15 @@ class ProfileFragment : Fragment() {
                 || super.onOptionsItemSelected(item)
     }
 
+    private fun showProfile() {
+        val profileComponents = listOf(binding.bio, binding.userIdentifiers, binding.profilePicture)
+        for (component in profileComponents)
+            component.visibility = View.VISIBLE
+        binding.progress.visibility = View.GONE
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.unbind()
+        _binding = null
     }
 }

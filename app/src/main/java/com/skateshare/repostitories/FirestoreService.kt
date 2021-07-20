@@ -29,4 +29,13 @@ object FirestoreService {
             Log.d("FirestoreService", e.toString())
         }
     }
+
+    suspend fun deleteUserData(uid: String) {
+        try {
+            FirebaseFirestore.getInstance().collection("users")
+                .document(uid).delete()
+        } catch(e: Exception) {
+            Log.d("FirestoreService", e.toString())
+        }
+    }
 }
