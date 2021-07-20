@@ -1,26 +1,21 @@
 package com.skateshare.viewmodels
 
-import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.*
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.R
-import com.skateshare.models.User
 import com.skateshare.repostitories.AuthRepository
 import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
     private val authRepository = AuthRepository()
-    val loginResponse = authRepository.authError
+    val loginStatus = authRepository.authStatus
 
     private val _checkCredentialsEmpty = MutableLiveData<EventResponse>()
     val checkCredentialsEmpty: LiveData<EventResponse> = _checkCredentialsEmpty
@@ -74,12 +69,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun resetCredentialsEmpty() {
+    fun resetCredentialError() {
         _checkCredentialsEmpty.value = EventResponse(R.string.event_passes, true)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("AuthViewModel", "Cleared")
     }
 }

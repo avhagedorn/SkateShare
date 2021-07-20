@@ -3,7 +3,6 @@ package com.skateshare.views
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.skateshare.R
 
@@ -22,9 +21,4 @@ class AuthenticationActivity : AppCompatActivity() {
 
     private fun userLoggedIn() = this.getSharedPreferences("userData", Context.MODE_PRIVATE)
         .getBoolean("isLoggedIn", false)
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("AuthenticationActivity", "Destroyed")
-    }
 }

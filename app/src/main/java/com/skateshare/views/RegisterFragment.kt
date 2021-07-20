@@ -10,8 +10,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRegisterBinding
@@ -43,13 +41,13 @@ class RegisterFragment : Fragment() {
                 displayError(getString(event.response))
         })
 
-        viewModel.loginResponse.observe(viewLifecycleOwner, { errorResponse ->
-            if (errorResponse == null) {
+        viewModel.loginStatus.observe(viewLifecycleOwner) { result ->
+            if (result == null) {
                 saveLoginStatus()
                 goToMainActivity()
             } else
-                displayError(errorResponse)
-        })
+                displayError(result)
+        }
 
         return binding.root
     }
@@ -60,23 +58,18 @@ class RegisterFragment : Fragment() {
     }
 
     private fun goToLogin() {
-        viewModel.resetCredentialsEmpty()
+        viewModel.resetCredentialError()
         findNavController().navigate(
             RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
     }
 
     private fun saveLoginStatus() {
-        requireContext().getSharedPreferences("userSettings", Context.MODE_PRIVATE)
-            .edit().putBoolean("isLoggedIn", true).apply()
+        requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE).edit()
+            .putBoolean("isLoggedIn", true).apply()
     }
 
     private fun displayError(error: String) {
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.unbind()
     }
 }

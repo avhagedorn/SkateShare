@@ -3,33 +3,29 @@ package com.skateshare.viewmodels
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
-import com.skateshare.repostitories.FirestoreService
 import com.skateshare.models.User
-import com.squareup.okhttp.Dispatcher
+import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class ProfileViewModelFactory() : ViewModelProvider.Factory {
-
+class ProfileViewModelFactory(private val profileUid: String?) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProfileViewModel::class.java))
-            return ProfileViewModel() as T
+            return ProfileViewModel(profileUid) as T
         throw IllegalArgumentException("Unknown view model class!")
     }
 }
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(private var profileUid: String?) : ViewModel() {
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
-    val defaultProfilePicture = ""
 
     init {
-        val uid = FirebaseAuth.getInstance().uid
-        Log.d("ProfileViewModel", uid.toString())
+        if (profileUid == null)
+            profileUid = FirebaseAuth.getInstance().uid
 
         viewModelScope.launch(Dispatchers.IO) {
-            _user.postValue(FirestoreService.getUserData(uid.toString()))
+            _user.postValue(FirestoreService.getUserData(profileUid!!))
         }
     }
 }

@@ -2,8 +2,6 @@ package com.skateshare.models
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 data class User (
     val username: String,

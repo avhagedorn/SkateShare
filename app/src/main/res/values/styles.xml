@@ -5,4 +5,18 @@
         <item name="colorAccent">@color/red_500</item>
     </style>
 
+    <style name="text_input_wrapper">
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:textColorHint">@color/input_text</item>
+    </style>
+
+    <style name="text_input">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="backgroundTint">@color/medium_gray</item>
+    </style>
+
+    <style name="settingsTextItem">
+        <item name="android:textSize">24sp</item>
+    </style>
+
 </resources>

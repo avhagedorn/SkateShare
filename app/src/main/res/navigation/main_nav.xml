@@ -8,7 +8,12 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.skateshare.views.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <argument
+            android:name="profileUid"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/tempFragment"
         android:name="com.skateshare.views.TempFragment"
@@ -17,5 +22,16 @@
         <action
             android:id="@+id/action_tempFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.skateshare.views.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 </navigation>

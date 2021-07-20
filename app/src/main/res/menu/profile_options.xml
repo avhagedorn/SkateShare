@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/edit_profile"
+        android:menuCategory="secondary"
+        android:id="@+id/editProfileFragment"
         android:title="@string/edit_profile_option"/>
 
     <item
-        android:id="@+id/settings"
+        android:menuCategory="secondary"
+        android:id="@+id/settingsFragment"
         android:title="@string/settings_option"/>
 
 </menu>
