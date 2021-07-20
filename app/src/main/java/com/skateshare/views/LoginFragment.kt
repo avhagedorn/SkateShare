@@ -3,13 +3,13 @@ package com.skateshare.views
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
@@ -18,14 +18,15 @@ import com.skateshare.viewmodels.AuthViewModel
 
 class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentLoginBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
         viewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
 
         binding.registerHint.setOnClickListener { goToRegister() }
@@ -42,13 +43,13 @@ class LoginFragment : Fragment() {
                 displayError(getString(event.response))
         })
 
-        viewModel.loginResponse.observe(viewLifecycleOwner, { result ->
+        viewModel.loginStatus.observe(viewLifecycleOwner) { result ->
             if (result == null) {
                 saveLoginStatus()
                 goToMainActivity()
             } else
                 displayError(result)
-        })
+        }
 
         return binding.root
     }
@@ -59,14 +60,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun goToRegister() {
-        viewModel.resetCredentialsEmpty()
+        viewModel.resetCredentialError()
         findNavController().navigate(
             LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
     }
 
     private fun saveLoginStatus() {
-        requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE)
-            .edit().putBoolean("isLoggedIn", true).apply()
+        requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE).edit()
+            .putBoolean("isLoggedIn", true).apply()
     }
 
     private fun displayError(error: String) {
@@ -76,6 +77,7 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.unbind()
+        _binding = null
+        Log.i("LoginFragment", "View destroyed!")
     }
 }
