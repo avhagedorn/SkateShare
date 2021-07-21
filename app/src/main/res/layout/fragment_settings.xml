@@ -15,7 +15,6 @@
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            app:cardBackgroundColor="@color/gray"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -34,7 +33,6 @@
             android:id="@+id/feedback"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            app:cardBackgroundColor="@color/gray"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -53,7 +51,6 @@
             android:id="@+id/delete_account"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            app:cardBackgroundColor="@color/gray"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">

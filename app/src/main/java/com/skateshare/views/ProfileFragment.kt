@@ -47,24 +47,24 @@ class ProfileFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner, { userData ->
             Glide.with(this)
                 .load(userData.profilePicture)
-                .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .circleCrop()
                 .listener(object: RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?, model: Any?, target: Target<Drawable>?,
                         isFirstResource: Boolean): Boolean {
                         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
+                        showProfile()
                         return false
                     }
 
                     override fun onResourceReady(
                         resource: Drawable?, model: Any?, target: Target<Drawable>?,
                         dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        binding.progress.visibility = View.GONE
+                        showProfile()
                         return false
                     }
                 }).into(binding.profilePicture)
-            showProfile()
         })
 
         setHasOptionsMenu(true)

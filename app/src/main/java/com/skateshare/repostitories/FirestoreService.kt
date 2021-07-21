@@ -30,6 +30,15 @@ object FirestoreService {
         }
     }
 
+    suspend fun updateUserData(user: Map<String, Any?>, uid: String) {
+        try {
+            FirebaseFirestore.getInstance().collection("users")
+                .document(uid).set(user)
+        } catch(e: Exception) {
+            Log.d("FirestoreService", e.toString())
+        }
+    }
+
     suspend fun deleteUserData(uid: String) {
         try {
             FirebaseFirestore.getInstance().collection("users")
