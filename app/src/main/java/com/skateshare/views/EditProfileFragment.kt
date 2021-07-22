@@ -1,5 +1,6 @@
 package com.skateshare.views
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +14,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.skateshare.R
 import com.skateshare.databinding.FragmentEditProfileBinding
 import com.skateshare.viewmodels.EditProfileViewModel
@@ -44,7 +49,7 @@ class EditProfileFragment : Fragment() {
                 Glide.with(this)
                     .load(uri)
                     .circleCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .skipMemoryCache(true)
                     .into(binding.profilePicture)
                 updatedUri = uri
@@ -56,30 +61,26 @@ class EditProfileFragment : Fragment() {
         binding.cancelEdit.setOnClickListener { returnToProfile() }
 
         binding.confirmEdit.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
             viewModel.updateProfile(hashMapOf(
                     "username" to binding.editUsername.text.toString(),
                     "name" to binding.editName.text.toString(),
-                    "bio" to binding.editBio.text.toString()
+                    "bio" to binding.editBio.text.toString().replace("\n", " ")
                 ))
             if (updatedUri != null)
                 viewModel.uploadProfilePicture(updatedUri!!)
-            binding.progressBar.visibility = View.VISIBLE
         }
 
         viewModel.response.observe(viewLifecycleOwner) { response ->
-            binding.progressBar.visibility = View.GONE
             if (response == null) {
                 sendToast(getString(R.string.edit_success))
                 returnToProfile()
             } else
                 sendToast(response)
+            binding.progressBar.visibility = View.GONE
         }
 
         return binding.root
-    }
-
-    private fun sendToast(alert: String) {
-        Toast.makeText(requireContext(), alert, Toast.LENGTH_LONG).show()
     }
 
     private fun setupLayout() {
@@ -89,12 +90,34 @@ class EditProfileFragment : Fragment() {
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .skipMemoryCache(true)
                 .circleCrop()
-                .into(binding.profilePicture)
-            for (item in listOf(binding.profilePicture, binding.cancelEdit,
-                                binding.confirmEdit, binding.editLayout))
-                item.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
+                .listener(object: RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?,
+                        target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        loadUi(false)
+                        sendToast(e.toString())
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                        dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        loadUi(true)
+                        return false
+                    }
+                }).into(binding.profilePicture)
         })
+    }
+
+    private fun loadUi(loadSuccessful : Boolean) {
+        binding.progressBar.visibility = View.GONE
+        if (loadSuccessful)
+            for (item in listOf(binding.profilePicture, binding.cancelEdit,
+                binding.confirmEdit, binding.editLayout))
+                item.visibility = View.VISIBLE
+    }
+
+    private fun sendToast(alert: String) {
+        Toast.makeText(requireContext(), alert, Toast.LENGTH_LONG).show()
     }
 
     private fun returnToProfile() {

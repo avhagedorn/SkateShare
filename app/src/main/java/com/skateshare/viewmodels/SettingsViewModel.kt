@@ -7,8 +7,6 @@ import com.skateshare.repostitories.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// class SettingsViewModel @Inject constructor(repo: AuthRepository): ViewModel() {
-
 class SettingsViewModel : ViewModel() {
 
     // private var repository: AuthRepository = repo

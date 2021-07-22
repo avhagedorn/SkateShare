@@ -36,13 +36,13 @@ class EditProfileViewModel : ViewModel() {
     }
 
     fun uploadProfilePicture(uri: Uri) {
-        try {
-            viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
                 FirestoreService.uploadProfilePicture(uid, uri)
                 _response.postValue(null)
+            } catch (e: Exception){
+                _response.postValue(e.message)
             }
-        } catch (e: Exception){
-            _response.postValue(e.message)
         }
     }
 }

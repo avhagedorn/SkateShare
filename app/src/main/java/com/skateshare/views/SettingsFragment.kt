@@ -36,6 +36,7 @@ class SettingsFragment : Fragment() {
         binding.logout.setOnClickListener {
             updatePreferences()
             viewModel.logout()
+            goToLogin()
         }
 
         binding.deleteAccount.setOnClickListener {

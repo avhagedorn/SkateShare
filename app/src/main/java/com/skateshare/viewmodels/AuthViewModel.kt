@@ -20,10 +20,6 @@ class AuthViewModel : ViewModel() {
     private val _checkCredentialsEmpty = MutableLiveData<EventResponse>()
     val checkCredentialsEmpty: LiveData<EventResponse> = _checkCredentialsEmpty
 
-    init {
-        Log.i("AuthViewModel", "Created")
-    }
-
     fun register(email: String, password: String, username: String) {
         val verification = credentialsAreValid(email, password, username)
         if (verification.success) {
