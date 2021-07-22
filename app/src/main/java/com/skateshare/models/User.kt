@@ -23,7 +23,7 @@ data class User (
                 newDefaultUser()
             }
         }
-
         fun newDefaultUser() = User("defaultname", "", "", "")
+
     }
 }

@@ -1,12 +1,15 @@
 package com.skateshare.repostitories
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.models.User
 import com.skateshare.models.User.Companion.newDefaultUser
 import com.skateshare.models.User.Companion.toUser
 import kotlinx.coroutines.tasks.await
+import kotlin.collections.HashMap
 
 object FirestoreService {
 
@@ -30,21 +33,41 @@ object FirestoreService {
         }
     }
 
-    suspend fun updateUserData(user: Map<String, Any?>, uid: String) {
+    suspend fun deleteUserData(uid: String) {
         try {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(uid).set(user)
+            val x = FirebaseFirestore.getInstance().collection("users")
+                .document(uid).delete()
         } catch(e: Exception) {
             Log.d("FirestoreService", e.toString())
         }
     }
 
-    suspend fun deleteUserData(uid: String) {
+    suspend fun updateUserData(user: Map<String, Any?>, uid: String) {
         try {
             FirebaseFirestore.getInstance().collection("users")
-                .document(uid).delete()
+                .document(uid).update(user)
         } catch(e: Exception) {
             Log.d("FirestoreService", e.toString())
+            throw e
+        }
+    }
+
+    suspend fun uploadProfilePicture(uid: String, uri: Uri) {
+        try {
+            val imageReference = FirebaseStorage.getInstance()
+                .getReference("profilePictures/$uid.png")
+            // Upload file
+            imageReference.putFile(uri).addOnSuccessListener {
+                imageReference.downloadUrl.addOnSuccessListener { newUri ->
+                    // Save profile picture
+                    FirebaseFirestore.getInstance().collection("users")
+                        .document(uid).update(hashMapOf<String, Any?>(
+                            "profilePicture" to newUri.toString()))
+                }
+            }
+        } catch(e: Exception) {
+            Log.e("FirestoreService", e.toString())
+            throw e
         }
     }
 }

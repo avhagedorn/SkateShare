@@ -1,5 +1,7 @@
 package com.skateshare.viewmodels
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.models.User
@@ -12,7 +14,9 @@ class EditProfileViewModel : ViewModel() {
     private val uid = FirebaseAuth.getInstance().uid!!
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
-    val updatedProfilePicture = user.value?.profilePicture
+
+    private val _response = MutableLiveData<String?>()
+    val response: LiveData<String?> = _response
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -21,8 +25,24 @@ class EditProfileViewModel : ViewModel() {
     }
 
     fun updateProfile(updatedData: Map<String, Any?>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            FirestoreService.updateUserData(updatedData, uid)
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                FirestoreService.updateUserData(updatedData, uid)
+                _response.postValue(null)
+            }
+        } catch (e: Exception) {
+            _response.postValue(e.message)
+        }
+    }
+
+    fun uploadProfilePicture(uri: Uri) {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                FirestoreService.uploadProfilePicture(uid, uri)
+                _response.postValue(null)
+            }
+        } catch (e: Exception){
+            _response.postValue(e.message)
         }
     }
 }

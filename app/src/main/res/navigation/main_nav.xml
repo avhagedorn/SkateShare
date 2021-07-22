@@ -39,7 +39,7 @@
         android:name="com.skateshare.views.EditProfileFragment"
         android:label="EditProfileFragment" >
         <action
-            android:id="@+id/action_editProfileFragment2_to_profileFragment"
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="false" />

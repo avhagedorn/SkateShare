@@ -31,4 +31,6 @@
     <string name="hint_bio">Bio</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+
+    <string name="edit_success">Success! Changes will take effect on refresh!</string>
 </resources>
