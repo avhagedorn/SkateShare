@@ -10,24 +10,21 @@ import kotlinx.coroutines.tasks.await
 
 class AuthRepository {
 
-    private val _authStatus = MutableLiveData<String?>()
-    val authStatus: LiveData<String?> = _authStatus
-
     suspend fun register(email: String, password: String) {
         try {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()
-            _authStatus.postValue(null)
         } catch(e: Exception){
-            _authStatus.postValue(e.message)
+            Log.d("AuthRepository", e.toString())
+            throw e
         }
     }
 
     suspend fun login(email: String, password: String) {
         try {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
-            _authStatus.postValue(null)
         } catch(e: Exception){
-            _authStatus.postValue(e.message)
+            Log.d("AuthRepository", e.toString())
+            throw e
         }
     }
 
@@ -38,9 +35,6 @@ class AuthRepository {
     suspend fun deleteAccount() {
         try {
             val user = FirebaseAuth.getInstance().currentUser!!
-
-            Log.d("DeleteAccount", user.uid)
-
             FirestoreService.deleteUserData(user.uid)
             user.delete()
         }

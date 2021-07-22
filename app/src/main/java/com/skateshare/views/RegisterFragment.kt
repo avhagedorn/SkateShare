@@ -37,16 +37,22 @@ class RegisterFragment : Fragment() {
         }
 
         viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
-            if (!event.success)
+            if (!event.success) {
                 displayError(getString(event.response))
+                viewModel.resetCredentialError()
+            }
         })
 
-        viewModel.loginStatus.observe(viewLifecycleOwner) { result ->
-            if (result == null) {
-                saveLoginStatus()
-                goToMainActivity()
-            } else
-                displayError(result)
+        viewModel.loginException.observe(viewLifecycleOwner) { result ->
+            if (result.success) {
+                if (result.status == null) {
+                    saveLoginStatus()
+                    goToMainActivity()
+                } else {
+                    displayError(result.status)
+                    viewModel.resetLoginException()
+                }
+            }
         }
 
         return binding.root
@@ -58,7 +64,6 @@ class RegisterFragment : Fragment() {
     }
 
     private fun goToLogin() {
-        viewModel.resetCredentialError()
         findNavController().navigate(
             RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
     }
