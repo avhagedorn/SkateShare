@@ -126,6 +126,7 @@ class EditProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.i("EditProfileFragment", "Destroyed")
         _binding = null
     }
 }

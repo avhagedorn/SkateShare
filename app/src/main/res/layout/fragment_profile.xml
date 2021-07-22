@@ -8,7 +8,7 @@
         <import type="com.skateshare.models.User"/>
         
         <variable
-            name="model"
+            name="viewModel"
             type="com.skateshare.viewmodels.ProfileViewModel" />
     </data>
 
@@ -24,7 +24,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@+id/user_identifiers"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/profilePicture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/profilePicture"
@@ -46,7 +46,7 @@
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{model.user.username}"
+                android:text="@{viewModel.user.username}"
                 android:textSize="28sp"
                 tools:text="Username" />
 
@@ -54,7 +54,7 @@
                 android:id="@+id/real_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{model.user.name}"
+                android:text="@{viewModel.user.name}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 tools:text="First Last" />
 
@@ -65,10 +65,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:visibility="gone"
-            android:text="@{model.user.bio}"
+            android:visibility="invisible"
+            android:text="@{viewModel.user.bio}"
             app:layout_constraintTop_toBottomOf="@+id/profilePicture"
-            tools:text="@string/lorem_ipsum" />
+            tools:text="@string/lorem_ipsum"
+            style="@style/biographyText"/>
 
         <ProgressBar
             android:id="@+id/progress"

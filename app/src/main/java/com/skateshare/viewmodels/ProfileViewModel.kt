@@ -19,7 +19,7 @@ class ProfileViewModelFactory(private val profileUid: String?) : ViewModelProvid
 class ProfileViewModel(private var profileUid: String?) : ViewModel() {
     private val currentUserUid = FirebaseAuth.getInstance().uid
     private val _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
+    val user: LiveData<User> get() = _user
     var profileUserIsCurrentUser = false
 
     init {

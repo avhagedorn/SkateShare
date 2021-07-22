@@ -41,7 +41,7 @@ class ProfileFragment : Fragment() {
         factory = ProfileViewModelFactory(profileUid)
         viewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
-        binding.model = viewModel
+        binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.user.observe(viewLifecycleOwner, { userData ->

@@ -13,7 +13,7 @@ class EditProfileViewModel : ViewModel() {
 
     private val uid = FirebaseAuth.getInstance().uid!!
     private val _user = MutableLiveData<User>()
-    val user: LiveData<User> = _user
+    val user: LiveData<User> get() = _user
 
     private val _response = MutableLiveData<String?>()
     val response: LiveData<String?> = _response
