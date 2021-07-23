@@ -1,8 +1,10 @@
 package com.skateshare.viewmodels
 
 import android.net.Uri
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.models.User
 import com.skateshare.repostitories.FirestoreService

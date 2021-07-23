@@ -1,11 +1,9 @@
 package com.skateshare.views
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,9 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.R
-import com.skateshare.databinding.FragmentLoginBinding
 import com.skateshare.databinding.FragmentProfileBinding
 import com.skateshare.viewmodels.ProfileViewModel
 import com.skateshare.viewmodels.ProfileViewModelFactory

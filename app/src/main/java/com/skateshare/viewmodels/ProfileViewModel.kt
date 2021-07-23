@@ -1,6 +1,5 @@
 package com.skateshare.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.models.User

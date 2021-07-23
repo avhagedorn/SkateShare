@@ -1,11 +1,8 @@
 package com.skateshare.views
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.skateshare.R
 
 class MainActivity : AppCompatActivity() {

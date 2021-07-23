@@ -9,7 +9,6 @@ import com.skateshare.models.User
 import com.skateshare.models.User.Companion.newDefaultUser
 import com.skateshare.models.User.Companion.toUser
 import kotlinx.coroutines.tasks.await
-import kotlin.collections.HashMap
 
 object FirestoreService {
 
