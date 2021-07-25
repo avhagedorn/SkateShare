@@ -7,7 +7,9 @@ data class Post(
     val posterId: String,
     val description: String,
     val imageUrl: String,
-    val posterUsername: String) {
+    val posterUsername: String,
+    val tempId: String              // TEMPORARY
+    ) {
 
     companion object {
 
@@ -17,10 +19,11 @@ data class Post(
                     posterId = getString("posterId")!!,
                     description = getString("description")!!,
                     imageUrl = getString("imageUrl")!!,
-                    posterUsername = getString("posterUsername")!!
+                    posterUsername = getString("posterUsername")!!,
+                    tempId = getString("tempId")!!                  // TEMPORARY
                 )
             } catch (e: Exception) {
-                Log.d("Post", e.message!!)
+                Log.d("Post", e.toString())
                 null
             }
         }

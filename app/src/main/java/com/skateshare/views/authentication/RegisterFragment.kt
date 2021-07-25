@@ -1,42 +1,40 @@
-package com.skateshare.views.Authentication
+package com.skateshare.views.authentication
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
-import com.skateshare.databinding.FragmentLoginBinding
+import com.skateshare.databinding.FragmentRegisterBinding
 import com.skateshare.viewmodels.AuthViewModel
-import com.skateshare.views.Profile.ProfileActivity
+import com.skateshare.views.profile.ProfileActivity
 
-class LoginFragment : Fragment() {
+class RegisterFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var binding: FragmentRegisterBinding
+    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-        viewModel = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
 
-        binding.registerHint.setOnClickListener { goToRegister() }
+        binding.registerHint.setOnClickListener { goToLogin() }
 
-        binding.submitLogin.setOnClickListener {
+        binding.submitRegistration.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
-            viewModel.login(
-                email = binding.emailInput.text.toString(),
-                password = binding.passwordInput.text.toString())
+            viewModel.register(
+                email=binding.emailInput.text.toString(),
+                password=binding.passwordInput.text.toString(),
+                username=binding.usernameInput.text.toString())
         }
 
         viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
@@ -66,9 +64,9 @@ class LoginFragment : Fragment() {
         requireActivity().finish()
     }
 
-    private fun goToRegister() {
+    private fun goToLogin() {
         findNavController().navigate(
-            LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+            RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
     }
 
     private fun saveLoginStatus() {
@@ -79,11 +77,5 @@ class LoginFragment : Fragment() {
     private fun displayError(error: String) {
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-        Log.i("LoginFragment", "View destroyed!")
     }
 }

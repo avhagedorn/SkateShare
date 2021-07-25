@@ -1,11 +1,11 @@
-package com.skateshare.views.Authentication
+package com.skateshare.views.authentication
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.skateshare.R
-import com.skateshare.views.Profile.ProfileActivity
+import com.skateshare.views.profile.ProfileActivity
 
 class AuthenticationActivity : AppCompatActivity() {
 

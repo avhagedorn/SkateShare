@@ -14,8 +14,10 @@ object DummyPostRepository {
             .collection("posts")
             .get()
             .await()
-        for (item in query) {
-            mutablePosts.add(item.toPost())
+        query.forEach { item ->
+            val post = item.toPost()
+            if (post != null)
+                mutablePosts.add(post)
         }
         return mutablePosts
     }

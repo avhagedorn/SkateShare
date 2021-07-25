@@ -13,11 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SkateShare">
         <activity
-            android:name=".views.Feed.FeedActivity"
+            android:name=".views.feed.FeedActivity"
             android:label="@string/title_activity_feed"
             android:theme="@style/Theme.SkateShare.NoActionBar"></activity>
         <activity
-            android:name=".views.Authentication.AuthenticationActivity"
+            android:name=".views.authentication.AuthenticationActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.Profile.ProfileActivity"
+            android:name=".views.profile.ProfileActivity"
             android:windowSoftInputMode="adjustPan"></activity>
     </application>
 

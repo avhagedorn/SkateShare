@@ -1,6 +1,5 @@
-package com.skateshare.views.Feed
+package com.skateshare.views.feed
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,7 +20,11 @@ class FeedViewModel : ViewModel() {
 
     private fun initializePosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            _posts.postValue(DummyPostRepository.getPosts())
+            try {
+                _posts.postValue(DummyPostRepository.getPosts())
+            } catch(e: Exception) {
+                _posts.postValue(listOf())
+            }
         }
     }
 }

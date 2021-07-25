@@ -1,4 +1,4 @@
-package com.skateshare.views.Profile
+package com.skateshare.views.profile
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle

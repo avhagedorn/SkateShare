@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.skateshare.views.Profile.ProfileFragment"
+        android:name="com.skateshare.views.profile.ProfileFragment"
         android:label="ProfileFragment" >
         <argument
             android:name="profileUid"
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/tempFragment"
-        android:name="com.skateshare.views.Profile.TempFragment"
+        android:name="com.skateshare.views.profile.TempFragment"
         android:label="fragment_temp"
         tools:layout="@layout/fragment_temp" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.skateshare.views.Profile.SettingsFragment"
+        android:name="com.skateshare.views.profile.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.skateshare.views.Profile.EditProfileFragment"
+        android:name="com.skateshare.views.profile.EditProfileFragment"
         android:label="EditProfileFragment" >
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
@@ -49,6 +49,6 @@
     </fragment>
     <fragment
         android:id="@+id/feedFragment"
-        android:name="com.skateshare.views.Feed.FeedFragment"
+        android:name="com.skateshare.views.feed.FeedFragment"
         android:label="FeedFragment" />
 </navigation>

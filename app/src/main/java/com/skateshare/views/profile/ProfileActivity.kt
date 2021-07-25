@@ -1,9 +1,6 @@
-package com.skateshare.views.Profile
+package com.skateshare.views.profile
 
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import com.skateshare.R
