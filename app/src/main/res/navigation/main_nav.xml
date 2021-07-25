@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.skateshare.views.ProfileFragment"
+        android:name="com.skateshare.views.Profile.ProfileFragment"
         android:label="ProfileFragment" >
         <argument
             android:name="profileUid"
@@ -16,16 +16,19 @@
     </fragment>
     <fragment
         android:id="@+id/tempFragment"
-        android:name="com.skateshare.views.TempFragment"
+        android:name="com.skateshare.views.Profile.TempFragment"
         android:label="fragment_temp"
         tools:layout="@layout/fragment_temp" >
         <action
             android:id="@+id/action_tempFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_tempFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.skateshare.views.SettingsFragment"
+        android:name="com.skateshare.views.Profile.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -36,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.skateshare.views.EditProfileFragment"
+        android:name="com.skateshare.views.Profile.EditProfileFragment"
         android:label="EditProfileFragment" >
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
@@ -44,4 +47,8 @@
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="false" />
     </fragment>
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.skateshare.views.Feed.FeedFragment"
+        android:label="FeedFragment" />
 </navigation>

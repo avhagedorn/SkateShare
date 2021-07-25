@@ -37,6 +37,7 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 
 }
@@ -55,7 +56,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx:23.0.2'
     implementation 'com.google.firebase:firebase-database:20.0.0'
 
-    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
     // Firebase cloud image loading
     implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
@@ -87,4 +88,7 @@ dependencies {
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation 'com.jraska.livedata:testing-ktx:1.2.0'
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2"
+
+    // RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 }

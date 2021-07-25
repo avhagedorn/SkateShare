@@ -1,9 +1,8 @@
-package com.skateshare.views
+package com.skateshare.views.Profile
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +45,8 @@ class EditProfileFragment : Fragment() {
                 Glide.with(this)
                     .load(uri)
                     .circleCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(binding.profilePicture)
                 updatedUri = uri
             }
@@ -88,7 +88,7 @@ class EditProfileFragment : Fragment() {
                 .circleCrop()
                 .listener(object: RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?,
-                        target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                                              target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                         loadUi(false)
                         sendToast(e.toString())
                         return false
@@ -105,11 +105,11 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun loadUi(loadSuccessful : Boolean) {
-        binding.progressBar.visibility = View.GONE
         if (loadSuccessful)
             for (item in listOf(binding.profilePicture, binding.cancelEdit,
-                binding.confirmEdit, binding.editLayout))
+                                binding.confirmEdit, binding.editLayout))
                 item.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 
     private fun sendToast(alert: String) {
@@ -122,7 +122,6 @@ class EditProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i("EditProfileFragment", "Destroyed")
         _binding = null
     }
 }

@@ -1,4 +1,4 @@
-package com.skateshare.views
+package com.skateshare.views.Profile
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.skateshare.R
 import com.skateshare.databinding.FragmentSettingsBinding
 import com.skateshare.viewmodels.SettingsViewModel
+import com.skateshare.views.Authentication.AuthenticationActivity
 
 
 class SettingsFragment : Fragment() {

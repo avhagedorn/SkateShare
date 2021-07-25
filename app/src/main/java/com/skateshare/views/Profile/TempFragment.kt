@@ -1,4 +1,4 @@
-package com.skateshare.views
+package com.skateshare.views.Profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,15 +24,7 @@ class TempFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.btn2).setOnClickListener {
-            findNavController().navigate(TempFragmentDirections.actionTempFragmentToProfileFragment("OWgWh9PD8Ad9Yi6KBuUXVSFEOJY2"))
-        }
-
-        view.findViewById<Button>(R.id.btn3).setOnClickListener {
-            // findNavController().navigate(TempFragmentDirections.actionTempFragmentToProfileFragment("LrnacDNXndgQ5r1zqWnlTJFnQW83"))
-        }
-
-        view.findViewById<Button>(R.id.btn4).setOnClickListener {
-            findNavController().navigate(TempFragmentDirections.actionTempFragmentToProfileFragment("1pq2qiMbDzMUy1ViWI6Eyr73dLL2"))
+            findNavController().navigate(TempFragmentDirections.actionTempFragmentToFeedFragment())
         }
 
         return view

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.skateshare">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -12,20 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SkateShare">
-        <activity android:name=".views.AuthenticationActivity"
+        <activity
+            android:name=".views.Feed.FeedActivity"
+            android:label="@string/title_activity_feed"
+            android:theme="@style/Theme.SkateShare.NoActionBar"></activity>
+        <activity
+            android:name=".views.Authentication.AuthenticationActivity"
             android:windowSoftInputMode="adjustResize">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".views.MainActivity"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+        <activity
+            android:name=".views.Profile.ProfileActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

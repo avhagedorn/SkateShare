@@ -1,17 +1,16 @@
 package com.skateshare.viewmodels
 
+import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.models.User
 import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditProfileViewModel : ViewModel() {
+class EditProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private val uid = FirebaseAuth.getInstance().uid!!
     private val _user = MutableLiveData<User>()

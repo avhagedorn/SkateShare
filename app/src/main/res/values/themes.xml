@@ -11,9 +11,18 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/red_700</item>
         <!-- Customize your theme here. -->
     </style>
-    
+
     <style name="Theme.splashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:statusBarColor">@color/black</item>
     </style>
+
+    <style name="Theme.SkateShare.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SkateShare.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SkateShare.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
