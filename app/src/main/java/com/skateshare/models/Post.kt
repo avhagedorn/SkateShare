@@ -1,26 +1,34 @@
 package com.skateshare.models
 
 import android.util.Log
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.skateshare.repostitories.FirestoreService
 
 data class Post(
-    val posterId: String,
-    val description: String,
+    val id: String,
     val imageUrl: String,
+    val description: String,
+    val datePosted: Timestamp,
+    val postProfilePictureUrl: String,
     val posterUsername: String,
-    val tempId: String              // TEMPORARY
-    ) {
+    val posterId: String) {
 
     companion object {
 
-        fun DocumentSnapshot.toPost() : Post? {
+        suspend fun DocumentSnapshot.toPost() : Post? {
             return try {
+                val uid = getString("postedBy")
+                val user = FirestoreService.getUserData(uid!!)
                 Post(
-                    posterId = getString("posterId")!!,
+                    id = getString("id")!!,
                     description = getString("description")!!,
                     imageUrl = getString("imageUrl")!!,
-                    posterUsername = getString("posterUsername")!!,
-                    tempId = getString("tempId")!!                  // TEMPORARY
+                    datePosted = getTimestamp("datePosted")!!,
+                    postProfilePictureUrl = user.profilePicture,
+                    posterUsername = user.username,
+                    posterId = uid
                 )
             } catch (e: Exception) {
                 Log.d("Post", e.toString())

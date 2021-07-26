@@ -1,4 +1,4 @@
-package com.skateshare.views.feed
+package com.skateshare.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

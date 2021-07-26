@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.R
 import com.skateshare.repostitories.AuthRepository
 import com.skateshare.repostitories.FirestoreService
@@ -28,9 +29,11 @@ class AuthViewModel : ViewModel() {
                     FirestoreService.setUserData(
                         hashMapOf(
                             "username" to username,
-                            "bio" to "",
+                            "bio" to "This user hasn't told us anything about themselves yet! \uD83D\uDE1E",
                             "name" to "",
-                            "profilePicture" to ""))
+                            "profilePicture" to "https://firebasestorage.googleapis.com/v0/b/skateshare-b768a.appspot.com" +
+                                                "/o/profilePictures%2FdefaultProfilePicture.png?" +
+                                                "alt=media&token=2e7a831a-63d1-4036-a58a-a4704e737a4d"))
                     _loginException.postValue(ExceptionResponse(null, true))
                 } catch (e: Exception) {
                     _loginException.postValue(ExceptionResponse(e.message, true))
