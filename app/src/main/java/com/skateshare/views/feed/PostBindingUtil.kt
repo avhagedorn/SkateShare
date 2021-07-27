@@ -3,6 +3,7 @@ package com.skateshare.views.feed
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -42,4 +43,12 @@ fun ImageView.setProfilePicture(item: Post) {
 @BindingAdapter("postDate")
 fun TextView.setPostDate(item: Post) {
     text = DateFormat.getInstance().format(item.datePosted.toDate())
+}
+
+@BindingAdapter("settingsVisibility")
+fun ImageView.setSettingsVisibility(item: Post) {
+    visibility = if (item.isCurrentUser)
+        View.VISIBLE
+    else
+        View.GONE
 }

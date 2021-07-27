@@ -44,5 +44,7 @@
     <string name="post">Post</string>
     <string name="description">Description</string>
     <string name="post_description_prompt">Tell us about your post!</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 
 </resources>

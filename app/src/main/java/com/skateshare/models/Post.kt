@@ -13,7 +13,8 @@ data class Post(
     val datePosted: Timestamp,
     val postProfilePictureUrl: String,
     val posterUsername: String,
-    val posterId: String) {
+    val posterId: String,
+    var isCurrentUser: Boolean = false) {
 
     companion object {
 
