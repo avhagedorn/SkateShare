@@ -26,6 +26,10 @@ class FeedViewModel : ViewModel() {
     private val _numNewPosts = MutableLiveData<Int>()
     val numNewPosts: LiveData<Int> get() = _numNewPosts
 
+    // Event responses
+    private val _dbResponse = MutableLiveData<String?>()
+    val dbResponse: LiveData<String?> get() = _dbResponse
+
     init {
         fetchPosts()
     }
@@ -55,5 +59,17 @@ class FeedViewModel : ViewModel() {
         }
         queryResponse.reverse()
         return queryResponse
+    }
+
+    fun deletePost(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                DummyPostRepository.deletePost(id)
+                _dbResponse.postValue(null)
+            } catch (e: Exception) {
+                Log.e("FeedViewModel", e.toString())
+                _dbResponse.postValue(e.message)
+            }
+        }
     }
 }

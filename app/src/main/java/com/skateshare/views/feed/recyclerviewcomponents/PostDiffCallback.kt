@@ -1,4 +1,4 @@
-package com.skateshare.views.feed
+package com.skateshare.views.feed.recyclerviewcomponents
 
 import androidx.recyclerview.widget.DiffUtil
 import com.skateshare.models.Post

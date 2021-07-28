@@ -1,13 +1,8 @@
-package com.skateshare.views.feed
+package com.skateshare.views.feed.recyclerviewcomponents
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.skateshare.models.Post
-import com.skateshare.views.feed.PostDiffCallback
-import com.skateshare.views.feed.PostViewHolder
-import com.skateshare.views.feed.SleepNightListener
 
 class PostAdapter(val listener: SleepNightListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

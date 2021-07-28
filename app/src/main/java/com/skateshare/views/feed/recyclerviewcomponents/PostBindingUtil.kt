@@ -1,4 +1,4 @@
-package com.skateshare.views.feed
+package com.skateshare.views.feed.recyclerviewcomponents
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

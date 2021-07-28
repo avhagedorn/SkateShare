@@ -40,4 +40,9 @@ object DummyPostRepository {
             }
         }
     }
+
+    suspend fun deletePost(id: String) {
+        FirebaseFirestore.getInstance().document("posts/$id").delete()
+        FirebaseStorage.getInstance().getReference("postPictures/$id").delete()
+    }
 }
