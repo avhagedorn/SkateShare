@@ -22,7 +22,7 @@ class FeedViewModel : ViewModel() {
     private val currentUid = FirebaseAuth.getInstance().uid
     private var end: Timestamp = Timestamp.now()
     var isLoadingData: Boolean = false
-    val postsTotal = mutableListOf<Post>()
+    val postsTotal = mutableListOf<Post?>(null)
     private val _numNewPosts = MutableLiveData<Int>()
     val numNewPosts: LiveData<Int> get() = _numNewPosts
 
@@ -34,8 +34,9 @@ class FeedViewModel : ViewModel() {
         isLoadingData = true
         viewModelScope.launch(Dispatchers.IO) {
             val newPosts = queryToList(query = DummyPostRepository.getPosts(end))
+            postsTotal.removeLast() // Remove null (removes loading icon)
+            _numNewPosts.postValue(newPosts.size)
             if (newPosts.isNotEmpty()) {
-                _numNewPosts.postValue(newPosts.size)
                 postsTotal.addAll(newPosts)
                 end = newPosts[newPosts.size - 1].datePosted
             }

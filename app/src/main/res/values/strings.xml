@@ -46,5 +46,6 @@
     <string name="post_description_prompt">Tell us about your post!</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="feed_loading">Loading more posts...</string>
 
 </resources>

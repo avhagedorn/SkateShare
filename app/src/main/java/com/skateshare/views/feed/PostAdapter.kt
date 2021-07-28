@@ -9,16 +9,30 @@ import com.skateshare.views.feed.PostDiffCallback
 import com.skateshare.views.feed.PostViewHolder
 import com.skateshare.views.feed.SleepNightListener
 
-class PostAdapter(val listener: SleepNightListener) : RecyclerView.Adapter<PostViewHolder>() {
+class PostAdapter(val listener: SleepNightListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var data = mutableListOf<Post>()
+    private final val POST_ITEM = 0
+    private final val LOAD_ITEM = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        return PostViewHolder.from(parent)
+    var data = mutableListOf<Post?>()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            LOAD_ITEM -> LoadingViewHolder.from(parent)
+            POST_ITEM -> PostViewHolder.from(parent)
+            else -> throw Exception("No type match found!")
+        }
     }
 
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(data[position], listener)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (data[position]) {
+            null -> (holder as LoadingViewHolder)
+            else -> (holder as PostViewHolder).bind(data[position]!!, listener)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (data[position] == null) LOAD_ITEM else POST_ITEM
     }
 
     override fun getItemCount(): Int {

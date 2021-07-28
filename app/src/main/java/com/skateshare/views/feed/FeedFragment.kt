@@ -23,6 +23,7 @@ class FeedFragment : Fragment() {
 
     private var _binding: FragmentFeedBinding? = null
     private val binding: FragmentFeedBinding get() = _binding!!
+    private var uiIsInitialized = false
     private lateinit var viewModel: FeedViewModel
     private lateinit var adapter: PostAdapter
     private lateinit var recyclerView: RecyclerView
@@ -42,18 +43,19 @@ class FeedFragment : Fragment() {
         })
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.postList.adapter = adapter
+        adapter.data = viewModel.postsTotal
 
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer { newCount ->
             newCount?.let {
-                if (newCount != 0) {
-                    val oldCount = adapter.itemCount
-                    adapter.data = viewModel.postsTotal
-                    adapter.notifyItemRangeChanged(oldCount, newCount)
-                }
+                if (newCount != 0)
+                    displayNewPosts(newCount)
+                else
+                    // Empty response implies no more elements, so notify loading icon is removed
+                    adapter.notifyItemRemoved(adapter.itemCount)
             }
-            loadUi()
+            if (!uiIsInitialized)
+                loadUi()
         })
-
         awaitScrollRequest()
         setHasOptionsMenu(true)
         return binding.root
@@ -64,9 +66,13 @@ class FeedFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-
-                if (layoutManager.findLastCompletelyVisibleItemPosition() == adapter.itemCount - 1
+                // adapter.itemCount - 2 enables the spinner to exist before the user reaches the bottom
+                if (layoutManager.findLastCompletelyVisibleItemPosition() == adapter.itemCount - 2
                     && !viewModel.isLoadingData) {
+                    recyclerView.post {
+                        adapter.data.add(null)
+                        adapter.notifyItemInserted(adapter.itemCount-1)
+                    }
                     viewModel.fetchPosts()
                 }
             }
@@ -83,9 +89,15 @@ class FeedFragment : Fragment() {
                 || super.onOptionsItemSelected(item)
     }
 
+    private fun displayNewPosts(newCount: Int) {
+        val oldCount = adapter.itemCount - newCount
+        adapter.notifyItemRangeChanged(oldCount, newCount)
+    }
+
     private fun loadUi() {
         binding.postsLoading.visibility = View.GONE
         binding.postList.visibility = View.VISIBLE
+        uiIsInitialized = true
     }
 
     override fun onDestroyView() {
