@@ -1,6 +1,8 @@
 package com.skateshare.viewmodels
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
@@ -13,18 +15,26 @@ import java.util.*
 
 class CreatePostViewModel : ViewModel() {
 
+    private val _exceptionResponse = MutableLiveData<ExceptionResponse>()
+    val exceptionResponse: LiveData<ExceptionResponse> = _exceptionResponse
+
     fun pushPost(uri: Uri, description: String) {
         val uid = FirebaseAuth.getInstance().uid!!
 
         viewModelScope.launch(Dispatchers.IO) {
-            DummyPostRepository.createPost(uri,
-                hashMapOf<String, Any?>(
-                    "id" to UUID.randomUUID().toString(),
-                    "description" to description,
-                    "postedBy" to uid,
-                    "datePosted" to Timestamp.now()
+            try {
+                DummyPostRepository.createPost(uri,
+                    hashMapOf<String, Any?>(
+                        "id" to UUID.randomUUID().toString(),
+                        "description" to description,
+                        "postedBy" to uid,
+                        "datePosted" to Timestamp.now()
+                    )
                 )
-            )
+                _exceptionResponse.postValue(ExceptionResponse(null, true))
+            } catch(e: Exception) {
+                _exceptionResponse.postValue(ExceptionResponse(e.toString(), false))
+            }
         }
     }
 }

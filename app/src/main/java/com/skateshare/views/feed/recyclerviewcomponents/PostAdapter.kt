@@ -33,4 +33,9 @@ class PostAdapter(val listener: SleepNightListener) : RecyclerView.Adapter<Recyc
     override fun getItemCount(): Int {
         return data.size
     }
+
+    fun clear() {
+        data = mutableListOf()
+        notifyDataSetChanged()
+    }
 }

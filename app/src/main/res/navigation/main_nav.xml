@@ -58,5 +58,9 @@
     <fragment
         android:id="@+id/createPostFragment"
         android:name="com.skateshare.views.feed.CreatePostFragment"
-        android:label="CreatePostFragment" />
+        android:label="CreatePostFragment" >
+        <action
+            android:id="@+id/action_createPostFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+    </fragment>
 </navigation>

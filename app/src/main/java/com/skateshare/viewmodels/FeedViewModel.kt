@@ -22,7 +22,7 @@ class FeedViewModel : ViewModel() {
     private val currentUid = FirebaseAuth.getInstance().uid
     private var end: Timestamp = Timestamp.now()
     var isLoadingData: Boolean = false
-    val postsTotal = mutableListOf<Post?>(null)
+    var postsTotal = mutableListOf<Post?>(null)
     private val _numNewPosts = MutableLiveData<Int>()
     val numNewPosts: LiveData<Int> get() = _numNewPosts
 
@@ -61,15 +61,22 @@ class FeedViewModel : ViewModel() {
         return queryResponse
     }
 
-    fun deletePost(id: String) {
+    fun deletePost(id: String, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 DummyPostRepository.deletePost(id)
+                postsTotal.removeAt(position)
                 _dbResponse.postValue(null)
             } catch (e: Exception) {
                 Log.e("FeedViewModel", e.toString())
                 _dbResponse.postValue(e.message)
             }
         }
+    }
+
+    fun refreshData() {
+        end = Timestamp.now()
+        postsTotal = mutableListOf<Post?>(null)
+        fetchPosts()
     }
 }

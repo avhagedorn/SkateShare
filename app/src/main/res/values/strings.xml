@@ -26,6 +26,8 @@
     <string name="settings_logout">Logout</string>
     <string name="settings_send_feedback">Send Feedback</string>
     <string name="settings_delete_account">Delete Account</string>
+    <string name="delete_account_warning">This action is irreversible.\nAll public and private data will be deleted.</string>
+    <string name="delete_account_prompt">Delete Account?</string>
 
     <string name="hint_name">Name (optional)</string>
     <string name="hint_bio">Bio</string>
@@ -49,4 +51,9 @@
     <string name="feed_loading">Loading more posts…</string>
 
     <string name="post_deleted">Post deleted successfully!</string>
+    <string name="image_required">All posts require an image!</string>
+    <string name="confirm_delete_post">Delete Post?</string>
+    <string name="irreversible">This action is irreversible.</string>
+    <string name="post_created">Post created successfully!</string>
+
 </resources>

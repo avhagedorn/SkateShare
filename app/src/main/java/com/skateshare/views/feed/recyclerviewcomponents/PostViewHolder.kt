@@ -29,6 +29,7 @@ class PostViewHolder private constructor(private val binding: FeedPostBinding)
     fun bind(post: Post, clickListener: SleepNightListener) {
         binding.post = post
         binding.listener = clickListener
+        binding.position = this.layoutPosition
         binding.executePendingBindings()
         val postImage = binding.postImage
 

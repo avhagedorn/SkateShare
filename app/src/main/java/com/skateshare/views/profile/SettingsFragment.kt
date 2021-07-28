@@ -37,14 +37,14 @@ class SettingsFragment : Fragment() {
 
         binding.deleteAccount.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("Delete Account?")
-                .setMessage("This action is irreversible.\nAll public and private routes will be deleted.")
-                .setPositiveButton("Delete") {_,_ ->
+                .setTitle(R.string.delete_account_prompt)
+                .setMessage(R.string.delete_account_warning)
+                .setPositiveButton(R.string.delete) {_,_ ->
                     updatePreferences()
                     viewModel.deleteAccount()
                     goToLogin()
                 }
-                .setNegativeButton("Cancel") {_,_-> /* Alert dismissed */ }
+                .setNegativeButton(R.string.cancel) {_,_-> /* Alert dismissed */ }
                 .show()
         }
 

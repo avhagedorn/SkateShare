@@ -31,14 +31,13 @@ object DummyPostRepository {
         val postId = postData["id"].toString()
         val imageReference = FirebaseStorage.getInstance()
             .getReference("postPictures/$postId")
-        imageReference.putFile(uri).addOnSuccessListener {
-            imageReference.downloadUrl.addOnSuccessListener { newUri ->
-                postData["imageUrl"] = newUri.toString()
+        imageReference.putFile(uri).await()
+        imageReference.downloadUrl.addOnSuccessListener { newUri ->
+            postData["imageUrl"] = newUri.toString()
 
-                FirebaseFirestore.getInstance()
-                    .document("posts/$postId").set(postData)
-            }
-        }
+            FirebaseFirestore.getInstance()
+                .document("posts/$postId").set(postData)
+        }.await()
     }
 
     suspend fun deletePost(id: String) {
