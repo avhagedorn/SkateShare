@@ -55,5 +55,6 @@
     <string name="confirm_delete_post">Delete Post?</string>
     <string name="irreversible">This action is irreversible.</string>
     <string name="post_created">Post created successfully!</string>
+    <string name="refresh">Refresh</string>
 
 </resources>

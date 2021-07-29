@@ -52,6 +52,8 @@ class FeedFragment : Fragment() {
         binding.postList.adapter = adapter
         adapter.data = viewModel.postsTotal
 
+        binding.refreshLayout.setOnRefreshListener { refresh() }
+
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer { newCount ->
             newCount?.let {
                 if (newCount != 0)
@@ -70,17 +72,18 @@ class FeedFragment : Fragment() {
                 Snackbar.make(requireView(), response, Snackbar.LENGTH_LONG).show()
         })
 
-        binding.refreshLayout.setOnRefreshListener {
-            hideUi()
-            adapter.clear()
-            viewModel.refreshData()
-            adapter.data = viewModel.postsTotal
-            binding.refreshLayout.isRefreshing = false
-        }
-
         awaitScrollRequest()
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    private fun refresh() {
+        hideUi()
+        adapter.clear()
+        viewModel.refreshData()
+        recyclerView.smoothScrollToPosition(0)
+        adapter.data = viewModel.postsTotal
+        binding.refreshLayout.isRefreshing = false
     }
 
     private fun confirmDeleteModal(postId: String, position: Int) {
@@ -135,8 +138,15 @@ class FeedFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item, findNavController())
-                || super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.createPostFragment ->
+                NavigationUI.onNavDestinationSelected(item, findNavController())
+            R.id.refresh_button -> {
+                refresh()
+                false
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDestroyView() {
