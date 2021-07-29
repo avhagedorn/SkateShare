@@ -20,8 +20,8 @@ data class Post(
 
         suspend fun DocumentSnapshot.toPost() : Post? {
             return try {
-                val uid = getString("postedBy")
-                val user = FirestoreService.getUserData(uid!!)
+                val uid = getString("postedBy")!!
+                val user = FirestoreService.getUserData(uid)
                 Post(
                     id = getString("id")!!,
                     description = getString("description")!!,

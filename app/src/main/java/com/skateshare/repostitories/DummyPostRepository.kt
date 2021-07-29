@@ -22,7 +22,7 @@ object DummyPostRepository {
             .collection("posts")
             .whereLessThan("datePosted", end)
             .orderBy("datePosted")
-            .limitToLast(10)
+            .limitToLast(5)
             .get()
             .await()
     }

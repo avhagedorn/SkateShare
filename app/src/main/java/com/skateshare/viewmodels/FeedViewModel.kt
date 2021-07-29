@@ -22,7 +22,7 @@ class FeedViewModel : ViewModel() {
     private val currentUid = FirebaseAuth.getInstance().uid
     private var end: Timestamp = Timestamp.now()
     var isLoadingData: Boolean = false
-    var postsTotal = mutableListOf<Post?>(null)
+    var currentPosts = mutableListOf<Post?>()
     private val _numNewPosts = MutableLiveData<Int>()
     val numNewPosts: LiveData<Int> get() = _numNewPosts
 
@@ -36,14 +36,14 @@ class FeedViewModel : ViewModel() {
 
     fun fetchPosts() {
         isLoadingData = true
+        currentPosts.clear()
         viewModelScope.launch(Dispatchers.IO) {
             val newPosts = queryToList(query = DummyPostRepository.getPosts(end))
-            postsTotal.removeLast() // Remove null (removes loading icon)
-            _numNewPosts.postValue(newPosts.size)
             if (newPosts.isNotEmpty()) {
-                postsTotal.addAll(newPosts)
+                currentPosts.addAll(newPosts)
                 end = newPosts[newPosts.size - 1].datePosted
             }
+            _numNewPosts.postValue(newPosts.size)
             isLoadingData = false
         }
     }
@@ -65,7 +65,7 @@ class FeedViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 DummyPostRepository.deletePost(id)
-                postsTotal.removeAt(position)
+//                postsTotal.removeAt(position)
                 _dbResponse.postValue(RecyclerItemResponse(position, null))
             } catch (e: Exception) {
                 Log.e("FeedViewModel", e.toString())
@@ -76,7 +76,8 @@ class FeedViewModel : ViewModel() {
 
     fun refreshData() {
         end = Timestamp.now()
-        postsTotal = mutableListOf<Post?>(null)
+        currentPosts = mutableListOf<Post?>()
+//        postsTotal = mutableListOf<Post?>(null)
         fetchPosts()
     }
 }

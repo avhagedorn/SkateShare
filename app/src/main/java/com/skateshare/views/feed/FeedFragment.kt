@@ -50,20 +50,23 @@ class FeedFragment : Fragment() {
         }))
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.postList.adapter = adapter
-        adapter.data = viewModel.postsTotal
 
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer { newCount ->
-            loadUi()
             newCount?.let {
-                if (newCount != 0)
-                    displayNewPosts(newCount)
-                else
-                    // Empty response implies no more elements, so notify loading icon is removed
-                    adapter.notifyItemRemoved(adapter.itemCount)
+                val lastIndex = adapter.itemCount - 1
+                if (adapter.data.isNotEmpty()) {
+                    // Remove null flag
+                    adapter.data.removeAt(lastIndex)
+                    adapter.notifyItemRemoved(lastIndex)
+                }
+                if (newCount != 0) {
+                    adapter.data.addAll(viewModel.currentPosts)
+                    adapter.notifyItemRangeInserted(lastIndex+1, newCount)
+                }
+                loadUi()
             }
-
         })
 
         viewModel.dbResponse.observe(viewLifecycleOwner, Observer { response ->
@@ -71,6 +74,7 @@ class FeedFragment : Fragment() {
                 if (response.message == null) {
                     val position = response.viewIndex
                     Snackbar.make(requireView(), R.string.post_deleted, Snackbar.LENGTH_SHORT).show()
+                    adapter.data.removeAt(position)
                     adapter.notifyItemRemoved(position)
                     // Updates underlying indices in case of multiple deletions
                     adapter.notifyItemRangeChanged(position, adapter.itemCount - position)
@@ -90,7 +94,7 @@ class FeedFragment : Fragment() {
         adapter.clear()
         viewModel.refreshData()
         recyclerView.smoothScrollToPosition(0)
-        adapter.data = viewModel.postsTotal
+//        adapter.data = viewModel.postsTotal
         binding.refreshLayout.isRefreshing = false
     }
 
@@ -113,18 +117,14 @@ class FeedFragment : Fragment() {
                 if (layoutManager.findLastCompletelyVisibleItemPosition() == adapter.itemCount - 2
                     && !viewModel.isLoadingData) {
                     recyclerView.post {
+                        val dataSize = adapter.itemCount
                         adapter.data.add(null)
-                        adapter.notifyItemInserted(adapter.itemCount)
+                        adapter.notifyItemInserted(dataSize)
                     }
                     viewModel.fetchPosts()
                 }
             }
         })
-    }
-
-    private fun displayNewPosts(newCount: Int) {
-        val oldCount = adapter.itemCount - newCount
-        adapter.notifyItemRangeChanged(oldCount, newCount)
     }
 
     private fun loadUi() {
