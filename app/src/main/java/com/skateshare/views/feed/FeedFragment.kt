@@ -55,6 +55,7 @@ class FeedFragment : Fragment() {
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer { newCount ->
+            loadUi()
             newCount?.let {
                 if (newCount != 0)
                     displayNewPosts(newCount)
@@ -62,14 +63,21 @@ class FeedFragment : Fragment() {
                     // Empty response implies no more elements, so notify loading icon is removed
                     adapter.notifyItemRemoved(adapter.itemCount)
             }
-            loadUi()
+
         })
 
         viewModel.dbResponse.observe(viewLifecycleOwner, Observer { response ->
-            if (response == null)
-                Snackbar.make(requireView(), R.string.post_deleted, Snackbar.LENGTH_SHORT).show()
-            else
-                Snackbar.make(requireView(), response, Snackbar.LENGTH_LONG).show()
+            response?.let {
+                if (response.message == null) {
+                    val position = response.viewIndex
+                    Snackbar.make(requireView(), R.string.post_deleted, Snackbar.LENGTH_SHORT).show()
+                    adapter.notifyItemRemoved(position)
+                    // Updates underlying indices in case of multiple deletions
+                    adapter.notifyItemRangeChanged(position, adapter.itemCount - position)
+                }
+                else
+                    Snackbar.make(requireView(), response.message, Snackbar.LENGTH_LONG).show()
+            }
         })
 
         awaitScrollRequest()
@@ -90,10 +98,7 @@ class FeedFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.confirm_delete_post)
             .setMessage(R.string.irreversible)
-            .setPositiveButton(R.string.delete) {_,_ ->
-                viewModel.deletePost(postId, position)
-                adapter.notifyItemRemoved(position)
-            }
+            .setPositiveButton(R.string.delete) {_,_ -> viewModel.deletePost(postId, position) }
             .setNegativeButton(R.string.cancel) {_,_-> /* Alert dismissed */ }
             .show()
     }

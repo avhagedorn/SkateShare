@@ -27,8 +27,8 @@ class FeedViewModel : ViewModel() {
     val numNewPosts: LiveData<Int> get() = _numNewPosts
 
     // Event responses
-    private val _dbResponse = MutableLiveData<String?>()
-    val dbResponse: LiveData<String?> get() = _dbResponse
+    private val _dbResponse = MutableLiveData<RecyclerItemResponse>()
+    val dbResponse: LiveData<RecyclerItemResponse?> get() = _dbResponse
 
     init {
         fetchPosts()
@@ -66,10 +66,10 @@ class FeedViewModel : ViewModel() {
             try {
                 DummyPostRepository.deletePost(id)
                 postsTotal.removeAt(position)
-                _dbResponse.postValue(null)
+                _dbResponse.postValue(RecyclerItemResponse(position, null))
             } catch (e: Exception) {
                 Log.e("FeedViewModel", e.toString())
-                _dbResponse.postValue(e.message)
+                _dbResponse.postValue(RecyclerItemResponse(-1, e.message))
             }
         }
     }
