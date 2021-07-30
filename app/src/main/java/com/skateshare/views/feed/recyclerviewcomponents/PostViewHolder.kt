@@ -15,8 +15,7 @@ import com.bumptech.glide.request.target.Target
 import com.skateshare.databinding.FeedPostBinding
 import com.skateshare.models.Post
 
-class PostViewHolder private constructor(private val binding: FeedPostBinding)
-    : RecyclerView.ViewHolder(binding.root) {
+class PostViewHolder private constructor(private val binding: FeedPostBinding) : ItemViewHolder(binding.root) {
 
     companion object {
         fun from(parent: ViewGroup) : PostViewHolder {

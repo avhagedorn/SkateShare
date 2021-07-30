@@ -14,7 +14,7 @@ data class Post(
     val postProfilePictureUrl: String,
     val posterUsername: String,
     val posterId: String,
-    var isCurrentUser: Boolean = false) {
+    var isCurrentUser: Boolean = false) : FeedItem() {
 
     companion object {
 

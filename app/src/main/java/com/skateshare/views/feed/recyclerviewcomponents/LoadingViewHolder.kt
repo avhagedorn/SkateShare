@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.skateshare.R
 
-class LoadingViewHolder private constructor(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
+class LoadingViewHolder private constructor(private val itemView: View) : ItemViewHolder(itemView) {
 
     companion object {
         fun from(parent: ViewGroup) : LoadingViewHolder {

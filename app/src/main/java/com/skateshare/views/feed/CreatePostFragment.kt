@@ -82,7 +82,6 @@ class CreatePostFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i("CreatePostFragment", "View Destroyed")
         _binding = null
     }
 }

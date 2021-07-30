@@ -10,6 +10,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QuerySnapshot
+import com.skateshare.models.FeedItem
+import com.skateshare.models.LoadingItem
 import com.skateshare.models.Post
 import com.skateshare.models.Post.Companion.toPost
 import com.skateshare.repostitories.DummyPostRepository
@@ -23,11 +25,11 @@ class FeedViewModel : ViewModel() {
     private var end: Timestamp = Timestamp.now()
     var isLoadingData: Boolean = false
     var totalPosts = mutableListOf<Post>()
-    private val _numNewPosts = MutableLiveData<EventResponse>()
-    val numNewPosts: LiveData<EventResponse> get() = _numNewPosts
-    val userDataCache = HashMap<String, List<String>>()
+    private val _numNewPosts = MutableLiveData<Int>()
 
     // Event responses
+    val numNewPosts: LiveData<Int> get() = _numNewPosts
+    val userDataCache = HashMap<String, List<String>>()
     private val _dbResponse = MutableLiveData<RecyclerItemResponse>()
     val dbResponse: LiveData<RecyclerItemResponse?> get() = _dbResponse
 
@@ -43,7 +45,7 @@ class FeedViewModel : ViewModel() {
                 totalPosts.addAll(newPosts)
                 end = newPosts[newPosts.size - 1].datePosted
             }
-            _numNewPosts.postValue(EventResponse(newPosts.size, true))
+            _numNewPosts.postValue(newPosts.size)
             isLoadingData = false
         }
     }
@@ -77,15 +79,17 @@ class FeedViewModel : ViewModel() {
         _dbResponse.value = RecyclerItemResponse(-1, null, false)
     }
 
-    fun resetPostRequest() {
-        _numNewPosts.value = EventResponse(-1, false)
-    }
-
     fun refreshData() {
         end = Timestamp.now()
         totalPosts.clear()
         fetchPosts()
     }
 
-    fun getData() = totalPosts.toMutableList()
+    fun getData() = totalPosts.toMutableList<FeedItem>()
+
+    fun getLoading() : MutableList<FeedItem> {
+        val temp = getData()
+        temp.add(LoadingItem())
+        return temp
+    }
 }
