@@ -51,6 +51,7 @@ class CreatePostFragment : Fragment() {
 
         binding.submitPost.setOnClickListener {
             if (updatedUri != null) {
+                binding.postProgress.visibility = View.VISIBLE
                 viewModel.pushPost(
                     uri = updatedUri!!,
                     description = binding.postDescription.text.toString())
@@ -64,8 +65,11 @@ class CreatePostFragment : Fragment() {
                 if (response.success) {
                     Snackbar.make(requireView(), R.string.post_created, Snackbar.LENGTH_LONG).show()
                     findNavController().navigate(CreatePostFragmentDirections.actionCreatePostFragmentToFeedFragment())
-                } else
+                } else {
+                    binding.postProgress.visibility = View.INVISIBLE
                     Snackbar.make(requireView(), response.status!!, Snackbar.LENGTH_LONG).show()
+                }
+                viewModel.resetException()
             }
         })
 

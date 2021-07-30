@@ -11,11 +11,6 @@
         <variable
             name="listener"
             type="com.skateshare.views.feed.recyclerviewcomponents.SleepNightListener" />
-
-        <variable
-            name="position"
-            type="Integer" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -130,7 +125,6 @@
             android:layout_height="24dp"
             android:layout_marginEnd="16dp"
             settingsVisibility="@{post}"
-            android:onClick="@{() -> listener.onDelete(post, position)}"
             android:src="@drawable/ic_baseline_delete_forever_24"
             app:layout_constraintBottom_toBottomOf="@+id/like_icon"
             app:layout_constraintEnd_toEndOf="parent"

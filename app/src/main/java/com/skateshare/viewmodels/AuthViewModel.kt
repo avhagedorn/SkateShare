@@ -64,14 +64,14 @@ class AuthViewModel : ViewModel() {
     // Replace EventResponse with nullable int?
     private fun credentialsAreValid(email: String, password: String, username: String) : EventResponse {
         return when {
+            username.trim{it<=' '}.isEmpty() -> {
+                EventResponse(R.string.missing_username, false)
+            }
             email.trim{it<=' '}.isEmpty() -> {
                 EventResponse(R.string.missing_email, false)
             }
             password.trim{it<=' '}.isEmpty() -> {
                 EventResponse(R.string.missing_password, false)
-            }
-            username.trim{it<=' '}.isEmpty() -> {
-                EventResponse(R.string.missing_username, false)
             }
             else -> EventResponse(R.string.event_passes, true)
         }

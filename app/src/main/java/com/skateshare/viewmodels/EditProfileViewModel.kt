@@ -15,9 +15,8 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
     private val uid = FirebaseAuth.getInstance().uid!!
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> get() = _user
-
-    private val _response = MutableLiveData<String?>()
-    val response: LiveData<String?> = _response
+    private val _exceptionResponse = MutableLiveData<ExceptionResponse>()
+    val exceptionResponse: LiveData<ExceptionResponse> get() = _exceptionResponse
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -29,10 +28,10 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
         try {
             viewModelScope.launch(Dispatchers.IO) {
                 FirestoreService.updateUserData(updatedData, uid)
-                _response.postValue(null)
+                _exceptionResponse.postValue(ExceptionResponse(null, true))
             }
         } catch (e: Exception) {
-            _response.postValue(e.message)
+            _exceptionResponse.postValue(ExceptionResponse(e.message, false))
         }
     }
 
@@ -40,9 +39,9 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 FirestoreService.uploadProfilePicture(uid, uri)
-                _response.postValue(null)
+                _exceptionResponse.postValue(ExceptionResponse(null, true))
             } catch (e: Exception){
-                _response.postValue(e.message)
+                _exceptionResponse.postValue(ExceptionResponse(e.message, false))
             }
         }
     }

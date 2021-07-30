@@ -22,9 +22,10 @@ class FeedViewModel : ViewModel() {
     private val currentUid = FirebaseAuth.getInstance().uid
     private var end: Timestamp = Timestamp.now()
     var isLoadingData: Boolean = false
-    var currentPosts = mutableListOf<Post?>()
-    private val _numNewPosts = MutableLiveData<Int>()
-    val numNewPosts: LiveData<Int> get() = _numNewPosts
+    var totalPosts = mutableListOf<Post>()
+    private val _numNewPosts = MutableLiveData<EventResponse>()
+    val numNewPosts: LiveData<EventResponse> get() = _numNewPosts
+    val userDataCache = HashMap<String, List<String>>()
 
     // Event responses
     private val _dbResponse = MutableLiveData<RecyclerItemResponse>()
@@ -36,14 +37,13 @@ class FeedViewModel : ViewModel() {
 
     fun fetchPosts() {
         isLoadingData = true
-        currentPosts.clear()
         viewModelScope.launch(Dispatchers.IO) {
             val newPosts = queryToList(query = DummyPostRepository.getPosts(end))
             if (newPosts.isNotEmpty()) {
-                currentPosts.addAll(newPosts)
+                totalPosts.addAll(newPosts)
                 end = newPosts[newPosts.size - 1].datePosted
             }
-            _numNewPosts.postValue(newPosts.size)
+            _numNewPosts.postValue(EventResponse(newPosts.size, true))
             isLoadingData = false
         }
     }
@@ -65,19 +65,27 @@ class FeedViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 DummyPostRepository.deletePost(id)
-//                postsTotal.removeAt(position)
-                _dbResponse.postValue(RecyclerItemResponse(position, null))
+                totalPosts.removeAt(position)
+                _dbResponse.postValue(RecyclerItemResponse(position, null, true))
             } catch (e: Exception) {
-                Log.e("FeedViewModel", e.toString())
-                _dbResponse.postValue(RecyclerItemResponse(-1, e.message))
+                _dbResponse.postValue(RecyclerItemResponse(-1, e.message, true))
             }
         }
     }
 
+    fun resetRecyclerItemResponse() {
+        _dbResponse.value = RecyclerItemResponse(-1, null, false)
+    }
+
+    fun resetPostRequest() {
+        _numNewPosts.value = EventResponse(-1, false)
+    }
+
     fun refreshData() {
         end = Timestamp.now()
-        currentPosts = mutableListOf<Post?>()
-//        postsTotal = mutableListOf<Post?>(null)
+        totalPosts.clear()
         fetchPosts()
     }
+
+    fun getData() = totalPosts.toMutableList()
 }

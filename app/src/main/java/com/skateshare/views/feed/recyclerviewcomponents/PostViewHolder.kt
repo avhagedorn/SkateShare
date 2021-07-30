@@ -29,7 +29,6 @@ class PostViewHolder private constructor(private val binding: FeedPostBinding)
     fun bind(post: Post, clickListener: SleepNightListener) {
         binding.post = post
         binding.listener = clickListener
-        binding.position = this.layoutPosition
         binding.executePendingBindings()
         val postImage = binding.postImage
 
@@ -49,5 +48,9 @@ class PostViewHolder private constructor(private val binding: FeedPostBinding)
                     return false
                 }
             }).into(postImage)
+
+        binding.deleteIcon.setOnClickListener {
+            clickListener.deleteListener(post.id, layoutPosition)
+        }
     }
 }

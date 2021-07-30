@@ -67,12 +67,12 @@ class EditProfileFragment : Fragment() {
                 viewModel.uploadProfilePicture(updatedUri!!)
         }
 
-        viewModel.response.observe(viewLifecycleOwner) { response ->
-            if (response == null) {
+        viewModel.exceptionResponse.observe(viewLifecycleOwner) { response ->
+            if (!response.success) {
+                sendToast(response.status!!)
+            } else
                 sendToast(getString(R.string.edit_success))
                 returnToProfile()
-            } else
-                sendToast(response)
             binding.progressBar.visibility = View.GONE
         }
 

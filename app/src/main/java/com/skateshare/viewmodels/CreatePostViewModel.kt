@@ -37,4 +37,8 @@ class CreatePostViewModel : ViewModel() {
             }
         }
     }
+
+    fun resetException() {
+
+    }
 }

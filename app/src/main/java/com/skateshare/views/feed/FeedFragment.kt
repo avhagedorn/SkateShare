@@ -48,39 +48,37 @@ class FeedFragment : Fragment() {
         }, { postId, position ->
             confirmDeleteModal(postId, position)
         }))
-        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        // adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.postList.adapter = adapter
 
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
-        viewModel.numNewPosts.observe(viewLifecycleOwner, Observer { newCount ->
-            newCount?.let {
-                val lastIndex = adapter.itemCount - 1
-                if (adapter.data.isNotEmpty()) {
-                    // Remove null flag
-                    adapter.data.removeAt(lastIndex)
-                    adapter.notifyItemRemoved(lastIndex)
+        viewModel.numNewPosts.observe(viewLifecycleOwner, Observer { request ->
+            request?.let {
+                if (request.success) {
+//                    if (adapter.data.isNotEmpty()) {
+//                        adapter.data.removeAt(lastIndex)        // Remove null flag
+//                    }
+                    if (request.response != 0) {
+                        adapter.submitList(viewModel.getData())
+                    }
+                    loadUi()
+                    viewModel.resetPostRequest()
                 }
-                if (newCount != 0) {
-                    adapter.data.addAll(viewModel.currentPosts)
-                    adapter.notifyItemRangeInserted(lastIndex+1, newCount)
-                }
-                loadUi()
             }
         })
 
         viewModel.dbResponse.observe(viewLifecycleOwner, Observer { response ->
             response?.let {
-                if (response.message == null) {
-                    val position = response.viewIndex
-                    Snackbar.make(requireView(), R.string.post_deleted, Snackbar.LENGTH_SHORT).show()
-                    adapter.data.removeAt(position)
-                    adapter.notifyItemRemoved(position)
-                    // Updates underlying indices in case of multiple deletions
-                    adapter.notifyItemRangeChanged(position, adapter.itemCount - position)
+                if (response.enabled) {
+                    if (response.message == null) {
+                        adapter.submitList(viewModel.getData())
+                        Snackbar.make(requireView(), R.string.post_deleted, Snackbar.LENGTH_SHORT).show()
+                    }
+                    else
+                        Snackbar.make(requireView(), response.message, Snackbar.LENGTH_LONG).show()
+                    viewModel.resetRecyclerItemResponse()
                 }
-                else
-                    Snackbar.make(requireView(), response.message, Snackbar.LENGTH_LONG).show()
             }
         })
 
@@ -91,10 +89,8 @@ class FeedFragment : Fragment() {
 
     private fun refresh() {
         hideUi()
-        adapter.clear()
+        recyclerView.scrollToPosition(0)
         viewModel.refreshData()
-        recyclerView.smoothScrollToPosition(0)
-//        adapter.data = viewModel.postsTotal
         binding.refreshLayout.isRefreshing = false
     }
 
@@ -116,11 +112,11 @@ class FeedFragment : Fragment() {
                 // reaches the bottom, resulting in a slightly smoother experience.
                 if (layoutManager.findLastCompletelyVisibleItemPosition() == adapter.itemCount - 2
                     && !viewModel.isLoadingData) {
-                    recyclerView.post {
-                        val dataSize = adapter.itemCount
-                        adapter.data.add(null)
-                        adapter.notifyItemInserted(dataSize)
-                    }
+//                    recyclerView.post {
+//                        val dataSize = adapter.itemCount
+//                        adapter.data.add(null)
+//                        adapter.notifyItemInserted(dataSize)
+//                    }
                     viewModel.fetchPosts()
                 }
             }
@@ -156,10 +152,9 @@ class FeedFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i("1one", "Feed Destroyed")
         binding.refreshLayout.setOnRefreshListener(null)
-        _adapter = null
-        _recyclerView = null
         _binding = null
+        _recyclerView = null
+        _adapter = null
     }
 }
