@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/tempFragment">
+    app:startDestination="@id/recordFragment">
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.skateshare.views.profile.ProfileFragment"
-        android:label="ProfileFragment" >
+        android:label="@string/profile">
         <argument
             android:name="profileUid"
+            android:defaultValue=""
             app:argType="string"
             app:nullable="true" />
     </fragment>
@@ -29,8 +30,8 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.skateshare.views.profile.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" >
+        android:label="@string/settings_option"
+        tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -40,7 +41,7 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.skateshare.views.profile.EditProfileFragment"
-        android:label="EditProfileFragment" >
+        android:label="@string/edit_profile_option">
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -50,7 +51,7 @@
     <fragment
         android:id="@+id/feedFragment"
         android:name="com.skateshare.views.feed.FeedFragment"
-        android:label="FeedFragment" >
+        android:label="@string/feed">
         <action
             android:id="@+id/action_feedFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
@@ -58,10 +59,20 @@
     <fragment
         android:id="@+id/createPostFragment"
         android:name="com.skateshare.views.feed.CreatePostFragment"
-        android:label="CreatePostFragment" >
+        android:label="@string/create_post">
         <action
             android:id="@+id/action_createPostFragment_to_feedFragment"
             app:destination="@id/feedFragment"
             app:popUpTo="@id/feedFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/recordFragment"
+        android:name="com.skateshare.views.record.RecordFragment"
+        android:label="@string/record"
+        tools:layout="@layout/fragment_record" />
+    <fragment
+        android:id="@+id/routesFragment"
+        android:name="com.skateshare.views.routes.RoutesFragment"
+        android:label="@string/routes"
+        tools:layout="@layout/fragment_routes" />
 </navigation>

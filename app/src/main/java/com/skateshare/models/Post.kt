@@ -14,27 +14,4 @@ data class Post(
     val postProfilePictureUrl: String,
     val posterUsername: String,
     val posterId: String,
-    var isCurrentUser: Boolean = false) : FeedItem() {
-
-    companion object {
-
-        suspend fun DocumentSnapshot.toPost() : Post? {
-            return try {
-                val uid = getString("postedBy")!!
-                val user = FirestoreService.getUserData(uid)
-                Post(
-                    id = getString("id")!!,
-                    description = getString("description")!!,
-                    imageUrl = getString("imageUrl")!!,
-                    datePosted = getTimestamp("datePosted")!!,
-                    postProfilePictureUrl = user.profilePicture,
-                    posterUsername = user.username,
-                    posterId = uid
-                )
-            } catch (e: Exception) {
-                Log.d("Post", e.toString())
-                null
-            }
-        }
-    }
-}
+    var isCurrentUser: Boolean = false) : FeedItem()

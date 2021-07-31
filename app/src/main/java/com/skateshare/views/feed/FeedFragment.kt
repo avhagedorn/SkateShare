@@ -2,6 +2,7 @@ package com.skateshare.views.feed
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -53,6 +54,7 @@ class FeedFragment : Fragment() {
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer {
+            binding.refreshLayout.isRefreshing = false
             adapter.submitList(viewModel.getData())
             if (!uiIsInitialized)
                 loadUi()
@@ -81,7 +83,6 @@ class FeedFragment : Fragment() {
         binding.refreshLayout.isRefreshing = true
         recyclerView.smoothScrollToPosition(0)
         viewModel.refreshData()
-        binding.refreshLayout.isRefreshing = false
     }
 
     private fun confirmDeleteModal(postId: String, position: Int) {
@@ -111,6 +112,14 @@ class FeedFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("1one", "Fragment resumed!")
+        val newData = viewModel.getData()
+        if (newData != adapter.currentList)
+            refresh()
     }
 
     private fun loadUi() {

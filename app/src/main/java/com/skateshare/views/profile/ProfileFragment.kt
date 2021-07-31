@@ -19,6 +19,7 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentProfileBinding
 import com.skateshare.viewmodels.ProfileViewModel
 import com.skateshare.viewmodels.ProfileViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 
 class ProfileFragment : Fragment() {
 

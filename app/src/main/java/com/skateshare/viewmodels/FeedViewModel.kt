@@ -13,7 +13,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.skateshare.models.FeedItem
 import com.skateshare.models.LoadingItem
 import com.skateshare.models.Post
-import com.skateshare.models.Post.Companion.toPost
+import com.skateshare.models.toPost
 import com.skateshare.repostitories.DummyPostRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ class FeedViewModel : ViewModel() {
 
     // Event responses
     val numNewPosts: LiveData<Int> get() = _numNewPosts
-    val userDataCache = HashMap<String, List<String>>()
+    private val userDataCache = HashMap<String, HashMap<String, String>>()
     private val _dbResponse = MutableLiveData<RecyclerItemResponse>()
     val dbResponse: LiveData<RecyclerItemResponse?> get() = _dbResponse
 
@@ -52,13 +52,16 @@ class FeedViewModel : ViewModel() {
 
     private suspend fun queryToList(query: QuerySnapshot) : MutableList<Post> {
         val queryResponse = mutableListOf<Post>()
+        val start = System.currentTimeMillis()
         query.forEach { item ->
-            val post = item.toPost()
+            val post = item.toPost(userDataCache)
             if (post != null) {
                 queryResponse.add(post)
                 post.isCurrentUser = currentUid == post.posterId
             }
         }
+        val end = System.currentTimeMillis()
+        Log.i("1one", "${end - start}")
         queryResponse.reverse()
         return queryResponse
     }

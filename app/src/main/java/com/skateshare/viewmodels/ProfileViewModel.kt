@@ -22,7 +22,7 @@ class ProfileViewModel(private var profileUid: String?) : ViewModel() {
     var profileUserIsCurrentUser = false
 
     init {
-        if (profileUid == null || profileUid == currentUserUid) {
+        if (profileUid.isNullOrEmpty() || profileUid == currentUserUid) {
             profileUid = currentUserUid
             profileUserIsCurrentUser = true
         }

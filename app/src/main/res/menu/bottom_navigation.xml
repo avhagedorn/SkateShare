@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="@string/feed"
+        android:icon="@drawable/ic_baseline_rss_feed_24"
+        android:id="@+id/feedFragment"/>
+
+    <item
+        android:title="@string/routes"
+        android:icon="@drawable/ic_baseline_near_me_24"
+        android:id="@+id/routesFragment"/>
+
+    <item
+        android:title="@string/record"
+        android:icon="@drawable/ic_baseline_fiber_manual_record_24"
+        android:id="@+id/recordFragment"/>
+
+    <item
+        android:title="@string/profile"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:id="@+id/profileFragment"/>
+
+</menu>

@@ -9,7 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.models.Post
-import com.skateshare.models.Post.Companion.toPost
 import kotlinx.coroutines.tasks.await
 import org.w3c.dom.Document
 import java.util.*

@@ -64,7 +64,6 @@ class CreatePostFragment : Fragment() {
             response?.let {
                 if (response.success) {
                     Snackbar.make(requireView(), R.string.post_created, Snackbar.LENGTH_LONG).show()
-                    findNavController().navigate(CreatePostFragmentDirections.actionCreatePostFragmentToFeedFragment())
                 } else {
                     binding.postProgress.visibility = View.INVISIBLE
                     Snackbar.make(requireView(), response.status!!, Snackbar.LENGTH_LONG).show()
