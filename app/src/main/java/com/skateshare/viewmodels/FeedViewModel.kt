@@ -52,7 +52,6 @@ class FeedViewModel : ViewModel() {
 
     private suspend fun queryToList(query: QuerySnapshot) : MutableList<Post> {
         val queryResponse = mutableListOf<Post>()
-        val start = System.currentTimeMillis()
         query.forEach { item ->
             val post = item.toPost(userDataCache)
             if (post != null) {
@@ -60,7 +59,6 @@ class FeedViewModel : ViewModel() {
                 post.isCurrentUser = currentUid == post.posterId
             }
         }
-        val end = System.currentTimeMillis()
         queryResponse.reverse()
         return queryResponse
     }
