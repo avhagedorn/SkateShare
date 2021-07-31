@@ -5,8 +5,8 @@ import android.os.Handler
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -101,7 +101,8 @@ class FeedFragment : Fragment() {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 // adapter.itemCount - 2 enables the spinner to exist before the user
                 // reaches the bottom, resulting in a slightly smoother experience.
-                if (layoutManager.findLastCompletelyVisibleItemPosition() == adapter.itemCount - 2
+                val position = layoutManager.findLastCompletelyVisibleItemPosition()
+                if ((position == adapter.itemCount - 2 || position == adapter.itemCount - 1)
                     && !viewModel.isLoadingData) {
                     recyclerView.post {
                         val loadingList = viewModel.getData()
@@ -112,14 +113,6 @@ class FeedFragment : Fragment() {
                 }
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("1one", "Fragment resumed!")
-        val newData = viewModel.getData()
-        if (newData != adapter.currentList)
-            refresh()
     }
 
     private fun loadUi() {
@@ -153,7 +146,7 @@ class FeedFragment : Fragment() {
         super.onDestroyView()
         binding.refreshLayout.setOnRefreshListener(null)
         _binding = null
-        _recyclerView = null
+        _recyclerView = null        // LeakCanary leaks unless RecyclerView is manually nulled
         _adapter = null
     }
 }

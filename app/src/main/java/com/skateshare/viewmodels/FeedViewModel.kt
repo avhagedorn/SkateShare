@@ -61,7 +61,6 @@ class FeedViewModel : ViewModel() {
             }
         }
         val end = System.currentTimeMillis()
-        Log.i("1one", "${end - start}")
         queryResponse.reverse()
         return queryResponse
     }

@@ -55,6 +55,10 @@
         <action
             android:id="@+id/action_feedFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment"
+            app:popUpTo="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/createPostFragment"
@@ -63,7 +67,8 @@
         <action
             android:id="@+id/action_createPostFragment_to_feedFragment"
             app:destination="@id/feedFragment"
-            app:popUpTo="@id/feedFragment" />
+            app:popUpTo="@id/recordFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/recordFragment"
