@@ -7,7 +7,9 @@
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2584192439862543" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_delete_forever_24.xml" value="0.2584192439862543" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.2584192439862543" />
+        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_fiber_manual_record_24.xml" value="0.39166666666666666" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.2584192439862543" />
+        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_near_me_24.xml" value="0.39166666666666666" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.2584192439862543" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_baseline_texture_24.xml" value="0.2584192439862543" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2584192439862543" />
@@ -18,7 +20,7 @@
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/feed_post.xml" value="0.247766323024055" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_feed.xml" value="0.247766323024055" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_profile.xml" value="0.2503472222222222" />
-        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_record.xml" value="0.2503472222222222" />
+        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_record.xml" value="0.37552083333333336" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_routes.xml" value="0.2503472222222222" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_temp.xml" value="0.2503472222222222" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/menu/bottom_navigation.xml" value="0.2503472222222222" />

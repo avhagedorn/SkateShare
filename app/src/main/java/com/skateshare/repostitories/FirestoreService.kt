@@ -3,16 +3,12 @@ package com.skateshare.repostitories
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
-import com.google.firebase.storage.ktx.storageMetadata
 import com.skateshare.models.User
 import com.skateshare.models.User.Companion.newDefaultUser
 import com.skateshare.models.User.Companion.toUser
 import kotlinx.coroutines.tasks.await
-import java.util.*
 
 object FirestoreService {
 

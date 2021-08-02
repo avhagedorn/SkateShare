@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.misc
 
 open class EventResponse(val response: Int, var success: Boolean = false)
 open class ExceptionResponse(val status: String?, val success: Boolean)

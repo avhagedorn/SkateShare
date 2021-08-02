@@ -5,6 +5,11 @@
     android:id="@+id/main_nav"
     app:startDestination="@id/recordFragment">
 
+    <action
+        android:id="@+id/action_global_record_fragment"
+        app:destination="@id/recordFragment"
+        app:launchSingleTop="true" />
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.skateshare.views.profile.ProfileFragment"

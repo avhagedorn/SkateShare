@@ -1,6 +1,5 @@
 package com.skateshare.views.feed.recyclerviewcomponents
 
-import android.view.View
 import com.skateshare.models.Post
 
 class SleepNightListener(val clickListener: (uid: String) -> Unit,

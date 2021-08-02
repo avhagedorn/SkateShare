@@ -1,87 +1,153 @@
 package com.skateshare.views.record
 
 import android.Manifest
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.pm.PackageManager
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.MapView
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRecordBinding
+import com.skateshare.misc.TrackerUtil
+import com.skateshare.misc.TrackerUtil.REQUEST_CODE_LOCATION_PERMISSION
+import com.skateshare.misc.TrackerUtil.hasLocationPermissions
+import com.skateshare.services.BEGIN_TRACKING
+import com.skateshare.services.MapService
+import com.skateshare.services.STOP_TRACKING
+import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.EasyPermissions
 
-class RecordFragment : Fragment() {
+class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentRecordBinding? = null
     private val binding: FragmentRecordBinding get() = _binding!!
-
-    private var _mapsFragment: SupportMapFragment? = null
-    private val mapsFragment: SupportMapFragment get() = _mapsFragment!!
-
-    private var _locationProvider: FusedLocationProviderClient? = null
-    private val locationProvider get() = _locationProvider!!
-
+    private var map: GoogleMap? = null
+    private var mapView: MapView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_record, container, false)
-        _mapsFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
+        mapView = binding.mapView
+        mapView?.onCreate(savedInstanceState)
 
-        _locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-        mapsFragment.getMapAsync { googleMap ->
-            googleMap.setOnMapClickListener { latLng ->
-                Toast.makeText(requireContext(), latLng.toString(), Toast.LENGTH_SHORT).show()
-            }
+        mapView?.getMapAsync { providedMap ->
+            map = providedMap
         }
 
+        binding.beginRecording.setOnClickListener { startRecording() }
+        binding.stopRecording.setOnClickListener { stopRecording() }
 
-
-        listenForLocationRequest()
         return binding.root
     }
 
-    @SuppressLint("MissingPermission")
-    private fun listenForLocationRequest() {
-        binding.beginRecording.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireActivity().applicationContext,
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                val location = locationProvider.lastLocation.addOnCompleteListener { task ->
-                    Toast.makeText(requireContext(),
-                        "${task.result.latitude}, ${task.result.longitude}", Toast.LENGTH_SHORT).show()
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requestPermissions()
+    }
+
+    private fun requestPermissions() {
+        if (!TrackerUtil.hasLocationPermissions(requireContext())) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                EasyPermissions.requestPermissions(
+                    this,
+                    "Location permissions are required for recording and viewing routes!",
+                    REQUEST_CODE_LOCATION_PERMISSION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
             } else {
-                
+                EasyPermissions.requestPermissions(
+                    this,
+                    "Location permissions are required for recording and viewing routes!",
+                    REQUEST_CODE_LOCATION_PERMISSION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                )
             }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-        _locationProvider = null
-        mapsFragment.onDestroyView()
+    private fun startRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
+        intent.action = BEGIN_TRACKING
+        requireContext().startService(intent)
+        binding.beginRecording.visibility = View.GONE
+        binding.stopRecording.visibility = View.VISIBLE
     }
 
-    // SupportMapFragment is causing a memory leak. This still does not fix it.
-    // It appears this is a known issue, so unfortunately I can't do anything about it at this time.
+    private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
+        intent.action = STOP_TRACKING
+        requireContext().startService(intent)
+        binding.beginRecording.visibility = View.VISIBLE
+        binding.stopRecording.visibility = View.GONE
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView?.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView?.onStop()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView?.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView?.onResume()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView?.onLowMemory()
+    }
+
+    override fun onDestroyView() {
+        mapView?.onDestroy()
+        map = null
+        mapView = null         // MapView is nulled to prevent memory leak
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        mapsFragment.onDestroy()
-        _mapsFragment = null
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            AppSettingsDialog.Builder(this).build().show()
+        } else {
+            requestPermissions()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 }

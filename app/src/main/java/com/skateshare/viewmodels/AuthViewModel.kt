@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.R
+import com.skateshare.misc.EventResponse
+import com.skateshare.misc.ExceptionResponse
 import com.skateshare.repostitories.AuthRepository
 import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers

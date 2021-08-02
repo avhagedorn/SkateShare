@@ -2,9 +2,12 @@ package com.skateshare.viewmodels
 
 import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.*
-import com.bumptech.glide.Glide
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.skateshare.misc.ExceptionResponse
 import com.skateshare.models.User
 import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers

@@ -1,10 +1,6 @@
 package com.skateshare.models
 
-import android.util.Log
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.skateshare.repostitories.FirestoreService
 
 data class Post(
     val id: String,

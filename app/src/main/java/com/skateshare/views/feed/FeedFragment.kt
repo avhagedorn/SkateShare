@@ -1,12 +1,10 @@
 package com.skateshare.views.feed
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,7 +18,6 @@ import com.skateshare.models.LoadingItem
 import com.skateshare.viewmodels.FeedViewModel
 import com.skateshare.views.feed.recyclerviewcomponents.FeedAdapter
 import com.skateshare.views.feed.recyclerviewcomponents.SleepNightListener
-import java.util.*
 
 class FeedFragment : Fragment() {
 

@@ -1,15 +1,13 @@
 package com.skateshare.viewmodels
 
-import com.google.type.Date
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QuerySnapshot
+import com.skateshare.misc.RecyclerItemResponse
 import com.skateshare.models.FeedItem
 import com.skateshare.models.LoadingItem
 import com.skateshare.models.Post
