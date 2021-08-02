@@ -4,22 +4,23 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRecordBinding
 import com.skateshare.misc.TrackerUtil
 import com.skateshare.misc.TrackerUtil.REQUEST_CODE_LOCATION_PERMISSION
-import com.skateshare.misc.TrackerUtil.hasLocationPermissions
-import com.skateshare.services.BEGIN_TRACKING
-import com.skateshare.services.MapService
-import com.skateshare.services.STOP_TRACKING
+import com.skateshare.services.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -29,6 +30,9 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private val binding: FragmentRecordBinding get() = _binding!!
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
+
+    private var isTracking = false
+    private var route = mutableListOf<LatLng>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +44,8 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         mapView?.getMapAsync { providedMap ->
             map = providedMap
+            map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
+            addAllLocations()
         }
 
         binding.beginRecording.setOnClickListener { startRecording() }
@@ -51,6 +57,49 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissions()
+        observeService()
+    }
+
+    private fun updateRoute(isTracking: Boolean) {
+        this.isTracking = isTracking
+    }
+
+    private fun observeService() {
+        MapService.isTracking.observe(viewLifecycleOwner, Observer { newStatus ->
+            updateRoute(newStatus)
+        })
+
+        MapService.routeData.observe(viewLifecycleOwner, Observer { polyline ->
+            route = polyline
+            addLastLocation()
+            panCameraToLastLocation()
+        })
+    }
+
+    private fun addAllLocations() {
+        val polylineOptions = PolylineOptions()
+            .color(POLYLINE_COLOR)
+            .width(POLYLINE_WIDTH)
+            .addAll(route)
+        map?.addPolyline(polylineOptions)
+    }
+
+    private fun addLastLocation() {
+        if (route.size > 1) {
+            val previousLatLng = route[route.size - 2]
+            val newLatLng = route.last()
+            val polylineOptions = PolylineOptions()
+                .color(POLYLINE_COLOR)
+                .width(POLYLINE_WIDTH)
+                .add(previousLatLng)
+                .add(newLatLng)
+            map?.addPolyline(polylineOptions)
+        }
+    }
+
+    private fun panCameraToLastLocation() {
+        if (route.isNotEmpty())
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(route.last(), MAP_ZOOM))
     }
 
     private fun requestPermissions() {
@@ -76,16 +125,20 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun startRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
-        intent.action = BEGIN_TRACKING
+    private fun sendCommand(command: String) =
+            Intent(requireContext(), MapService::class.java).also { intent ->
+        intent.action = command
         requireContext().startService(intent)
+    }
+
+    private fun startRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
+        sendCommand(BEGIN_TRACKING)
         binding.beginRecording.visibility = View.GONE
         binding.stopRecording.visibility = View.VISIBLE
     }
 
     private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
-        intent.action = STOP_TRACKING
-        requireContext().startService(intent)
+        sendCommand(STOP_TRACKING)
         binding.beginRecording.visibility = View.VISIBLE
         binding.stopRecording.visibility = View.GONE
     }

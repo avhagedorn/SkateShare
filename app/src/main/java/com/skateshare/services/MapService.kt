@@ -17,7 +17,6 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,7 +28,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.skateshare.R
 import com.skateshare.misc.TrackerUtil.hasLocationPermissions
 import com.skateshare.views.profile.ProfileActivity
-import java.util.*
 
 typealias Polyline = MutableList<LatLng>
 
@@ -38,10 +36,10 @@ class MapService : LifecycleService() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     companion object {
-        private val routeData = MutableLiveData<Polyline>()
-        private val speedData = MutableLiveData<Float>()    // Speed in m/s
-        private val timeData = MutableLiveData<Long>()      // Time in ms since start
-        private val isTracking = MutableLiveData<Boolean>()
+        val routeData = MutableLiveData<Polyline>()
+        val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
+        val elevationData = MutableLiveData<MutableList<Double>>()      // Altitude in m
+        val isTracking = MutableLiveData<Boolean>()
     }
 
     private val locationCallback = object: LocationCallback() {
@@ -50,6 +48,8 @@ class MapService : LifecycleService() {
                 result.locations.let { locations ->
                     for (location in locations) {
                         addLocation(location)
+                        addAltitude(location.altitude)
+                        addSpeed(location.speed)
                     }
                 }
             }
@@ -128,6 +128,20 @@ class MapService : LifecycleService() {
                 add(newLatLng)
                 routeData.postValue(this)
             }
+        }
+    }
+
+    private fun addAltitude(altitude: Double) {
+        elevationData.value?.apply {
+            add(altitude)
+            elevationData.postValue(this)
+        }
+    }
+
+    private fun addSpeed(speed: Float) {
+        speedData.value?.apply {
+            add(speed)
+            speedData.postValue(this)
         }
     }
 
