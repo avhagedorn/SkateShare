@@ -26,6 +26,6 @@ object AppModule  {
 
     @Singleton
     @Provides
-    fun provideLocalRoutesDao(db: LocalRoutesDatabase) = null //db.getDao()
+    fun provideLocalRoutesDao(db: LocalRoutesDatabase) = db.localRoutesDao
 
 }

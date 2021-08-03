@@ -75,6 +75,10 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             addLastLocation()
             panCameraToLastLocation()
         })
+
+        MapService.elapsedMilliseconds.observe(viewLifecycleOwner, Observer { time ->
+            binding.displayDuration.text = MapHelper.formatTime(time, false)
+        })
     }
 
     private fun addAllLocations() {

@@ -14,7 +14,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.skateshare.R
+import com.skateshare.db.LocalRoutesDao
 import com.skateshare.services.SHOW_RECORD_FRAGMENT
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 // TODO: Make ProfileActivity into a "MainActivity" class for all app fragments after authentication
 class ProfileActivity : AppCompatActivity() {

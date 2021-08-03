@@ -28,6 +28,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.skateshare.R
 import com.skateshare.misc.TrackerUtil.hasLocationPermissions
 import com.skateshare.views.profile.ProfileActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 typealias Polyline = MutableList<LatLng>
 
@@ -35,7 +39,13 @@ class MapService : LifecycleService() {
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    private val elapsedSeconds = MutableLiveData<Long>()
+    private var timerEnabled = false
+    private var startTime = 0L
+    private var prevSecondTime = 0L
+
     companion object {
+        val elapsedMilliseconds = MutableLiveData<Long>()
         val routeData = MutableLiveData<Polyline>()
         val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
         val elevationData = MutableLiveData<MutableList<Double>>()      // Altitude in m
@@ -68,6 +78,8 @@ class MapService : LifecycleService() {
     private fun initializeLiveData() {
         routeData.postValue(mutableListOf<LatLng>())
         isTracking.postValue(true)
+        elapsedMilliseconds.postValue(0L)
+        elapsedSeconds.postValue(0L)
     }
 
     // Handles communication with fragment intents
@@ -75,13 +87,30 @@ class MapService : LifecycleService() {
         when (intent?.action) {
             BEGIN_TRACKING -> {
                 startForegroundService()
+                startTimer()
             }
             STOP_TRACKING -> {
-                Log.i("1one", "Tracking stopped!")
-                isTracking.postValue(false)
+                stopForegroundService()
             }
         }
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun startTimer() {
+        startTime = System.currentTimeMillis()
+        timerEnabled = true
+
+        CoroutineScope(Dispatchers.Main).launch {
+            while (isTracking.value!!) {
+                val routeTime = System.currentTimeMillis() - startTime
+                elapsedMilliseconds.postValue(routeTime)
+                if (routeTime >= 1000L + prevSecondTime) {
+                    elapsedSeconds.postValue(elapsedSeconds.value!! + 1)
+                    prevSecondTime = routeTime
+                }
+                delay(TIMER_UPDATE_INTERVAL)
+            }
+        }
     }
 
     // Updates tracking status and creates route recording notification
@@ -100,6 +129,12 @@ class MapService : LifecycleService() {
             .setContentIntent(getActivityPendingIntent())
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    // Stops recording route, TODO: Save route data
+    private fun stopForegroundService() {
+        isTracking.postValue(false)
+
     }
 
     // Updates route recording status
