@@ -11,7 +11,7 @@ import com.skateshare.models.User
 import com.skateshare.models.User.Companion.newDefaultUser
 import com.skateshare.models.User.Companion.toUser
 import kotlinx.coroutines.tasks.await
-import java.util.HashMap
+import java.util.*
 import javax.inject.Singleton
 
 @Singleton

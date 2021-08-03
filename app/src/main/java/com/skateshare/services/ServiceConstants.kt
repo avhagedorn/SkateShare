@@ -20,3 +20,6 @@ const val TIMER_UPDATE_INTERVAL = 50L
 val POLYLINE_COLOR = Color.rgb(244, 67, 54)
 const val POLYLINE_WIDTH = 10f
 const val MAP_ZOOM = 17f
+
+const val UNIT_MILES = "mi"
+const val UNIT_KILOMETERS = "km"

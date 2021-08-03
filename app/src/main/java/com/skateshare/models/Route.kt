@@ -3,11 +3,6 @@ package com.skateshare.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.google.type.LatLng
-import java.security.Timestamp
 
 @Entity(tableName = "my_routes")
 data class Route(
@@ -17,11 +12,8 @@ data class Route(
     @ColumnInfo(name = "start_time_millis")
     val time_start : Long = 0L,
 
-    @ColumnInfo(name = "end_time_millis")
-    var time_stop : Long = 0L,
-
     @ColumnInfo(name="duration_millis")
-    var duration : Long = time_stop - time_start,
+    var duration : Long = 0L,
 
     @ColumnInfo(name = "length_mi")
     var length_mi : Double = 0.0,
@@ -42,7 +34,7 @@ data class Route(
     var altitude : MutableList<Double>,
 
     @ColumnInfo(name = "speed")
-    var speed : MutableList<Double>,
+    var speed : MutableList<Float>,
 
     @ColumnInfo(name = "image")
     var image_url : String? = null

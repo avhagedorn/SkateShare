@@ -26,30 +26,43 @@ import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.skateshare.R
+import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.TrackerUtil.hasLocationPermissions
+import com.skateshare.models.Route
+import com.skateshare.services.MapHelper.formatTime
+import com.skateshare.services.MapHelper.metersToStandardUnits
 import com.skateshare.views.profile.ProfileActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 typealias Polyline = MutableList<LatLng>
 
+@AndroidEntryPoint
 class MapService : LifecycleService() {
 
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    @Inject lateinit var pendingIntent: PendingIntent
+    @Inject lateinit var notificationBuilder: NotificationCompat.Builder
+    @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    @Inject lateinit var localRoutesDao: LocalRoutesDao
 
     private val elapsedSeconds = MutableLiveData<Long>()
     private var timerEnabled = false
     private var startTime = 0L
     private var prevSecondTime = 0L
+    private lateinit var lastLocation: Location
 
     companion object {
+        val distanceMeters = MutableLiveData<Double>()
         val elapsedMilliseconds = MutableLiveData<Long>()
         val routeData = MutableLiveData<Polyline>()
         val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
         val elevationData = MutableLiveData<MutableList<Double>>()      // Altitude in m
         val isTracking = MutableLiveData<Boolean>()
+        val errorMessage = MutableLiveData<String?>()
     }
 
     private val locationCallback = object: LocationCallback() {
@@ -57,6 +70,7 @@ class MapService : LifecycleService() {
             if (isTracking.value!!) {
                 result.locations.let { locations ->
                     for (location in locations) {
+                        addDistance(location)
                         addLocation(location)
                         addAltitude(location.altitude)
                         addSpeed(location.speed)
@@ -77,9 +91,13 @@ class MapService : LifecycleService() {
 
     private fun initializeLiveData() {
         routeData.postValue(mutableListOf<LatLng>())
+        speedData.postValue(mutableListOf<Float>())
+        elevationData.postValue(mutableListOf<Double>())
         isTracking.postValue(true)
         elapsedMilliseconds.postValue(0L)
         elapsedSeconds.postValue(0L)
+        distanceMeters.postValue(0.0)
+        errorMessage.postValue(null)
     }
 
     // Handles communication with fragment intents
@@ -119,22 +137,65 @@ class MapService : LifecycleService() {
         isTracking.postValue(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel(notificationManager)
-
-        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setAutoCancel(false)
-            .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_baseline_add_24) // TODO: Add custom icon
-            .setContentTitle("SkateShare")
-            .setContentText("00:00:00")
-            .setContentIntent(getActivityPendingIntent())
-
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+
+        elapsedSeconds.observe(this, Observer { time ->
+            time?.let{
+                val notification = notificationBuilder
+                    .setContentText(formatTime(time * 1000L))
+                notificationManager.notify(NOTIFICATION_ID, notification.build())
+            }
+        })
     }
 
-    // Stops recording route, TODO: Save route data
+    // Stops recording route
     private fun stopForegroundService() {
         isTracking.postValue(false)
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(NOTIFICATION_ID)
 
+        val notification = notificationBuilder
+            .clearActions()
+            .setContentText("Processing route...")
+            .setProgress(100, 5, false)
+        notificationManager.notify(NOTIFICATION_ID, notification.build())
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                saveRoute()
+            } catch (e: Exception) {
+                Log.i("1one", e.message.toString())
+            }
+            stopForeground(false)
+        }
+    }
+
+    private suspend fun saveRoute() {
+        val lats = mutableListOf<Double>()
+        val lngs = mutableListOf<Double>()
+
+        val startTime = System.currentTimeMillis()
+
+        routeData.value!!.forEach {
+            lats.add(it.latitude)
+            lngs.add(it.longitude)
+        }
+        val distances = metersToStandardUnits(distanceMeters.value!!)
+
+        localRoutesDao.insert(
+            Route(
+                time_start = startTime,
+                duration = System.currentTimeMillis() - startTime,
+                length_km = distances[UNIT_KILOMETERS]!!,
+                length_mi = distances[UNIT_MILES]!!,
+                altitude = elevationData.value!!,
+                speed = speedData.value!!,
+                lat_path = lats,
+                lng_path = lngs
+            )
+        )
+        Log.i("1one", localRoutesDao.routesByDate(10, 0).toString())
+        Log.i("1one", (System.currentTimeMillis() - startTime).toString())
     }
 
     // Updates route recording status
@@ -180,15 +241,12 @@ class MapService : LifecycleService() {
         }
     }
 
-    // Sends the landing activity an intent to navigate to the route recording fragment
-    private fun getActivityPendingIntent() = PendingIntent.getActivity(
-        this,
-        0,
-        Intent(this, ProfileActivity::class.java).also {
-            it.action = SHOW_RECORD_FRAGMENT
-        },
-        FLAG_UPDATE_CURRENT
-    )
+    private fun addDistance(currentLocation: Location) {
+        if (routeData.value!!.isNotEmpty())
+            distanceMeters.postValue(
+                distanceMeters.value!! + currentLocation.distanceTo(lastLocation))
+        lastLocation = currentLocation
+    }
 
     private fun createNotificationChannel(notificationManager: NotificationManager) {
         val channel = NotificationChannel(

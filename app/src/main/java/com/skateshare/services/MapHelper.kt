@@ -19,4 +19,10 @@ object MapHelper {
                 "${if (seconds < 10) "0" else ""}$seconds:" +
                 "${if (millis < 10) "0" else ""}$millis"
     }
+
+    fun metersToStandardUnits(meters: Double) =
+        hashMapOf<String, Double>(
+            UNIT_MILES to (meters / 1609.344),
+            UNIT_KILOMETERS to (meters / 1000.0)
+    )
 }

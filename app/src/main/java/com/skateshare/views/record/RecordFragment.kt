@@ -63,6 +63,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun updateRoute(isTracking: Boolean) {
         this.isTracking = isTracking
+        if (isTracking) showStopButton() else showStartButton()
     }
 
     private fun observeService() {
