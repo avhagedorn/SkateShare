@@ -11,10 +11,10 @@ const val NOTIFICATION_ID = 1
 
 const val SHOW_RECORD_FRAGMENT = "SHOW_RECORD_FRAGMENT"
 
-const val LOGGING_INTERVAL = 5000L
-const val FASTEST_INTERVAL = 3000L
+const val LOGGING_INTERVAL = 2000L
+const val FASTEST_INTERVAL = 1500L
 
 // Same color as red_500 in colors.xml
 val POLYLINE_COLOR = Color.rgb(244, 67, 54)
-const val POLYLINE_WIDTH = 8f
+const val POLYLINE_WIDTH = 10f
 const val MAP_ZOOM = 17f

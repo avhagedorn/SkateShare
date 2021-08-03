@@ -12,7 +12,7 @@ import com.skateshare.models.FeedItem
 import com.skateshare.models.LoadingItem
 import com.skateshare.models.Post
 import com.skateshare.models.toPost
-import com.skateshare.repostitories.DummyPostRepository
+import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -38,7 +38,7 @@ class FeedViewModel : ViewModel() {
     fun fetchPosts() {
         isLoadingData = true
         viewModelScope.launch(Dispatchers.IO) {
-            val newPosts = queryToList(query = DummyPostRepository.getPosts(end))
+            val newPosts = queryToList(query = FirestoreService.getPosts(end))
             if (newPosts.isNotEmpty()) {
                 totalPosts.addAll(newPosts)
                 end = newPosts[newPosts.size - 1].datePosted
@@ -64,7 +64,7 @@ class FeedViewModel : ViewModel() {
     fun deletePost(id: String, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                DummyPostRepository.deletePost(id)
+                FirestoreService.deletePost(id)
                 totalPosts.removeAt(position)
                 _dbResponse.postValue(RecyclerItemResponse(position, null, true))
             } catch (e: Exception) {

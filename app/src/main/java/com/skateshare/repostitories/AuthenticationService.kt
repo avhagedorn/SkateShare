@@ -4,13 +4,13 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 
-class AuthRepository {
+object AuthenticationService {
 
     suspend fun register(email: String, password: String) {
         try {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()
         } catch(e: Exception){
-            Log.d("AuthRepository", e.toString())
+            Log.d("AuthenticationService", e.toString())
             throw e
         }
     }
@@ -19,7 +19,7 @@ class AuthRepository {
         try {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
         } catch(e: Exception){
-            Log.d("AuthRepository", e.toString())
+            Log.d("AuthenticationService", e.toString())
             throw e
         }
     }
@@ -35,7 +35,7 @@ class AuthRepository {
             user.delete()
         }
         catch (e: Exception) {
-            Log.d("AuthRepository", e.toString())
+            Log.d("AuthenticationService", e.toString())
         }
 
     }

@@ -32,7 +32,8 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private var mapView: MapView? = null
 
     private var isTracking = false
-    private var route = mutableListOf<LatLng>()
+    private var _route: MutableList<LatLng>? = mutableListOf<LatLng>()
+    private val route: MutableList<LatLng> get() = _route!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +71,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         })
 
         MapService.routeData.observe(viewLifecycleOwner, Observer { polyline ->
-            route = polyline
+            _route = polyline
             addLastLocation()
             panCameraToLastLocation()
         })
@@ -133,12 +134,20 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun startRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
         sendCommand(BEGIN_TRACKING)
-        binding.beginRecording.visibility = View.GONE
-        binding.stopRecording.visibility = View.VISIBLE
+        showStopButton()
     }
 
     private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
         sendCommand(STOP_TRACKING)
+        showStartButton()
+    }
+
+    private fun showStopButton() {
+        binding.beginRecording.visibility = View.GONE
+        binding.stopRecording.visibility = View.VISIBLE
+    }
+
+    private fun showStartButton() {
         binding.beginRecording.visibility = View.VISIBLE
         binding.stopRecording.visibility = View.GONE
     }
@@ -166,6 +175,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onResume() {
         super.onResume()
         mapView?.onResume()
+        if (isTracking) showStopButton() else showStartButton()
     }
 
     override fun onLowMemory() {
@@ -177,12 +187,9 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         mapView?.onDestroy()
         map = null
         mapView = null         // MapView is nulled to prevent memory leak
+        _route = null
         _binding = null
         super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}

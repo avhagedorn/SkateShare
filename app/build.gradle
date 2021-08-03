@@ -6,6 +6,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -101,4 +102,16 @@ dependencies {
 
     // EasyPermissions
     implementation 'pub.devrel:easypermissions:3.0.0'
+
+    // Dagger-Hilt
+    implementation 'com.google.dagger:hilt-android:2.38.1'
+    kapt 'com.google.dagger:hilt-compiler:2.38.1'
+
+    // Room
+    implementation 'androidx.room:room-runtime:2.3.0'
+}
+
+kapt {
+    generateStubs = true
+    correctErrorTypes true
 }

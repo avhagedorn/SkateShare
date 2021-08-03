@@ -7,14 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.skateshare.R
 import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
-import com.skateshare.repostitories.AuthRepository
+import com.skateshare.repostitories.AuthenticationService
 import com.skateshare.repostitories.FirestoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
-    private val authRepository = AuthRepository()
     private val _loginException = MutableLiveData<ExceptionResponse>()
     val loginException: LiveData<ExceptionResponse> get() = _loginException
 
@@ -26,7 +25,7 @@ class AuthViewModel : ViewModel() {
         if (verification.success) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    authRepository.register(email, password)
+                    AuthenticationService.register(email, password)
                     FirestoreService.setUserData(
                         hashMapOf(
                             "username" to username,
@@ -52,7 +51,7 @@ class AuthViewModel : ViewModel() {
         if (verification.success)
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    authRepository.login(email, password)
+                    AuthenticationService.login(email, password)
                     _loginException.postValue(ExceptionResponse(null, true))
                 } catch (e: Exception) {
                     _loginException.postValue(ExceptionResponse(e.message, true))
