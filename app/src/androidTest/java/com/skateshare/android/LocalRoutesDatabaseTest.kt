@@ -1,6 +1,7 @@
 package com.skateshare.android
 
 import android.util.Log
+import androidx.room.CoroutinesRoom
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -10,6 +11,8 @@ import com.skateshare.db.LocalRoutesDatabase
 import com.skateshare.models.Route
 import com.skateshare.services.MapService
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -65,7 +68,7 @@ class LocalRoutesDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun insertRoute() {
+    fun insertRoute() = runBlocking {
         for (i in 0 until 5) {
             val rawData = generateDummyData()
             val rawRoute = rawData["rawRoute"] as MutableList<LatLng>
@@ -100,7 +103,7 @@ class LocalRoutesDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun totalRidingDuration() {
+    fun totalRidingDuration() = runBlocking {
         val iterations = 5
         var targetDuration = 0L
         for (i in 0 until iterations) {
@@ -136,7 +139,7 @@ class LocalRoutesDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun queryRoutesByStartTime() {
+    fun queryRoutesByStartTime() = runBlocking {
         var startTime = 1000L
         for (i in 0 until 15) {
             val rawData = generateDummyData()
@@ -169,7 +172,7 @@ class LocalRoutesDatabaseTest {
         val query = localRoutesDao.routesByDate(10, 0)
 
         assertEquals(query.size, 10)
-        assertEquals(query.last().time_start, 10000L)
+        assertEquals(query.last().time_start, 6000L)
         localRoutesDao.deleteALl()
     }
 }

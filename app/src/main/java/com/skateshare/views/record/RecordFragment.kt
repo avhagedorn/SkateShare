@@ -1,12 +1,15 @@
 package com.skateshare.views.record
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.graphics.Camera
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.skateshare.R
@@ -21,6 +25,10 @@ import com.skateshare.databinding.FragmentRecordBinding
 import com.skateshare.misc.TrackerUtil
 import com.skateshare.misc.TrackerUtil.REQUEST_CODE_LOCATION_PERMISSION
 import com.skateshare.services.*
+import com.skateshare.services.MapHelper.formatTime
+import com.skateshare.services.MapHelper.metersToFormattedUnits
+import com.skateshare.services.MapHelper.metersToStandardSpeed
+import com.skateshare.services.MapHelper.metersToStandardUnits
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -28,6 +36,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentRecordBinding? = null
     private val binding: FragmentRecordBinding get() = _binding!!
+    private var usersUnits: String? = null
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
 
@@ -50,7 +59,8 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
 
         binding.beginRecording.setOnClickListener { startRecording() }
-        binding.stopRecording.setOnClickListener { stopRecording() }
+        binding.stopRecording.setOnClickListener { confirmStopRecording() }
+        observeService()
 
         return binding.root
     }
@@ -58,12 +68,23 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissions()
-        observeService()
+        initializeUnits()
+    }
+
+    private fun initializeUnits() {
+        usersUnits = requireContext()
+            .getSharedPreferences("userData", Context.MODE_PRIVATE)
+            .getString("units", UNIT_MILES)
     }
 
     private fun updateRoute(isTracking: Boolean) {
         this.isTracking = isTracking
-        if (isTracking) showStopButton() else showStartButton()
+        if (isTracking) {
+            showStopButton()
+        } else {
+            showStartButton()
+            map?.clear()
+        }
     }
 
     private fun observeService() {
@@ -78,7 +99,20 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         })
 
         MapService.elapsedMilliseconds.observe(viewLifecycleOwner, Observer { time ->
-            binding.displayDuration.text = MapHelper.formatTime(time, false)
+            binding.displayDuration.text = formatTime(time, false)
+        })
+
+        MapService.speedData.observe(viewLifecycleOwner, Observer { metersPerSecond ->
+            usersUnits?.let { units ->
+                if (metersPerSecond.isNotEmpty())
+                    binding.displaySpeed.text = metersToStandardSpeed(metersPerSecond.last(), units)
+            }
+        })
+
+        MapService.distanceMeters.observe(viewLifecycleOwner, Observer { meters ->
+            usersUnits?.let { units ->
+                binding.displayLength.text = metersToFormattedUnits(meters, units)
+            }
         })
     }
 
@@ -131,6 +165,22 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    private fun frameRoute() {
+        val bounds = LatLngBounds.builder()
+        for (coordinate in route) {
+            bounds.include(coordinate)
+        }
+
+        map?.moveCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds.build(),
+                binding.mapView.width,
+                binding.mapView.height,
+                (binding.mapView.height*0.05).toInt()
+            )
+        )
+    }
+
     private fun sendCommand(command: String) =
             Intent(requireContext(), MapService::class.java).also { intent ->
         intent.action = command
@@ -142,9 +192,18 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         showStopButton()
     }
 
+    private fun confirmStopRecording() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.finish_recording_prompt)
+            .setMessage(R.string.finish_recording_warning)
+            .setPositiveButton(R.string.finish) {_,_ -> stopRecording() }
+            .setNegativeButton(R.string.cancel) {_,_-> /* Alert dismissed */ }
+            .show()
+    }
+
     private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
         sendCommand(STOP_TRACKING)
-        showStartButton()
+        showStartState()
     }
 
     private fun showStopButton() {
@@ -155,6 +214,14 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun showStartButton() {
         binding.beginRecording.visibility = View.VISIBLE
         binding.stopRecording.visibility = View.GONE
+    }
+
+    private fun showStartState() {
+        showStartButton()
+
+        binding.displayDuration.text = getString(R.string.route_start_time)
+        binding.displayLength.text = getString(R.string.route_start_distance)
+        binding.displaySpeed.text = getString(R.string.route_start_speed)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -9,7 +9,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -156,7 +155,7 @@ class MapService : LifecycleService() {
 
         val notification = notificationBuilder
             .clearActions()
-            .setContentText("Processing route...")
+            .setContentText(getString(R.string.start_processing))
             .setProgress(100, 5, false)
         notificationManager.notify(NOTIFICATION_ID, notification.build())
 
@@ -171,17 +170,58 @@ class MapService : LifecycleService() {
     }
 
     private suspend fun saveRoute() {
-        val lats = mutableListOf<Double>()
-        val lngs = mutableListOf<Double>()
+        localRoutesDao.deleteALl() // TODO: THIS IS TEMPORARY FOR TESTING, REMOVE THIS SOON
+        Log.i("1one", localRoutesDao.routesByDate(10, 0).first().lat_path.size.toString())
+        Log.i("1one", localRoutesDao.routesByDate(10, 0).first().lat_path.toString())
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val startTime = System.currentTimeMillis()
+
+        val lats = mutableListOf<Double>()
+        val lngs = mutableListOf<Double>()
+        updateNotification(notificationManager, R.string.converting_coordinates, 15)
 
         routeData.value!!.forEach {
             lats.add(it.latitude)
             lngs.add(it.longitude)
         }
-        val distances = metersToStandardUnits(distanceMeters.value!!)
 
+        val coordTime = System.currentTimeMillis()
+
+        updateNotification(notificationManager, R.string.smoothing_route, 45)
+        val newLats = bSpline(lats)
+        val newLngs = bSpline(lngs)
+        lats.clear()
+        lngs.clear()
+
+        val smoothingTime = System.currentTimeMillis()
+
+        updateNotification(notificationManager, R.string.saving_to_database, 75)
+        insertRoute(newLats, newLngs)
+
+        val insertTime = System.currentTimeMillis()
+
+        val postedRoute = localRoutesDao.routesByDate(10, 0).first()
+
+        Log.i("1one", "Coordinate conversion time: ${coordTime - startTime}ms")
+        Log.i("1one", "B-Spline smoothing time: ${smoothingTime - startTime}ms")
+        Log.i("1one", "Database insertion time: ${insertTime - startTime}ms")
+        Log.i("1one", "Total time: ${System.currentTimeMillis() - startTime}ms")
+
+        Log.i("1one", postedRoute.toString())
+        Log.i("1one", postedRoute.speed.size.toString())
+    }
+
+    private fun updateNotification(manager: NotificationManager, messageId: Int, progress: Int) {
+        val notification = notificationBuilder
+            .setContentText(getString(messageId))
+            .setProgress(100, progress, false)
+        manager.notify(NOTIFICATION_ID, notification.build())
+    }
+
+    private suspend fun insertRoute(lats: MutableList<Double>, lngs: MutableList<Double>) {
+        val distances = metersToStandardUnits(distanceMeters.value!!)
         localRoutesDao.insert(
             Route(
                 time_start = startTime,
@@ -194,8 +234,6 @@ class MapService : LifecycleService() {
                 lng_path = lngs
             )
         )
-        Log.i("1one", localRoutesDao.routesByDate(10, 0).toString())
-        Log.i("1one", (System.currentTimeMillis() - startTime).toString())
     }
 
     // Updates route recording status

@@ -24,5 +24,19 @@ object MapHelper {
         hashMapOf<String, Double>(
             UNIT_MILES to (meters / 1609.344),
             UNIT_KILOMETERS to (meters / 1000.0)
-    )
+        )
+
+    fun metersToStandardSpeed(meters: Float, unit: String) =
+        when (unit) {
+            UNIT_KILOMETERS -> "%.1f km/hr".format(meters * 3.6)
+            UNIT_MILES -> "%.1f mi/hr".format(meters * 2.23694)
+            else -> "UNDEFINED"
+        }
+
+    fun metersToFormattedUnits(meters: Double, unit: String) =
+        when (unit) {
+            UNIT_KILOMETERS -> "%.1f km".format(meters*1000)
+            UNIT_MILES -> "%.1f mi".format(meters/1609.344)
+            else -> "UNDEFINED"
+        }
 }

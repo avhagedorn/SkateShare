@@ -36,7 +36,7 @@
 
     <string name="edit_success">Success! Changes will take effect on refresh!</string>
     <string name="title_activity_feed">FeedActivity</string>
-    <!-- Strings used for fragments for navigation -->
+
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
@@ -64,4 +64,14 @@
     <string name="begin">Begin</string>
     <string name="finish">Finish</string>
 
+    <string name="start_processing">Starting route processing…</string>
+    <string name="converting_coordinates">Converting coordinates…</string>
+    <string name="smoothing_route">Smoothing route…</string>
+    <string name="saving_to_database">Saving route to database…</string>
+
+    <string name="finish_recording_prompt">End Route</string>
+    <string name="finish_recording_warning">Ended routes cannot be resumed!</string>
+    <string name="route_start_time">00:00:00</string>
+    <string name="route_start_distance">---</string>
+    <string name="route_start_speed">---</string>
 </resources>
