@@ -5,23 +5,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.data.LineDataSet
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRecordBinding
 import com.skateshare.databinding.FragmentRoutesBinding
 import com.skateshare.db.LocalRoutesDao
+import com.skateshare.misc.toLatLng
+import com.skateshare.models.Route
 import com.skateshare.services.POLYLINE_COLOR
 import com.skateshare.services.POLYLINE_WIDTH
+import com.skateshare.viewmodels.RoutesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,6 +42,8 @@ class RoutesFragment : Fragment() {
 
     private var _binding: FragmentRoutesBinding? = null
     private val binding: FragmentRoutesBinding get() = _binding!!
+    private lateinit var viewModel: RoutesViewModel
+    private lateinit var route: Route
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
 
@@ -46,6 +55,7 @@ class RoutesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_routes, container, false)
+        viewModel = ViewModelProvider(this).get(RoutesViewModel::class.java)
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
 
@@ -56,27 +66,38 @@ class RoutesFragment : Fragment() {
 
         displayLastRoute()
         routes.observe(viewLifecycleOwner, Observer {
-            Log.i("1one", "wtf?")
-            Log.i("1one", it.size.toString())
-            addPolylines(it)
+            if (it.isNotEmpty()) {
+                addPolylines(it)
+                frameRoute()
+            }
+        })
+
+        binding.share.setOnClickListener {
+            viewModel.publishRouteToFirestore(route)
+        }
+
+        viewModel.firebaseResponse.observe(viewLifecycleOwner, Observer { response ->
+            if (response.status != null) {
+                Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()
+                viewModel.resetResponse()
+            }
         })
 
         return binding.root
     }
 
     private fun displayLastRoute() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val route = localRoutesDao.routesByDate(1, 0).first()
-            routes.postValue(toLatLng(route.lat_path, route.lng_path))
+        try {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val query = localRoutesDao.routesByDate(1, 0)
+                if (query.isNotEmpty()) {
+                    route = query.first()
+                    routes.postValue(toLatLng(route.lat_path, route.lng_path))
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun toLatLng(lats: List<Double>, lngs: List<Double>) : List<LatLng> {
-        val coordinates = mutableListOf<LatLng>()
-        for (i in lats.indices) {
-            coordinates.add(LatLng(lats[i], lngs[i]))
-        }
-        return coordinates
     }
 
     private fun addPolylines(coordinates: List<LatLng>) {
@@ -87,6 +108,24 @@ class RoutesFragment : Fragment() {
                 .add(coordinates[i-1])
                 .add(coordinates[i])
             map?.addPolyline(polylineOptions)
+        }
+    }
+
+    private fun frameRoute() {
+        val bounds = LatLngBounds.builder()
+        routes.value?.let { coordinates ->
+            for (coordinate in coordinates) {
+                bounds.include(coordinate)
+            }
+
+            map?.moveCamera(
+                CameraUpdateFactory.newLatLngBounds(
+                    bounds.build(),
+                    binding.mapView.width,
+                    binding.mapView.height,
+                    (binding.mapView.height*0.05).toInt()
+                )
+            )
         }
     }
 

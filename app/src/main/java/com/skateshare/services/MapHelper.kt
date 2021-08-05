@@ -39,4 +39,10 @@ object MapHelper {
             UNIT_MILES -> "%.1f mi".format(meters/1609.344)
             else -> "UNDEFINED"
         }
+
+    fun calculateAvgSpeed(meters: Double, duration: Long) =
+        hashMapOf(
+            UNIT_MILES to (meters * 2236.936 / duration),
+            UNIT_KILOMETERS to (meters * 3600 / duration)
+        )
 }

@@ -21,8 +21,11 @@ data class Route(
     @ColumnInfo(name = "length_km")
     var length_km : Double = 0.0,
 
-    @ColumnInfo(name = "avg_speed")
-    var avg_speed: Double = 0.0,
+    @ColumnInfo(name = "avg_speed_km")
+    var avg_speed_km: Double = 0.0,
+
+    @ColumnInfo(name = "avg_speed_mi")
+    var avg_speed_mi: Double = 0.0,
 
     @ColumnInfo(name = "route_lat")
     var lat_path : MutableList<Double>,

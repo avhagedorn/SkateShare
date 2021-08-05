@@ -14,6 +14,7 @@ import android.content.Intent
 import android.location.Location
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
@@ -28,7 +29,9 @@ import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.TrackerUtil.hasLocationPermissions
 import com.skateshare.models.Route
+import com.skateshare.services.MapHelper.calculateAvgSpeed
 import com.skateshare.services.MapHelper.formatTime
+import com.skateshare.services.MapHelper.metersToStandardSpeed
 import com.skateshare.services.MapHelper.metersToStandardUnits
 import com.skateshare.views.profile.ProfileActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,10 +72,12 @@ class MapService : LifecycleService() {
             if (isTracking.value!!) {
                 result.locations.let { locations ->
                     for (location in locations) {
-                        addDistance(location)
-                        addLocation(location)
-                        addAltitude(location.altitude)
-                        addSpeed(location.speed)
+                        if (location.accuracy <= MAX_RADIUS_METERS) {
+                            addDistance(location)
+                            addLocation(location)
+                            addAltitude(location.altitude)
+                            addSpeed(location.speed)
+                        }
                     }
                 }
             }
@@ -170,13 +175,7 @@ class MapService : LifecycleService() {
     }
 
     private suspend fun saveRoute() {
-        localRoutesDao.deleteALl() // TODO: THIS IS TEMPORARY FOR TESTING, REMOVE THIS SOON
-        Log.i("1one", localRoutesDao.routesByDate(10, 0).first().lat_path.size.toString())
-        Log.i("1one", localRoutesDao.routesByDate(10, 0).first().lat_path.toString())
-
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val startTime = System.currentTimeMillis()
 
         val lats = mutableListOf<Double>()
         val lngs = mutableListOf<Double>()
@@ -187,30 +186,21 @@ class MapService : LifecycleService() {
             lngs.add(it.longitude)
         }
 
-        val coordTime = System.currentTimeMillis()
-
         updateNotification(notificationManager, R.string.smoothing_route, 45)
         val newLats = bSpline(lats)
         val newLngs = bSpline(lngs)
         lats.clear()
         lngs.clear()
 
-        val smoothingTime = System.currentTimeMillis()
-
         updateNotification(notificationManager, R.string.saving_to_database, 75)
-        insertRoute(newLats, newLngs)
+        try {
+            insertRoute(newLats, newLngs)
 
-        val insertTime = System.currentTimeMillis()
-
-        val postedRoute = localRoutesDao.routesByDate(10, 0).first()
-
-        Log.i("1one", "Coordinate conversion time: ${coordTime - startTime}ms")
-        Log.i("1one", "B-Spline smoothing time: ${smoothingTime - startTime}ms")
-        Log.i("1one", "Database insertion time: ${insertTime - startTime}ms")
-        Log.i("1one", "Total time: ${System.currentTimeMillis() - startTime}ms")
-
-        Log.i("1one", postedRoute.toString())
-        Log.i("1one", postedRoute.speed.size.toString())
+            val notification = notificationBuilder
+            notificationManager.cancelAll()
+        } catch (e: Exception) {
+            Toast.makeText(this, e.message.toString(), Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun updateNotification(manager: NotificationManager, messageId: Int, progress: Int) {
@@ -221,12 +211,19 @@ class MapService : LifecycleService() {
     }
 
     private suspend fun insertRoute(lats: MutableList<Double>, lngs: MutableList<Double>) {
+        val routeDuration = System.currentTimeMillis() - startTime
         val distances = metersToStandardUnits(distanceMeters.value!!)
+        val speeds = calculateAvgSpeed(distanceMeters.value!!, routeDuration)
+
+        Log.i("1one", speeds.toString())
+
         localRoutesDao.insert(
             Route(
                 time_start = startTime,
-                duration = System.currentTimeMillis() - startTime,
+                duration = routeDuration,
+                avg_speed_km = speeds[UNIT_KILOMETERS]!!,
                 length_km = distances[UNIT_KILOMETERS]!!,
+                avg_speed_mi = speeds[UNIT_MILES]!!,
                 length_mi = distances[UNIT_MILES]!!,
                 altitude = elevationData.value!!,
                 speed = speedData.value!!,
@@ -245,6 +242,7 @@ class MapService : LifecycleService() {
                     interval = LOGGING_INTERVAL
                     fastestInterval = FASTEST_INTERVAL
                     priority = PRIORITY_HIGH_ACCURACY
+                    isWaitForAccurateLocation = true
                 }
                 fusedLocationProviderClient.requestLocationUpdates(
                     request, locationCallback, Looper.getMainLooper())

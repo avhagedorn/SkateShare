@@ -224,6 +224,13 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.displaySpeed.text = getString(R.string.route_start_speed)
     }
 
+    private fun loadServicePolyline() {
+        MapService.routeData.value?.let {
+            _route = it
+            addAllLocations()
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mapView?.onSaveInstanceState(outState)
@@ -247,7 +254,12 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onResume() {
         super.onResume()
         mapView?.onResume()
-        if (isTracking) showStopButton() else showStartButton()
+        if (isTracking) {
+            map?.clear()
+            loadServicePolyline()
+            showStopButton()
+        } else
+            showStartButton()
     }
 
     override fun onLowMemory() {

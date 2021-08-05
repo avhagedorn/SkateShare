@@ -23,3 +23,5 @@ const val MAP_ZOOM = 17f
 
 const val UNIT_MILES = "mi"
 const val UNIT_KILOMETERS = "km"
+
+const val MAX_RADIUS_METERS = 30

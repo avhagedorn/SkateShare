@@ -14,7 +14,6 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Singleton
 
-@Singleton
 object FirestoreService {
 
     /* User functions */
