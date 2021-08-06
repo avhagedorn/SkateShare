@@ -21,18 +21,6 @@
             app:nullable="true" />
     </fragment>
     <fragment
-        android:id="@+id/tempFragment"
-        android:name="com.skateshare.views.profile.TempFragment"
-        android:label="fragment_temp"
-        tools:layout="@layout/fragment_temp" >
-        <action
-            android:id="@+id/action_tempFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_tempFragment_to_feedFragment"
-            app:destination="@id/feedFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.skateshare.views.profile.SettingsFragment"
         android:label="@string/settings_option"
@@ -79,10 +67,19 @@
         android:id="@+id/recordFragment"
         android:name="com.skateshare.views.record.RecordFragment"
         android:label="@string/record"
-        tools:layout="@layout/fragment_record" />
+        tools:layout="@layout/fragment_record" >
+        <action
+            android:id="@+id/action_recordFragment_to_bugReportFragment"
+            app:destination="@id/bugReportFragment"
+            app:enterAnim="@android:anim/fade_in" />
+    </fragment>
     <fragment
         android:id="@+id/routesFragment"
         android:name="com.skateshare.views.routes.RoutesFragment"
         android:label="@string/routes"
         tools:layout="@layout/fragment_routes" />
+    <fragment
+        android:id="@+id/bugReportFragment"
+        android:name="com.skateshare.views.record.BugReportFragment"
+        android:label="Report A Bug" />
 </navigation>

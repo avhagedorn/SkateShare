@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -48,6 +49,8 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        requestPermissions()
+        initializeUnits()
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_record, container, false)
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
@@ -55,20 +58,14 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         mapView?.getMapAsync { providedMap ->
             map = providedMap
             map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
-            addAllLocations()
         }
 
         binding.beginRecording.setOnClickListener { startRecording() }
         binding.stopRecording.setOnClickListener { confirmStopRecording() }
+        binding.bugReport.setOnClickListener { sendBugReport() }
         observeService()
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requestPermissions()
-        initializeUnits()
     }
 
     private fun initializeUnits() {
@@ -82,7 +79,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (isTracking) {
             showStopButton()
         } else {
-            showStartButton()
+            showStartState()
             map?.clear()
         }
     }
@@ -165,20 +162,9 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun frameRoute() {
-        val bounds = LatLngBounds.builder()
-        for (coordinate in route) {
-            bounds.include(coordinate)
-        }
-
-        map?.moveCamera(
-            CameraUpdateFactory.newLatLngBounds(
-                bounds.build(),
-                binding.mapView.width,
-                binding.mapView.height,
-                (binding.mapView.height*0.05).toInt()
-            )
-        )
+    private fun sendBugReport() {
+        findNavController().navigate(
+            RecordFragmentDirections.actionRecordFragmentToBugReportFragment())
     }
 
     private fun sendCommand(command: String) =
@@ -187,7 +173,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         requireContext().startService(intent)
     }
 
-    private fun startRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
+    private fun startRecording() = Intent(requireContext(), MapService::class.java).also { _ ->
         sendCommand(BEGIN_TRACKING)
         showStopButton()
     }
@@ -201,9 +187,8 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             .show()
     }
 
-    private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { intent ->
+    private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { _ ->
         sendCommand(STOP_TRACKING)
-        showStartState()
     }
 
     private fun showStopButton() {

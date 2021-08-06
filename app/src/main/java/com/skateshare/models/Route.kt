@@ -9,6 +9,9 @@ data class Route(
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0L,
 
+    @ColumnInfo(name = "uid")
+    val posted_by : String = "",
+
     @ColumnInfo(name = "start_time_millis")
     val time_start : Long = 0L,
 
@@ -22,10 +25,16 @@ data class Route(
     var length_km : Double = 0.0,
 
     @ColumnInfo(name = "avg_speed_km")
-    var avg_speed_km: Double = 0.0,
+    var avg_speed_km : Double = 0.0,
 
     @ColumnInfo(name = "avg_speed_mi")
-    var avg_speed_mi: Double = 0.0,
+    var avg_speed_mi : Double = 0.0,
+
+    @ColumnInfo(name = "start_lat")
+    var lat_start : Double = 0.0,
+
+    @ColumnInfo(name = "start_lng")
+    var lng_start : Double = 0.0,
 
     @ColumnInfo(name = "route_lat")
     var lat_path : MutableList<Double>,

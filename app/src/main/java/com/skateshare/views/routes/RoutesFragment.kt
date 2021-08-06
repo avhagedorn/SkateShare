@@ -24,7 +24,6 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentRecordBinding
 import com.skateshare.databinding.FragmentRoutesBinding
 import com.skateshare.db.LocalRoutesDao
-import com.skateshare.misc.toLatLng
 import com.skateshare.models.Route
 import com.skateshare.services.POLYLINE_COLOR
 import com.skateshare.services.POLYLINE_WIDTH
@@ -92,7 +91,7 @@ class RoutesFragment : Fragment() {
                 val query = localRoutesDao.routesByDate(1, 0)
                 if (query.isNotEmpty()) {
                     route = query.first()
-                    routes.postValue(toLatLng(route.lat_path, route.lng_path))
+                    routes.postValue(viewModel.toLatLng(route.lat_path, route.lng_path))
                 }
             }
         } catch (e: Exception) {

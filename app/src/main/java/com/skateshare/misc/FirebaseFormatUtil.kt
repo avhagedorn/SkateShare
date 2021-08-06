@@ -1,5 +1,7 @@
 package com.skateshare.misc
 
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.skateshare.models.Route
@@ -15,7 +17,8 @@ fun routeToPreviewHashMap(route: Route, posterId: String) =
         "distanceKm" to route.length_km,
         "avgSpeedMph" to route.avg_speed_mi,
         "avgSpeedKph" to route.avg_speed_km,
-        "startCoordinates" to LatLng(route.lat_path[0], route.lng_path[0]),
+        "startLat" to route.lat_start,
+        "startLng" to route.lng_start,
         "imgUrl" to null
     )
 
@@ -23,15 +26,26 @@ fun routeToDetailedHashMap(route: Route, previewId: String, posterId: String) =
     hashMapOf<String, Any?>(
         "previewId" to previewId,
         "postedBy" to posterId,
-        "routePath" to toLatLng(route.lat_path, route.lng_path),
+        "timestamp" to Timestamp.now(),
+        "durationMs" to route.duration,
+        "distanceMi" to route.length_mi,
+        "distanceKm" to route.length_km,
+        "avgSpeedMph" to route.avg_speed_mi,
+        "avgSpeedKph" to route.avg_speed_km,
+        "startLat" to route.lat_start,
+        "startLng" to route.lng_start,
+        "imgUrl" to null,
+        "routeLats" to route.lat_path,
+        "routeLngs" to route.lng_path,
         "altitude" to route.altitude,
-        "speed" to route.speed
+        "speed" to route.speed,
+        "geohash" to GeoFireUtils.getGeoHashForLocation(
+            GeoLocation(route.lat_start, route.lng_start))
     )
 
-fun toLatLng(lats: List<Double>, lngs: List<Double>) : List<LatLng> {
-    val coordinates = mutableListOf<LatLng>()
-    for (i in lats.indices) {
-        coordinates.add(LatLng(lats[i], lngs[i]))
-    }
-    return coordinates
-}
+fun reportToHashMap(location: String, description: String, userId: String) =
+    hashMapOf<String, Any?>(
+        "postedBy" to location,
+        "bugDescription" to description,
+        "submittedBy" to userId
+    )

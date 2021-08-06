@@ -117,6 +117,9 @@ dependencies {
 
     // MPAndroid
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // GeoFire (For geo queries)
+    implementation 'com.firebase:geofire-android-common:3.1.0'
 }
 
 kapt {

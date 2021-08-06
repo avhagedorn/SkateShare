@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.models.Route
 import com.skateshare.repostitories.FirestoreRoutes
@@ -43,5 +44,13 @@ class RoutesViewModel : ViewModel() {
 
     fun resetResponse() {
         _firebaseResponse.postValue(ExceptionResponse(null, false))
+    }
+
+    fun toLatLng(lats: List<Double>, lngs: List<Double>) : List<LatLng> {
+        val coordinates = mutableListOf<LatLng>()
+        for (i in lats.indices) {
+            coordinates.add(LatLng(lats[i], lngs[i]))
+        }
+        return coordinates
     }
 }

@@ -156,7 +156,6 @@ class MapService : LifecycleService() {
     private fun stopForegroundService() {
         isTracking.postValue(false)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(NOTIFICATION_ID)
 
         val notification = notificationBuilder
             .clearActions()
@@ -170,17 +169,17 @@ class MapService : LifecycleService() {
             } catch (e: Exception) {
                 Log.i("1one", e.message.toString())
             }
-            stopForeground(false)
+            stopForeground(true)
+            notificationManager.cancelAll()
         }
     }
 
     private suspend fun saveRoute() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        updateNotification(notificationManager, R.string.converting_coordinates, 15)
 
         val lats = mutableListOf<Double>()
         val lngs = mutableListOf<Double>()
-        updateNotification(notificationManager, R.string.converting_coordinates, 15)
-
         routeData.value!!.forEach {
             lats.add(it.latitude)
             lngs.add(it.longitude)
@@ -195,9 +194,6 @@ class MapService : LifecycleService() {
         updateNotification(notificationManager, R.string.saving_to_database, 75)
         try {
             insertRoute(newLats, newLngs)
-
-            val notification = notificationBuilder
-            notificationManager.cancelAll()
         } catch (e: Exception) {
             Toast.makeText(this, e.message.toString(), Toast.LENGTH_LONG).show()
         }
@@ -215,8 +211,6 @@ class MapService : LifecycleService() {
         val distances = metersToStandardUnits(distanceMeters.value!!)
         val speeds = calculateAvgSpeed(distanceMeters.value!!, routeDuration)
 
-        Log.i("1one", speeds.toString())
-
         localRoutesDao.insert(
             Route(
                 time_start = startTime,
@@ -227,6 +221,8 @@ class MapService : LifecycleService() {
                 length_mi = distances[UNIT_MILES]!!,
                 altitude = elevationData.value!!,
                 speed = speedData.value!!,
+                lat_start = lats[0],
+                lng_start = lngs[0],
                 lat_path = lats,
                 lng_path = lngs
             )
