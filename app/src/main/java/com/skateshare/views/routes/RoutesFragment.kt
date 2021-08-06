@@ -61,6 +61,12 @@ class RoutesFragment : Fragment() {
         mapView?.getMapAsync { providedMap ->
             map = providedMap
             map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
+
+            map?.setOnCameraMoveListener {
+                val zoom = map!!.cameraPosition.zoom.toDouble()
+                val center = map!!.cameraPosition.target
+                viewModel.geoQueryAbout(center, zoom)
+            }
         }
 
         displayLastRoute()
@@ -80,6 +86,11 @@ class RoutesFragment : Fragment() {
                 Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()
                 viewModel.resetResponse()
             }
+        })
+
+        // Temporary
+        viewModel.publicRoutes.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(requireContext(), it.size.toString(), Toast.LENGTH_SHORT).show()
         })
 
         return binding.root

@@ -25,7 +25,6 @@ object FirestoreRoutes {
 
     suspend fun getRoutesAboutRadius(lat: Double, lng: Double, radius: Double) : List<Route> {
         val db = FirebaseFirestore.getInstance()
-        val uid = FirebaseAuth.getInstance().uid!!
 
         val center = GeoLocation(lat, lng)
         val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radius);
@@ -33,30 +32,32 @@ object FirestoreRoutes {
         val result = mutableListOf<Route>()
 
         for (bound in bounds) {
-            val query = db.collection("routesDetailed")
+            val query = db.collection("routesDetail")
                 .orderBy("geohash")
                 .startAt(bound.startHash)
                 .endAt(bound.endHash)
             tasks.add(query.get())
         }
 
-        Tasks.whenAllComplete(tasks)
-            .addOnCompleteListener {
-                for (task in tasks){
-                    val snapshot = task.result
-                    for (doc in snapshot.documents) {
-                        val location = GeoLocation(
-                            doc.getDouble("start_lat")!!,
-                            doc.getDouble("start_lng")!!
-                        )
-                        // Double check the query radius for edge cases
-                        val distance = GeoFireUtils.getDistanceBetween(center, location)
-                        if (distance <= radius)
-                            result.add(doc.toRoute(uid))
-                    }
+        Tasks.whenAllComplete(tasks).await()
+        for (task in tasks){
+            val snapshot = task.result
+            for (doc in snapshot.documents) {
+                val location = GeoLocation(
+                    doc.getDouble("startLat")!!,
+                    doc.getDouble("startLng")!!
+                )
+                // Double check the query radius for edge cases
+                val distance = GeoFireUtils.getDistanceBetween(center, location)
+                Log.i("1one", "Distance: $distance, Radius: $radius")
+                if (distance <= radius) {
+                    val route = doc.toRoute()
+                    Log.i("1one", route.toString())
+                    result.add(route)
                 }
             }
-        Log.i("1one", result.toString())
+        }
+        Log.i("1one", result.size.toString())
         return result
     }
 
