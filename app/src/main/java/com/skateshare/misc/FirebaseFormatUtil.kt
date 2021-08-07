@@ -35,8 +35,8 @@ fun routeToDetailedHashMap(route: Route, previewId: String, posterId: String) =
         "startLat" to route.lat_start,
         "startLng" to route.lng_start,
         "imgUrl" to null,
-        "routeLats" to route.lat_path,
-        "routeLngs" to route.lng_path,
+        "latPath" to route.lat_path,
+        "lngPath" to route.lng_path,
         "altitude" to route.altitude,
         "speed" to route.speed,
         "geohash" to GeoFireUtils.getGeoHashForLocation(

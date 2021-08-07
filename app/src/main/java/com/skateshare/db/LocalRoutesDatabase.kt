@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.skateshare.models.Route
 
-@Database(entities = [Route::class], version = 3, exportSchema = false)
+@Database(entities = [Route::class], version = 4, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class LocalRoutesDatabase : RoomDatabase() {
 

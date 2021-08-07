@@ -1,6 +1,7 @@
 package com.skateshare.services
 
 import android.graphics.Color
+import com.google.android.gms.maps.model.LatLng
 
 const val BEGIN_TRACKING = "BEGIN TRACKING"
 const val STOP_TRACKING = "STOP TRACKING"
@@ -26,3 +27,10 @@ const val UNIT_KILOMETERS = "km"
 
 const val MAX_RADIUS_METERS = 30
 const val MAX_ZOOM_RADIUS = 591657550.5
+
+const val MIN_ZOOM_QUERY = 12f
+
+val DEFAULT_LOCATION = LatLng(
+    44.974526,
+    -93.232064
+)

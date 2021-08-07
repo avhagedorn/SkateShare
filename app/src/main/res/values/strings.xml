@@ -81,4 +81,5 @@
     <string name="upload_image">Upload a screenshot of the bug (optional)</string>
     <string name="submit">Submit</string>
     <string name="fill_required_fields">Please fill out all required fields!</string>
+    <string name="loading_maps">Loading Maps</string>
 </resources>

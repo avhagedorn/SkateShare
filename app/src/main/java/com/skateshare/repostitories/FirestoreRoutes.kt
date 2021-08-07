@@ -16,20 +16,21 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.misc.routeToDetailedHashMap
 import com.skateshare.misc.routeToPreviewHashMap
+import com.skateshare.models.FirebaseRoute
 import com.skateshare.models.Route
-import com.skateshare.models.toRoute
+import com.skateshare.models.toFirebaseRoute
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
 object FirestoreRoutes {
 
-    suspend fun getRoutesAboutRadius(lat: Double, lng: Double, radius: Double) : List<Route> {
+    suspend fun getRoutesAboutRadius(lat: Double, lng: Double, radius: Double) : List<FirebaseRoute> {
         val db = FirebaseFirestore.getInstance()
 
         val center = GeoLocation(lat, lng)
         val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radius);
         val tasks = mutableListOf<Task<QuerySnapshot>>()
-        val result = mutableListOf<Route>()
+        val result = mutableListOf<FirebaseRoute>()
 
         for (bound in bounds) {
             val query = db.collection("routesDetail")
@@ -49,19 +50,16 @@ object FirestoreRoutes {
                 )
                 // Double check the query radius for edge cases
                 val distance = GeoFireUtils.getDistanceBetween(center, location)
-                Log.i("1one", "Distance: $distance, Radius: $radius")
                 if (distance <= radius) {
-                    val route = doc.toRoute()
-                    Log.i("1one", route.toString())
+                    val route = doc.toFirebaseRoute()
                     result.add(route)
                 }
             }
         }
-        Log.i("1one", result.size.toString())
         return result
     }
 
-    // For greater efficiency, route data is denormalized to avoid double querying when detailed
+    // For greater efficiency, route data is denormalized to avoid double querying when preview
     // data is required and to avoid querying unnecessarily large datasets.
 
     suspend fun createRoute(route: Route) {
