@@ -9,37 +9,37 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.location.Location
+import android.location.*
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
-import com.skateshare.misc.TrackerUtil.hasLocationPermissions
+import com.skateshare.misc.*
+import com.skateshare.misc.PermissionsUtil.hasLocationPermissions
 import com.skateshare.models.Route
 import com.skateshare.services.MapHelper.calculateAvgSpeed
 import com.skateshare.services.MapHelper.formatTime
-import com.skateshare.services.MapHelper.metersToStandardSpeed
 import com.skateshare.services.MapHelper.metersToStandardUnits
-import com.skateshare.views.profile.ProfileActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Polyline = MutableList<LatLng>
 
@@ -47,10 +47,12 @@ typealias Polyline = MutableList<LatLng>
 class MapService : LifecycleService() {
 
     @Inject lateinit var pendingIntent: PendingIntent
-    @Inject lateinit var notificationBuilder: NotificationCompat.Builder
+    @Inject @Named("notificationBuilder") lateinit var notificationBuilder: NotificationCompat.Builder
+    @Inject @Named("warningBuilder") lateinit var warningBuilder: NotificationCompat.Builder
     @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     @Inject lateinit var localRoutesDao: LocalRoutesDao
 
+    private val readyToDestroy = MutableLiveData<Boolean>()
     private val elapsedSeconds = MutableLiveData<Long>()
     private var timerEnabled = false
     private var startTime = 0L
@@ -62,7 +64,7 @@ class MapService : LifecycleService() {
         val elapsedMilliseconds = MutableLiveData<Long>()
         val routeData = MutableLiveData<Polyline>()
         val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
-        val elevationData = MutableLiveData<MutableList<Double>>()      // Altitude in m
+        val accuracyData = MutableLiveData<MutableList<Float>>()
         val isTracking = MutableLiveData<Boolean>()
         val errorMessage = MutableLiveData<String?>()
     }
@@ -75,13 +77,24 @@ class MapService : LifecycleService() {
                         if (location.accuracy <= MAX_RADIUS_METERS) {
                             addDistance(location)
                             addLocation(location)
-                            addAltitude(location.altitude)
+                            addAccuracy(location.accuracy)
                             addSpeed(location.speed)
                         }
+                        Log.i("1one", location.accuracy.toString())
                     }
                 }
             }
             super.onLocationResult(result)
+        }
+
+        override fun onLocationAvailability(p0: LocationAvailability) {
+            super.onLocationAvailability(p0)
+            if (!p0.isLocationAvailable) {
+                Log.i("1one", "Disconnected!")
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                createWarningChannel(notificationManager)
+                notificationManager.notify(WARNING_ID, warningBuilder.build())
+            }
         }
     }
 
@@ -91,12 +104,16 @@ class MapService : LifecycleService() {
         isTracking.observe(this, Observer { trackingStatus ->
             updateLocationTracking(trackingStatus)
         })
+
+        readyToDestroy.observe(this, Observer { isReady ->
+            if (isReady)
+                onDestroy()
+        })
     }
 
     private fun initializeLiveData() {
         routeData.postValue(mutableListOf<LatLng>())
         speedData.postValue(mutableListOf<Float>())
-        elevationData.postValue(mutableListOf<Double>())
         isTracking.postValue(true)
         elapsedMilliseconds.postValue(0L)
         elapsedSeconds.postValue(0L)
@@ -166,6 +183,7 @@ class MapService : LifecycleService() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 saveRoute()
+                readyToDestroy.postValue(true)
             } catch (e: Exception) {
                 Log.i("1one", e.message.toString())
             }
@@ -219,8 +237,8 @@ class MapService : LifecycleService() {
                 length_km = distances[UNIT_KILOMETERS]!!,
                 avg_speed_mi = speeds[UNIT_MILES]!!,
                 length_mi = distances[UNIT_MILES]!!,
-                altitude = elevationData.value!!,
                 speed = speedData.value!!,
+                accuracy = accuracyData.value!!,
                 lat_start = lats[0],
                 lng_start = lngs[0],
                 lat_path = lats,
@@ -259,17 +277,17 @@ class MapService : LifecycleService() {
         }
     }
 
-    private fun addAltitude(altitude: Double) {
-        elevationData.value?.apply {
-            add(altitude)
-            elevationData.postValue(this)
-        }
-    }
-
     private fun addSpeed(speed: Float) {
         speedData.value?.apply {
             add(speed)
             speedData.postValue(this)
+        }
+    }
+
+    private fun addAccuracy(accuracy: Float) {
+        accuracyData.value?.apply {
+            add(accuracy)
+            accuracyData.postValue(this)
         }
     }
 
@@ -286,6 +304,16 @@ class MapService : LifecycleService() {
             CHANNEL_NAME,
             IMPORTANCE_LOW
         )
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun createWarningChannel(notificationManager: NotificationManager) {
+        val channel = NotificationChannel(
+            WARNING_CHANNEL_ID,
+            WARNING_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+
         notificationManager.createNotificationChannel(channel)
     }
 }

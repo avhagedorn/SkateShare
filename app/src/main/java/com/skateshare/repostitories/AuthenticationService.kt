@@ -31,7 +31,7 @@ object AuthenticationService {
     suspend fun deleteAccount() {
         try {
             val user = FirebaseAuth.getInstance().currentUser!!
-            FirestoreService.deleteUserData(user.uid)
+            FirestoreUser.deleteUserData(user.uid)
             user.delete()
         }
         catch (e: Exception) {

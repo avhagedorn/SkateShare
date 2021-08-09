@@ -3,9 +3,9 @@ package com.skateshare.views.record
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.graphics.Camera
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,18 +18,16 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRecordBinding
-import com.skateshare.misc.TrackerUtil
-import com.skateshare.misc.TrackerUtil.REQUEST_CODE_LOCATION_PERMISSION
-import com.skateshare.services.*
+import com.skateshare.misc.*
+import com.skateshare.misc.PermissionsUtil.REQUEST_CODE_LOCATION_PERMISSION
 import com.skateshare.services.MapHelper.formatTime
 import com.skateshare.services.MapHelper.metersToFormattedUnits
 import com.skateshare.services.MapHelper.metersToStandardSpeed
-import com.skateshare.services.MapHelper.metersToStandardUnits
+import com.skateshare.services.MapService
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -58,6 +56,17 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         mapView?.getMapAsync { providedMap ->
             map = providedMap
             map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
+
+            // Re-initialize existing polyline in case of app restart
+            MapService.isTracking.observe(viewLifecycleOwner, Observer { newStatus ->
+                newStatus?.let {
+                    if (it) {
+                        map?.clear()
+                        loadServicePolyline()
+                    }
+                    isTracking = it
+                }
+            })
         }
 
         binding.beginRecording.setOnClickListener { startRecording() }
@@ -114,6 +123,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun addAllLocations() {
+        Log.i("1one", "addAllLocations")
         val polylineOptions = PolylineOptions()
             .color(POLYLINE_COLOR)
             .width(POLYLINE_WIDTH)
@@ -140,7 +150,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun requestPermissions() {
-        if (!TrackerUtil.hasLocationPermissions(requireContext())) {
+        if (!PermissionsUtil.hasLocationPermissions(requireContext())) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 EasyPermissions.requestPermissions(
                     this,
@@ -168,12 +178,12 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun sendCommand(command: String) =
-            Intent(requireContext(), MapService::class.java).also { intent ->
+            Intent(requireContext(), MapService::class.java).also { intent ->// MapService::class.java).also { intent ->
         intent.action = command
         requireContext().startService(intent)
     }
 
-    private fun startRecording() = Intent(requireContext(), MapService::class.java).also { _ ->
+    private fun startRecording() = Intent(requireContext(), MapService::class.java).also {// MapService::class.java).also { _ ->
         sendCommand(BEGIN_TRACKING)
         showStopButton()
     }
@@ -187,7 +197,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             .show()
     }
 
-    private fun stopRecording() = Intent(requireContext(), MapService::class.java).also { _ ->
+    private fun stopRecording() = Intent(requireContext(), MapService::class.java).also {// MapService::class.java).also { _ ->
         sendCommand(STOP_TRACKING)
     }
 
@@ -210,7 +220,9 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun loadServicePolyline() {
+        Log.i("1one", "loadServicePolyline")
         MapService.routeData.value?.let {
+            Log.i("1one", it.toString())
             _route = it
             addAllLocations()
         }

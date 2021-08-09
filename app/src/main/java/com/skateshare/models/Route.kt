@@ -3,15 +3,14 @@ package com.skateshare.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.android.gms.maps.model.PolylineOptions
-
-// In contrast to FirebaseRoute, Route stores local route data, so data is in a more primitive form,
-// without attributes such as LatLng, PolylineOptions, or other such objects.
 
 @Entity(tableName = "my_routes")
 data class Route(
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0L,
+
+    @ColumnInfo(name = "posted_by")
+    var posted_by : String = "",
 
     @ColumnInfo(name = "start_time_millis")
     val time_start : Long = 0L,
@@ -38,15 +37,18 @@ data class Route(
     var lng_start : Double = 0.0,
 
     @ColumnInfo(name = "route_lat")
-    var lat_path : MutableList<Double>,
+    var lat_path : MutableList<Double> = mutableListOf(),
 
     @ColumnInfo(name = "route_lng")
-    var lng_path : MutableList<Double>,
+    var lng_path : MutableList<Double> = mutableListOf(),
 
-    @ColumnInfo(name = "altitude")
-    var altitude : MutableList<Double>,
+    @ColumnInfo(name = "route_accuracy")
+    var accuracy : MutableList<Float> = mutableListOf(),
 
     @ColumnInfo(name = "speed")
     var speed : MutableList<Float>,
+
+    @ColumnInfo(name = "image_url")
+    var image_url : String? = null
 )
 

@@ -1,6 +1,7 @@
 package com.skateshare.views.feed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -51,6 +52,7 @@ class FeedFragment : Fragment() {
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer {
+            Log.i("1one", viewModel.getData().toString())
             binding.refreshLayout.isRefreshing = false
             adapter.submitList(viewModel.getData())
             if (!uiIsInitialized)

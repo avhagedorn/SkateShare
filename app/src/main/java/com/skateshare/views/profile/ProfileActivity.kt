@@ -2,7 +2,6 @@ package com.skateshare.views.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -14,7 +13,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.skateshare.R
-import com.skateshare.services.SHOW_RECORD_FRAGMENT
+import com.skateshare.misc.SHOW_RECORD_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Make ProfileActivity into a "MainActivity" class for all app fragments after authentication

@@ -1,5 +1,7 @@
 package com.skateshare.services
 
+import com.skateshare.misc.UNIT_KILOMETERS
+import com.skateshare.misc.UNIT_MILES
 import java.util.concurrent.TimeUnit
 
 object MapHelper {

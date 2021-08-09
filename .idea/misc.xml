@@ -18,7 +18,7 @@
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/activity_authentication.xml" value="0.37552083333333336" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/activity_main.xml" value="0.247766323024055" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/bottom_navigation.xml" value="0.2503472222222222" />
-        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/feed_post.xml" value="0.247766323024055" />
+        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/feed_post.xml" value="0.67" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_bug_report.xml" value="0.33" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_create_post.xml" value="0.36203703703703705" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_feed.xml" value="0.247766323024055" />
@@ -27,6 +27,8 @@
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_register.xml" value="0.33794871794871795" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_routes.xml" value="0.33" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/fragment_temp.xml" value="0.2503472222222222" />
+        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/route_popup.xml" value="0.37552083333333336" />
+        <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/layout/route_post.xml" value="0.37552083333333336" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/menu/bottom_navigation.xml" value="0.2503472222222222" />
         <entry key="..\:/Users/avhag/OneDrive/Desktop/SkateShare/app/src/main/res/menu/feed_options.xml" value="0.2503472222222222" />
       </map>

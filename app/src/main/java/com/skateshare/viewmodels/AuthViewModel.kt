@@ -8,7 +8,7 @@ import com.skateshare.R
 import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.repostitories.AuthenticationService
-import com.skateshare.repostitories.FirestoreService
+import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ class AuthViewModel : ViewModel() {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     AuthenticationService.register(email, password)
-                    FirestoreService.setUserData(
+                    FirestoreUser.setUserData(
                         hashMapOf(
                             "username" to username,
                             "bio" to "This user hasn't told us anything about themselves yet! \uD83D\uDE1E",

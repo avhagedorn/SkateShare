@@ -1,7 +1,5 @@
 package com.skateshare.views.routes
 
-import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,30 +8,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.github.mikephil.charting.data.LineDataSet
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.skateshare.R
-import com.skateshare.databinding.FragmentRecordBinding
 import com.skateshare.databinding.FragmentRoutesBinding
 import com.skateshare.db.LocalRoutesDao
-import com.skateshare.models.Route
-import com.skateshare.services.MAX_ZOOM_RADIUS
-import com.skateshare.services.MIN_ZOOM_QUERY
-import com.skateshare.services.POLYLINE_COLOR
-import com.skateshare.services.POLYLINE_WIDTH
+import com.skateshare.misc.*
 import com.skateshare.viewmodels.RoutesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.pow
 
 @AndroidEntryPoint
 class RoutesFragment : Fragment() {
@@ -64,6 +55,7 @@ class RoutesFragment : Fragment() {
                 routes.forEach { route ->
                     route.polyline.let { options ->
                         map!!.addPolyline(options)
+                            .tag = route.id
                     }
                 }
             }
@@ -83,12 +75,16 @@ class RoutesFragment : Fragment() {
                 }
             }
 
+            map?.setOnPolylineClickListener {
+                Log.i("1one", it.tag.toString())
+            }
+
         }
 
         binding.share.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 val route = localRoutesDao.routesByDate(1, 0).first()
-                viewModel.publishRouteToFirestore(route)
+                viewModel.publishRouteToFirestore(route, "Fun route!", LONGBOARD, MEDIUM_HILLS)
             }
         }
 

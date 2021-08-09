@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.models.User
-import com.skateshare.repostitories.FirestoreService
+import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,14 +23,14 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _user.postValue(FirestoreService.getUserData(uid))
+            _user.postValue(FirestoreUser.getUserData(uid))
         }
     }
 
     fun updateProfile(updatedData: Map<String, Any?>) {
         try {
             viewModelScope.launch(Dispatchers.IO) {
-                FirestoreService.updateUserData(updatedData, uid)
+                FirestoreUser.updateUserData(updatedData, uid)
                 _exceptionResponse.postValue(ExceptionResponse(null, true))
             }
         } catch (e: Exception) {
@@ -41,7 +41,7 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
     fun uploadProfilePicture(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                FirestoreService.uploadProfilePicture(uid, uri)
+                FirestoreUser.uploadProfilePicture(uid, uri)
                 _exceptionResponse.postValue(ExceptionResponse(null, true))
             } catch (e: Exception){
                 _exceptionResponse.postValue(ExceptionResponse(e.message, false))

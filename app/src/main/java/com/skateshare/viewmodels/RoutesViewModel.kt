@@ -7,32 +7,32 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.skateshare.misc.DEFAULT_LOCATION
 import com.skateshare.misc.ExceptionResponse
-import com.skateshare.models.FirebaseRoute
+import com.skateshare.misc.MAX_ZOOM_RADIUS
+import com.skateshare.misc.MIN_ZOOM_QUERY
 import com.skateshare.models.Route
+import com.skateshare.models.RouteGlobalMap
 import com.skateshare.repostitories.FirestoreRoutes
-import com.skateshare.services.DEFAULT_LOCATION
-import com.skateshare.services.MAX_ZOOM_RADIUS
-import com.skateshare.services.MIN_ZOOM_QUERY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Math.pow
 import kotlin.math.pow
 
 class RoutesViewModel : ViewModel() {
 
     private val _firebaseResponse = MutableLiveData<ExceptionResponse>()
     val firebaseResponse: LiveData<ExceptionResponse> get() = _firebaseResponse
-    private val _publicRoutes = MutableLiveData<List<FirebaseRoute>>()
-    val publicRoutes: LiveData<List<FirebaseRoute>> get() = _publicRoutes
+    private val _publicRoutes = MutableLiveData<List<RouteGlobalMap>>()
+    val publicRoutes: LiveData<List<RouteGlobalMap>> get() = _publicRoutes
 
     private var queryCenter = DEFAULT_LOCATION
     private var queryRadius = 0.0
 
-    fun publishRouteToFirestore(route: Route) {
+    fun publishRouteToFirestore(route: Route, description: String,
+                                minBoardType: String, altitudeRating: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                FirestoreRoutes.createRoute(route)
+                FirestoreRoutes.createRoute(route, description, minBoardType, altitudeRating)
                 _firebaseResponse.postValue(
                     ExceptionResponse("Uploaded route successfully!", true))
             } catch (e: Exception) {
@@ -55,12 +55,13 @@ class RoutesViewModel : ViewModel() {
         }
     }
 
-    fun geoQueryAbout(coordinate: LatLng, radius: Double) {
+    private fun geoQueryAbout(coordinate: LatLng, radius: Double) {
         val lat = coordinate.latitude
         val lng = coordinate.longitude
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _publicRoutes.postValue(FirestoreRoutes.getRoutesAboutRadius(lat, lng, radius))
+                _publicRoutes.postValue(
+                    FirestoreRoutes.getRoutesAboutRadius(lat, lng, radius))
             } catch (e: Exception) {
                 Log.i("1one12", e.message.toString())
             }
@@ -83,12 +84,11 @@ class RoutesViewModel : ViewModel() {
                 geoQueryAbout(currentCoordinate, currentRadius*2)
                 queryCenter = currentCoordinate
                 queryRadius = currentRadius*2
-                Log.i("1one", "PERFORMED QUERY")
             }
         }
     }
 
-    fun calculateRadiusFromZoom(zoom: Float) = MAX_ZOOM_RADIUS / 2.0.pow(zoom + 4.0)
+    private fun calculateRadiusFromZoom(zoom: Float) = MAX_ZOOM_RADIUS / 2.0.pow(zoom + 4.0)
 
     fun resetResponse() {
         _firebaseResponse.postValue(ExceptionResponse(null, false))

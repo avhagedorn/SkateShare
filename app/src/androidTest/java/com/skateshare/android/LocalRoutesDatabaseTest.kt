@@ -1,7 +1,5 @@
 package com.skateshare.android
 
-import android.util.Log
-import androidx.room.CoroutinesRoom
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -9,19 +7,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.db.LocalRoutesDatabase
 import com.skateshare.models.Route
-import com.skateshare.services.MapService
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
-import java.text.ChoiceFormat.nextDouble
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.random.Random.Default.nextDouble
 
 @RunWith(AndroidJUnit4::class)
 class LocalRoutesDatabaseTest {

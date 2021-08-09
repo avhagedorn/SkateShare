@@ -1,13 +1,10 @@
 package com.skateshare.viewmodels
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skateshare.R
-import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.repostitories.FirestoreBugReport
 import kotlinx.coroutines.Dispatchers

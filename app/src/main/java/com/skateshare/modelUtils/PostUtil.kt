@@ -1,8 +1,9 @@
-package com.skateshare.models
+package com.skateshare.modelUtils
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
-import com.skateshare.repostitories.FirestoreService
+import com.skateshare.models.Post
+import com.skateshare.repostitories.FirestoreUser
 
 suspend fun DocumentSnapshot.toPost(cache: HashMap<String, HashMap<String, String>>) : Post? {
     return try {
@@ -26,7 +27,7 @@ suspend fun DocumentSnapshot.toPost(cache: HashMap<String, HashMap<String, Strin
 suspend fun getUser(uid: String, cache: HashMap<String, HashMap<String, String>>)
                                                 : java.util.HashMap<String, String>? {
     if (!cache.containsKey(uid)) {
-        val user = FirestoreService.getUserData(uid)
+        val user = FirestoreUser.getUserData(uid)
         cache[uid] = hashMapOf<String, String>(
             "username" to user.username,
             "profilePicture" to user.profilePicture

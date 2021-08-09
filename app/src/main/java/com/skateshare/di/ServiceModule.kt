@@ -3,14 +3,15 @@ package com.skateshare.di
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.Global.getString
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.skateshare.R
-import com.skateshare.services.CHANNEL_ID
+import com.skateshare.misc.CHANNEL_ID
+import com.skateshare.misc.SHOW_RECORD_FRAGMENT
+import com.skateshare.misc.STOP_TRACKING
+import com.skateshare.misc.WARNING_CHANNEL_ID
 import com.skateshare.services.MapService
-import com.skateshare.services.SHOW_RECORD_FRAGMENT
-import com.skateshare.services.STOP_TRACKING
 import com.skateshare.views.profile.ProfileActivity
 import dagger.Module
 import dagger.Provides
@@ -18,6 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
+import javax.inject.Named
 
 @Module
 @InstallIn(ServiceComponent::class)
@@ -44,6 +46,7 @@ object ServiceModule {
 
     @ServiceScoped
     @Provides
+    @Named("notificationBuilder")
     fun getOngoingNotification(
         @ApplicationContext context: Context,
         pendingIntent: PendingIntent
@@ -65,4 +68,26 @@ object ServiceModule {
             )
         )
         .setContentIntent(pendingIntent)
+
+    @ServiceScoped
+    @Provides
+    @Named("warningBuilder")
+    fun getWarningNotification(
+        @ApplicationContext context: Context
+    ) = NotificationCompat.Builder(context, WARNING_CHANNEL_ID)
+        .setSmallIcon(R.drawable.ic_baseline_add_24)
+        .setContentTitle("SkateShare")
+        .setStyle(NotificationCompat.BigTextStyle()
+            .bigText("GPS tracking has been disabled, or battery saver is on. " +
+                    "Please re-enable GPS and disable battery saver to resume route tracking!"))
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setContentIntent(
+            PendingIntent.getActivity(
+                context,
+                0,
+                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        )
+        .setAutoCancel(true)
 }

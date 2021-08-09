@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import pub.devrel.easypermissions.EasyPermissions
 
-object TrackerUtil {
+object PermissionsUtil {
 
     const val REQUEST_CODE_LOCATION_PERMISSION = 0
 
@@ -14,14 +14,16 @@ object TrackerUtil {
             EasyPermissions.hasPermissions(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
             )
         } else {
             EasyPermissions.hasPermissions(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
             )
         }
 }

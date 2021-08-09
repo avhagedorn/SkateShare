@@ -3,7 +3,7 @@ package com.skateshare.viewmodels
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.models.User
-import com.skateshare.repostitories.FirestoreService
+import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -28,7 +28,7 @@ class ProfileViewModel(private var profileUid: String?) : ViewModel() {
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            _user.postValue(FirestoreService.getUserData(profileUid!!))
+            _user.postValue(FirestoreUser.getUserData(profileUid!!))
         }
     }
 }

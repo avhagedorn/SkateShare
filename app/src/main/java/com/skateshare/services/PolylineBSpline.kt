@@ -1,6 +1,5 @@
 package com.skateshare.services
 
-import com.google.android.gms.maps.model.LatLng
 import kotlin.math.pow
 
 // Sources used:
