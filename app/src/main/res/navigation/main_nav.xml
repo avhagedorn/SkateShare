@@ -77,9 +77,19 @@
         android:id="@+id/routesFragment"
         android:name="com.skateshare.views.routes.RoutesFragment"
         android:label="@string/routes"
-        tools:layout="@layout/fragment_routes" />
+        tools:layout="@layout/fragment_routes" >
+        <action
+            android:id="@+id/action_routesFragment_to_privateRoutesFragment"
+            app:destination="@id/privateRoutesFragment"
+            app:enterAnim="@android:anim/fade_in" />
+    </fragment>
     <fragment
         android:id="@+id/bugReportFragment"
         android:name="com.skateshare.views.record.BugReportFragment"
         android:label="Report A Bug" />
+    <fragment
+        android:id="@+id/privateRoutesFragment"
+        android:name="com.skateshare.views.routes.PrivateRoutesFragment"
+        android:label="Private Routes"
+        tools:layout="@layout/fragment_private_routes" />
 </navigation>

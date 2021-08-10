@@ -81,7 +81,6 @@ class LocalRoutesDatabaseTest {
                     duration = 2700000L,
                     length_km = 0.0,
                     length_mi = 0.0,
-                    altitude = rawAltitude,
                     speed = rawSpeed,
                     lat_path = lats,
                     lng_path = lngs
@@ -118,7 +117,6 @@ class LocalRoutesDatabaseTest {
                     duration = 2700000L,
                     length_km = 0.0,
                     length_mi = 0.0,
-                    altitude = rawAltitude,
                     speed = rawSpeed,
                     lat_path = lats,
                     lng_path = lngs
@@ -153,7 +151,6 @@ class LocalRoutesDatabaseTest {
                     duration = 2700000L,
                     length_km = 0.0,
                     length_mi = 0.0,
-                    altitude = rawAltitude,
                     speed = rawSpeed,
                     lat_path = lats,
                     lng_path = lngs

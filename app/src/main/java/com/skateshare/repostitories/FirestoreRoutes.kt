@@ -14,7 +14,14 @@ import com.skateshare.misc.routeToRoutePost
 import com.skateshare.models.Route
 import com.skateshare.models.RouteGlobalMap
 import com.skateshare.modelUtils.toRouteGlobalMap
+import com.skateshare.models.ReverseGeocodeLocation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 object FirestoreRoutes {
@@ -68,6 +75,8 @@ object FirestoreRoutes {
         val posterId = FirebaseAuth.getInstance().uid!!
         val documentId = UUID.randomUUID().toString()
         val timestamp = Timestamp.now()
+        val location = getLocationData(route.lat_start, route.lng_start)
+
         val routeDataPreview = routeToRoutePost(
             id = documentId,
             uid = posterId,
@@ -76,7 +85,10 @@ object FirestoreRoutes {
             description = description,
             minBoardType = minBoardType,
             altitudeRating = altitudeRating,
-            route = route
+            route = route,
+            city = location.city,
+            province = location.province,
+            country = location.country
         )
         FirebaseFirestore.getInstance()
             .document("posts/$documentId")

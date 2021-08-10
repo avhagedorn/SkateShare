@@ -85,4 +85,11 @@
 
     <string name="route_header">%1$s shared a new route!</string>
 
+    <string-array name="sorting_choices">
+        <item>Date</item>
+        <item>Distance</item>
+        <item>Duration</item>
+        <item>Speed</item>
+    </string-array>
+
 </resources>

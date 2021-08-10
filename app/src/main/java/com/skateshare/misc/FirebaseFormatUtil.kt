@@ -20,7 +20,10 @@ fun routeToRoutePost(id: String,
                      description: String,
                      minBoardType: String,
                      altitudeRating: String,
-                     route: Route) =
+                     route: Route,
+                     city: String,
+                     province: String,
+                     country: String) =
     hashMapOf<String, Any?>(
         "id" to id,
         "postedBy" to uid,
@@ -33,6 +36,9 @@ fun routeToRoutePost(id: String,
         "lengthKm" to route.length_km,
         "minBoardType" to minBoardType,
         "altitudeRating" to altitudeRating,
+        "city" to city,
+        "province" to province,
+        "country" to country,
         "imageUrl" to url
     )
 

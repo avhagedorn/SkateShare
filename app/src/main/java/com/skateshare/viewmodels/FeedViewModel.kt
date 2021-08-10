@@ -33,7 +33,7 @@ class FeedViewModel : ViewModel() {
     val numNewPosts: LiveData<Int> get() = _numNewPosts
     private val userDataCache = HashMap<String, HashMap<String, String>>()
     private val _dbResponse = MutableLiveData<RecyclerItemResponse>()
-    val dbResponse: LiveData<RecyclerItemResponse?> get() = _dbResponse
+    val dbResponse: LiveData<RecyclerItemResponse> get() = _dbResponse
 
     init {
         fetchPosts()

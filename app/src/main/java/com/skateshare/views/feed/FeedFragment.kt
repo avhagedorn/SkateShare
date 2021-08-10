@@ -52,7 +52,6 @@ class FeedFragment : Fragment() {
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
         viewModel.numNewPosts.observe(viewLifecycleOwner, Observer {
-            Log.i("1one", viewModel.getData().toString())
             binding.refreshLayout.isRefreshing = false
             adapter.submitList(viewModel.getData())
             if (!uiIsInitialized)

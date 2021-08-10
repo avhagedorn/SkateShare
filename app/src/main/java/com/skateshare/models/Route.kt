@@ -9,9 +9,6 @@ data class Route(
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0L,
 
-    @ColumnInfo(name = "posted_by")
-    var posted_by : String = "",
-
     @ColumnInfo(name = "start_time_millis")
     val time_start : Long = 0L,
 
@@ -46,7 +43,7 @@ data class Route(
     var accuracy : MutableList<Float> = mutableListOf(),
 
     @ColumnInfo(name = "speed")
-    var speed : MutableList<Float>,
+    var speed : MutableList<Float> = mutableListOf(),
 
     @ColumnInfo(name = "image_url")
     var image_url : String? = null

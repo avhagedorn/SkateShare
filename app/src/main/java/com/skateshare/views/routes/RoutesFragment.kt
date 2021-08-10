@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
@@ -94,6 +95,10 @@ class RoutesFragment : Fragment() {
                 viewModel.resetResponse()
             }
         })
+
+        binding.tempButton.setOnClickListener {
+            findNavController().navigate(RoutesFragmentDirections.actionRoutesFragmentToPrivateRoutesFragment())
+        }
 
         return binding.root
     }

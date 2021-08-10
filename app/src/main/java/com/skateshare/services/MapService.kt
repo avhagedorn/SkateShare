@@ -22,6 +22,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.model.LatLng
@@ -29,15 +30,17 @@ import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
 import com.skateshare.misc.PermissionsUtil.hasLocationPermissions
+import com.skateshare.models.ReverseGeocodeLocation
 import com.skateshare.models.Route
+import com.skateshare.repostitories.createReverseGeocoder
 import com.skateshare.services.MapHelper.calculateAvgSpeed
 import com.skateshare.services.MapHelper.formatTime
 import com.skateshare.services.MapHelper.metersToStandardUnits
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -52,7 +55,6 @@ class MapService : LifecycleService() {
     @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     @Inject lateinit var localRoutesDao: LocalRoutesDao
 
-    private val readyToDestroy = MutableLiveData<Boolean>()
     private val elapsedSeconds = MutableLiveData<Long>()
     private var timerEnabled = false
     private var startTime = 0L
@@ -104,14 +106,10 @@ class MapService : LifecycleService() {
         isTracking.observe(this, Observer { trackingStatus ->
             updateLocationTracking(trackingStatus)
         })
-
-        readyToDestroy.observe(this, Observer { isReady ->
-            if (isReady)
-                onDestroy()
-        })
     }
 
     private fun initializeLiveData() {
+        accuracyData.postValue(mutableListOf<Float>())
         routeData.postValue(mutableListOf<LatLng>())
         speedData.postValue(mutableListOf<Float>())
         isTracking.postValue(true)
@@ -183,7 +181,6 @@ class MapService : LifecycleService() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 saveRoute()
-                readyToDestroy.postValue(true)
             } catch (e: Exception) {
                 Log.i("1one", e.message.toString())
             }
@@ -213,7 +210,8 @@ class MapService : LifecycleService() {
         try {
             insertRoute(newLats, newLngs)
         } catch (e: Exception) {
-            Toast.makeText(this, e.message.toString(), Toast.LENGTH_LONG).show()
+            Log.i("1one", e.toString())
+            Toast.makeText(applicationContext, e.message.toString(), Toast.LENGTH_LONG).show()
         }
     }
 

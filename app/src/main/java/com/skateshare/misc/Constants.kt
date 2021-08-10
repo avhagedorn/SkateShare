@@ -51,3 +51,9 @@ const val MOUNTAINBOARD = "Mountainboard"
 const val LOW_HILLS = "Nearly Flat"
 const val MEDIUM_HILLS = "Moderately Hilly"
 const val HIGH_HILLS = "Very Hilly"
+
+const val QUERY_LIMIT = 10
+const val BY_DATE = 0
+const val BY_DISTANCE = 1
+const val BY_DURATION = 2
+const val BY_SPEED = 3

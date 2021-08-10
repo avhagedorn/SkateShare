@@ -11,11 +11,16 @@ import com.skateshare.misc.DEFAULT_LOCATION
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.misc.MAX_ZOOM_RADIUS
 import com.skateshare.misc.MIN_ZOOM_QUERY
+import com.skateshare.models.ReverseGeocodeLocation
 import com.skateshare.models.Route
 import com.skateshare.models.RouteGlobalMap
 import com.skateshare.repostitories.FirestoreRoutes
+import com.skateshare.repostitories.createReverseGeocoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.math.pow
 
 class RoutesViewModel : ViewModel() {
