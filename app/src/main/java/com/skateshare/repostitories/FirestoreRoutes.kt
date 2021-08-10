@@ -3,12 +3,15 @@ package com.skateshare.repostitories
 import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.maps.android.PolyUtil
 import com.skateshare.misc.routeToRoutePath
 import com.skateshare.misc.routeToRoutePost
 import com.skateshare.models.Route
@@ -71,7 +74,7 @@ object FirestoreRoutes {
     // data is required and to avoid querying unnecessarily large datasets.
 
     suspend fun createRoute(route: Route, description: String,
-                            minBoardType: String, altitudeRating: String) {
+                            minBoardType: String, altitudeRating: String, path: String) {
         val posterId = FirebaseAuth.getInstance().uid!!
         val documentId = UUID.randomUUID().toString()
         val timestamp = Timestamp.now()
@@ -93,11 +96,12 @@ object FirestoreRoutes {
         FirebaseFirestore.getInstance()
             .document("posts/$documentId")
             .set(routeDataPreview)
-        createRoutePath(route, timestamp, posterId, documentId)
+        createRoutePath(route, timestamp, posterId, documentId, path)
     }
 
-    private suspend fun createRoutePath(route: Route, date: Timestamp, uid: String, id: String) {
-        val routeMapData = routeToRoutePath(id, date, uid, route)
+    private suspend fun createRoutePath(route: Route, date: Timestamp,
+                                        uid: String, id: String, path: String) {
+        val routeMapData = routeToRoutePath(id, date, uid, route, path)
         FirebaseFirestore.getInstance()
             .document("routesGlobalMap/$id")
             .set(routeMapData)

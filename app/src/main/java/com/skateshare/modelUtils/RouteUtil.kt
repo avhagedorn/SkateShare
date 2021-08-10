@@ -4,11 +4,11 @@ import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.maps.android.PolyUtil
 import com.skateshare.misc.POLYLINE_COLOR
 import com.skateshare.misc.POLYLINE_WIDTH
 import com.skateshare.models.RouteGlobalMap
 import com.skateshare.models.RoutePost
-import com.skateshare.repostitories.FirestoreUser.getUserData
 
 suspend fun DocumentSnapshot.toRoutePost(cache: HashMap<String, HashMap<String, String>>) : RoutePost? {
     return try {
@@ -37,15 +37,14 @@ suspend fun DocumentSnapshot.toRoutePost(cache: HashMap<String, HashMap<String, 
 
 fun DocumentSnapshot.toRouteGlobalMap() : RouteGlobalMap? {
     return try {
-        val lats = get("latPath") as List<Double>
-        val lngs = get("lngPath") as List<Double>
+        val encodedPath = getString("encodedPath")!!
 
         RouteGlobalMap(
             id = getString("id")!!,
             date = getDate("date")!!,
             distanceMi = getDouble("lengthMi")!!,
             distanceKm = getDouble("lengthKm")!!,
-            polyline = generatePolyline(lats, lngs)
+            polyline = generatePolyline(encodedPath)
         )
     } catch (e: Exception) {
         Log.i("RouteUtil", e.message.toString())
@@ -53,17 +52,9 @@ fun DocumentSnapshot.toRouteGlobalMap() : RouteGlobalMap? {
     }
 }
 
-private fun generatePolyline(lats: List<Double>, lngs: List<Double>) =
+private fun generatePolyline(path: String) =
     PolylineOptions()
-        .addAll(getLatLngPath(lats, lngs))
+        .addAll(PolyUtil.decode(path))
         .color(POLYLINE_COLOR)
         .width(POLYLINE_WIDTH)
         .clickable(true)
-
-private fun getLatLngPath(lats: List<Double>, lngs: List<Double>) : List<LatLng> {
-    val output = mutableListOf<LatLng>()
-    for (i in lats.indices) {
-        output.add(LatLng(lats[i], lngs[i]))
-    }
-    return output
-}

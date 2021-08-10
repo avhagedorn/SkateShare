@@ -42,7 +42,7 @@ fun routeToRoutePost(id: String,
         "imageUrl" to url
     )
 
-fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route) =
+fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route, path: String) =
     hashMapOf<String, Any?>(
         "id" to id,
         "postedBy" to uid,
@@ -50,8 +50,7 @@ fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route) =
         "accuracy" to route.accuracy,       // TODO: REMOVE ME
         "lengthMi" to route.length_mi,
         "lengthKm" to route.length_km,
-        "latPath" to route.lat_path,
-        "lngPath" to route.lng_path,
+        "encodedPath" to path,
         "startLat" to route.lat_start,
         "startLng" to route.lng_start,
         "geohash" to GeoFireUtils.getGeoHashForLocation(

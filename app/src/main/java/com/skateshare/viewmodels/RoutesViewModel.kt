@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.PolyUtil
 import com.skateshare.misc.DEFAULT_LOCATION
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.misc.MAX_ZOOM_RADIUS
@@ -37,7 +38,8 @@ class RoutesViewModel : ViewModel() {
                                 minBoardType: String, altitudeRating: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                FirestoreRoutes.createRoute(route, description, minBoardType, altitudeRating)
+                val path = encodePolylinePath(route)
+                FirestoreRoutes.createRoute(route, description, minBoardType, altitudeRating, path)
                 _firebaseResponse.postValue(
                     ExceptionResponse("Uploaded route successfully!", true))
             } catch (e: Exception) {
@@ -91,6 +93,18 @@ class RoutesViewModel : ViewModel() {
                 queryRadius = currentRadius*2
             }
         }
+    }
+
+    private fun encodePolylinePath(route: Route) : String {
+        val latLngPath = mutableListOf<LatLng>()
+        val lats = route.lat_path
+        val lngs = route.lng_path
+
+        for (i in lats.indices) {
+            latLngPath.add(LatLng(lats[i], lngs[i]))
+        }
+
+        return PolyUtil.encode(latLngPath)
     }
 
     private fun calculateRadiusFromZoom(zoom: Float) = MAX_ZOOM_RADIUS / 2.0.pow(zoom + 4.0)
