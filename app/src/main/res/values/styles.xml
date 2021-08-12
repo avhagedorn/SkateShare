@@ -34,5 +34,4 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
-
 </resources>

@@ -103,7 +103,7 @@ class MapService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         fusedLocationProviderClient = FusedLocationProviderClient(this)
-        isTracking.observe(this, Observer { trackingStatus ->
+        isTracking.observe(this, { trackingStatus ->
             updateLocationTracking(trackingStatus)
         })
     }
@@ -158,7 +158,7 @@ class MapService : LifecycleService() {
         createNotificationChannel(notificationManager)
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 
-        elapsedSeconds.observe(this, Observer { time ->
+        elapsedSeconds.observe(this, { time ->
             time?.let{
                 val notification = notificationBuilder
                     .setContentText(formatTime(time * 1000L))
@@ -209,10 +209,18 @@ class MapService : LifecycleService() {
         updateNotification(notificationManager, R.string.saving_to_database, 75)
         try {
             insertRoute(newLats, newLngs)
+            updateAvgSpeed()
         } catch (e: Exception) {
-            Log.i("1one", e.toString())
             Toast.makeText(applicationContext, e.message.toString(), Toast.LENGTH_LONG).show()
         }
+    }
+    
+    private suspend fun updateAvgSpeed() {
+        val kmh = localRoutesDao.getAvgSpeedKm()
+        applicationContext.getSharedPreferences("userData", Context.MODE_PRIVATE).edit()
+            .putFloat("avgSpeedKm", kmh)
+            .putFloat("avgSpeedMi", kmh*0.6213712f)
+            .apply()
     }
 
     private fun updateNotification(manager: NotificationManager, messageId: Int, progress: Int) {

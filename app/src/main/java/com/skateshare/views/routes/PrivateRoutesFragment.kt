@@ -10,20 +10,16 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skateshare.R
 import com.skateshare.databinding.FragmentPrivateRoutesBinding
-import com.skateshare.misc.BY_DATE
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.models.LoadingItem
 import com.skateshare.models.Route
 import com.skateshare.viewmodels.PrivateRoutesViewModel
-import com.skateshare.views.feed.recyclerviewcomponents.FeedAdapter
-import com.skateshare.views.routes.recyclerviewcomponents.MyRecyclerViewAnimator
 import com.skateshare.views.routes.recyclerviewcomponents.RouteListener
 import com.skateshare.views.routes.recyclerviewcomponents.RoutesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,13 +46,12 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.postList.layoutManager = LinearLayoutManager(requireContext())
         binding.sortOptions.onItemSelectedListener = this
         _recyclerView = binding.postList
-        recyclerView.itemAnimator = MyRecyclerViewAnimator()
         unit = requireContext()
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
             .getString("units", UNIT_MILES)!!
 
-        _adapter = RoutesAdapter(RouteListener ({ itemId ->
-            Log.i("1one", itemId.toString())
+        _adapter = RoutesAdapter(RouteListener ({ routeId ->
+            goToDetailedView(routeId)
         }, { itemPosition ->
             Log.i("1one", itemPosition.toString())
         }), unit)
@@ -75,7 +70,7 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.sortOptions.adapter = adapter
         }
 
-        viewModel.hasNewRoutes.observe(viewLifecycleOwner, Observer { hasNewRoutes ->
+        viewModel.hasNewRoutes.observe(viewLifecycleOwner, { hasNewRoutes ->
             if (hasNewRoutes) {
                 adapter.submitList(viewModel.getCurrentRoutes())
                 viewModel.resetHasNewRoutes()
@@ -106,6 +101,12 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         })
+    }
+
+    private fun goToDetailedView(routeId: Long) {
+        findNavController().navigate(
+            PrivateRoutesFragmentDirections
+                .actionPrivateRoutesFragmentToDetailedRouteFragment(routeId))
     }
 
     private fun loadUi() {
@@ -149,6 +150,8 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        _recyclerView = null
+        _adapter = null
     }
 
 }

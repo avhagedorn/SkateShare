@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
@@ -37,6 +38,7 @@ class CreatePostFragment : Fragment() {
             if (uri != null) {
                 Glide.with(this)
                     .load(uri)
+                    .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .into(binding.postImage)
@@ -59,7 +61,7 @@ class CreatePostFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.image_required, Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.exceptionResponse.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.exceptionResponse.observe(viewLifecycleOwner, { response ->
             response?.let {
                 if (response.success) {
                     Snackbar.make(requireView(), R.string.post_created, Snackbar.LENGTH_LONG).show()

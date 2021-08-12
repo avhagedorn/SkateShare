@@ -33,11 +33,8 @@ class RouteViewHolder private constructor(private val binding: PrivateRouteItemB
 
     fun bind(route: Route, unit: String, clickListener: RouteListener) {
         binding.route = route
-        binding.unit = UNIT_MILES
+        binding.unit = unit
+        binding.listener = clickListener
         binding.executePendingBindings()
-
-//        binding.deleteIcon.setOnClickListener {
-//            clickListener.deleteListener(route, layoutPosition)
-//        }
     }
 }

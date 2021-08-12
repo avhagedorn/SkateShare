@@ -9,7 +9,8 @@ import com.skateshare.models.FeedItem
 import com.skateshare.models.Post
 import com.skateshare.models.RoutePost
 
-class FeedAdapter(val listener: SleepNightListener) : ListAdapter<FeedItem, ItemViewHolder>(FeedDiffCallback()) {
+class FeedAdapter(val listener: SleepNightListener, val units: String, val avgSpeed: Float)
+    : ListAdapter<FeedItem, ItemViewHolder>(FeedDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return when (viewType) {
@@ -23,7 +24,8 @@ class FeedAdapter(val listener: SleepNightListener) : ListAdapter<FeedItem, Item
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         when (getItemViewType(position)) {
             POST_MEDIA -> (holder as PostViewHolder).bind(getItem(position) as Post, listener)
-            POST_ROUTE -> (holder as RoutePostViewHolder).bind(getItem(position) as RoutePost, listener)
+            POST_ROUTE -> (holder as RoutePostViewHolder)
+                .bind(getItem(position) as RoutePost, units, avgSpeed, listener)
             POST_LOADING -> (holder as LoadingViewHolder) /* Do nothing */
             else -> throw Exception("No type match found!")
         }

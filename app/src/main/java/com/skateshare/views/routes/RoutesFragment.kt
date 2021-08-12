@@ -51,7 +51,7 @@ class RoutesFragment : Fragment() {
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
 
-        viewModel.publicRoutes.observe( viewLifecycleOwner, Observer { routes ->
+        viewModel.publicRoutes.observe( viewLifecycleOwner, { routes ->
             if (map != null) {
                 routes.forEach { route ->
                     route.polyline.let { options ->
@@ -82,14 +82,7 @@ class RoutesFragment : Fragment() {
 
         }
 
-        binding.share.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val route = localRoutesDao.routesByDate(1, 0).first()
-                viewModel.publishRouteToFirestore(route, "Fun route!", LONGBOARD, MEDIUM_HILLS)
-            }
-        }
-
-        viewModel.firebaseResponse.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.firebaseResponse.observe(viewLifecycleOwner, { response ->
             if (response.status != null) {
                 Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()
                 viewModel.resetResponse()
@@ -97,7 +90,9 @@ class RoutesFragment : Fragment() {
         })
 
         binding.tempButton.setOnClickListener {
-            findNavController().navigate(RoutesFragmentDirections.actionRoutesFragmentToPrivateRoutesFragment())
+            findNavController().navigate(
+                RoutesFragmentDirections
+                    .actionRoutesFragmentToPrivateRoutesFragment())
         }
 
         return binding.root
@@ -106,17 +101,6 @@ class RoutesFragment : Fragment() {
     private fun loadUi() {
         binding.loading.visibility = View.GONE
         binding.content.visibility = View.VISIBLE
-    }
-
-    private fun addPolylines(coordinates: List<LatLng>) {
-        for (i in 1 until coordinates.size) {
-            val polylineOptions = PolylineOptions()
-                .color(POLYLINE_COLOR)
-                .width(POLYLINE_WIDTH)
-                .add(coordinates[i-1])
-                .add(coordinates[i])
-            map?.addPolyline(polylineOptions)
-        }
     }
 
     override fun onStart() {
@@ -142,6 +126,11 @@ class RoutesFragment : Fragment() {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView?.onLowMemory()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {

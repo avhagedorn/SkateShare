@@ -34,21 +34,6 @@ class RoutesViewModel : ViewModel() {
     private var queryCenter = DEFAULT_LOCATION
     private var queryRadius = 0.0
 
-    fun publishRouteToFirestore(route: Route, description: String,
-                                minBoardType: String, altitudeRating: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val path = encodePolylinePath(route)
-                FirestoreRoutes.createRoute(route, description, minBoardType, altitudeRating, path)
-                _firebaseResponse.postValue(
-                    ExceptionResponse("Uploaded route successfully!", true))
-            } catch (e: Exception) {
-                _firebaseResponse.postValue(
-                    ExceptionResponse(e.message.toString(), false))
-            }
-        }
-    }
-
     fun deleteRouteFromFirestore(routeId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -93,18 +78,6 @@ class RoutesViewModel : ViewModel() {
                 queryRadius = currentRadius*2
             }
         }
-    }
-
-    private fun encodePolylinePath(route: Route) : String {
-        val latLngPath = mutableListOf<LatLng>()
-        val lats = route.lat_path
-        val lngs = route.lng_path
-
-        for (i in lats.indices) {
-            latLngPath.add(LatLng(lats[i], lngs[i]))
-        }
-
-        return PolyUtil.encode(latLngPath)
     }
 
     private fun calculateRadiusFromZoom(zoom: Float) = MAX_ZOOM_RADIUS / 2.0.pow(zoom + 4.0)

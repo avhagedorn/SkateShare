@@ -52,7 +52,13 @@ const val LOW_HILLS = "Nearly Flat"
 const val MEDIUM_HILLS = "Moderately Hilly"
 const val HIGH_HILLS = "Very Hilly"
 
+const val SMOOTH_ROADS = "Smooth Roads"
+const val AVERAGE_ROADS = "Average Roads"
+const val ROUGH_ROADS = "Rough Roads"
+const val NO_ROADS = "Trail"
+
 const val QUERY_LIMIT = 10
+
 const val BY_DATE = 0
 const val BY_DISTANCE = 1
 const val BY_DURATION = 2

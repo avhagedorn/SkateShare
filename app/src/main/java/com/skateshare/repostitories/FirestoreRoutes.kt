@@ -73,8 +73,8 @@ object FirestoreRoutes {
     // For greater efficiency, route data is denormalized to avoid double querying when post
     // data is required and to avoid querying unnecessarily large datasets.
 
-    suspend fun createRoute(route: Route, description: String,
-                            minBoardType: String, altitudeRating: String, path: String) {
+    suspend fun createRoute(route: Route, description: String, boardType: String,
+                            terrainType: String, roadType: String, path: String) {
         val posterId = FirebaseAuth.getInstance().uid!!
         val documentId = UUID.randomUUID().toString()
         val timestamp = Timestamp.now()
@@ -86,8 +86,9 @@ object FirestoreRoutes {
             date = timestamp,
             url = null,
             description = description,
-            minBoardType = minBoardType,
-            altitudeRating = altitudeRating,
+            boardType = boardType,
+            terrainType = terrainType,
+            roadType = roadType,
             route = route,
             city = location.city,
             province = location.province,

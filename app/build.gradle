@@ -125,8 +125,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    // Map utils for
+    // Map utils for encoding path data
     implementation 'com.google.maps.android:android-maps-utils:2.2.5'
+
+    // MPAndroidChart for plotting a route's speed vs time
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 kapt {

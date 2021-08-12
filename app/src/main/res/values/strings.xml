@@ -91,7 +91,30 @@
         <item>Duration</item>
         <item>Speed</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="speed">Speed</string>
+    <string name="hint_board_type">What board type is best for this route?</string>
+    <string name="hint_terrain_type">How would you describe the terrain?</string>
+    <string name="hint_road_type">How would you describe the road quality?</string>
+    <string name="board_type">Board Type</string>
+    <string name="terrain_type">Terrain Type</string>
+    <string name="road_type">Road Type</string>
+    <string name="route_description_hint">Tell us about your route!</string>
+
+    <string name="route_post_data">
+        🤙 %1$.1f %2$s \n
+        🌄 %3$s \n
+        🛣 %4$s \n
+        ⚡ %5$s recommended! \n
+        🔥 Your expected time: %6$s \n
+        🌎 %7$s
+    </string>
+
+    <string name="unknown_location">Unknown Location</string>
+
+    <string name="unknown_time">Unknown Time</string>
+    <string name="minutes_time">%1$.1f minutes</string>
+    <string name="hour_time">%1$d hour %2$.1f minutes</string>
+    <string name="hours_time">%1$d hours %2$.1f minutes</string>
 
 </resources>

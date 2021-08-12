@@ -58,7 +58,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
 
             // Re-initialize existing polyline in case of app restart
-            MapService.isTracking.observe(viewLifecycleOwner, Observer { newStatus ->
+            MapService.isTracking.observe(viewLifecycleOwner, { newStatus ->
                 newStatus?.let {
                     if (it) {
                         map?.clear()
@@ -94,28 +94,28 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun observeService() {
-        MapService.isTracking.observe(viewLifecycleOwner, Observer { newStatus ->
+        MapService.isTracking.observe(viewLifecycleOwner, { newStatus ->
             updateRoute(newStatus)
         })
 
-        MapService.routeData.observe(viewLifecycleOwner, Observer { polyline ->
+        MapService.routeData.observe(viewLifecycleOwner, { polyline ->
             _route = polyline
             addLastLocation()
             panCameraToLastLocation()
         })
 
-        MapService.elapsedMilliseconds.observe(viewLifecycleOwner, Observer { time ->
+        MapService.elapsedMilliseconds.observe(viewLifecycleOwner, { time ->
             binding.displayDuration.text = formatTime(time, false)
         })
 
-        MapService.speedData.observe(viewLifecycleOwner, Observer { metersPerSecond ->
+        MapService.speedData.observe(viewLifecycleOwner, { metersPerSecond ->
             usersUnits?.let { units ->
                 if (metersPerSecond.isNotEmpty())
                     binding.displaySpeed.text = metersToStandardSpeed(metersPerSecond.last(), units)
             }
         })
 
-        MapService.distanceMeters.observe(viewLifecycleOwner, Observer { meters ->
+        MapService.distanceMeters.observe(viewLifecycleOwner, { meters ->
             usersUnits?.let { units ->
                 binding.displayLength.text = metersToFormattedUnits(meters, units)
             }
@@ -220,9 +220,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun loadServicePolyline() {
-        Log.i("1one", "loadServicePolyline")
         MapService.routeData.value?.let {
-            Log.i("1one", it.toString())
             _route = it
             addAllLocations()
         }

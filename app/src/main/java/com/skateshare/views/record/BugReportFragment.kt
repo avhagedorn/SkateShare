@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -47,7 +46,7 @@ class BugReportFragment : Fragment() {
         binding.submitButton.setOnClickListener { sendBugReport(updatedUri) }
         binding.cancelButton.setOnClickListener { returnToRecord() }
 
-        viewModel.reportResponse.observe(viewLifecycleOwner, Observer {
+        viewModel.reportResponse.observe(viewLifecycleOwner, {
             it?.let { response ->
                 if (response.status != null) {
                     Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()

@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
+import com.skateshare.misc.QUERY_LIMIT
 import com.skateshare.models.User
 import com.skateshare.models.User.Companion.newDefaultUser
 import com.skateshare.models.User.Companion.toUser
@@ -20,7 +21,7 @@ object FirestorePost {
             .collection("posts")
             .whereLessThan("datePosted", end)
             .orderBy("datePosted")
-            .limitToLast(5)
+            .limitToLast(QUERY_LIMIT.toLong())
             .get()
             .await()
     }

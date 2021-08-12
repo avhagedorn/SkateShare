@@ -1,5 +1,6 @@
 package com.skateshare.views.feed
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentFeedBinding
+import com.skateshare.misc.UNIT_KILOMETERS
+import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.LoadingItem
 import com.skateshare.viewmodels.FeedViewModel
 import com.skateshare.views.feed.recyclerviewcomponents.FeedAdapter
@@ -25,6 +28,8 @@ class FeedFragment : Fragment() {
     private var _binding: FragmentFeedBinding? = null
     private val binding: FragmentFeedBinding get() = _binding!!
     private lateinit var viewModel: FeedViewModel
+    private lateinit var unit: String
+    private var avgSpeed: Float = 0f
     private var _adapter: FeedAdapter? = null
     private val adapter: FeedAdapter get() = _adapter!!
     private var _recyclerView: RecyclerView? = null
@@ -41,24 +46,26 @@ class FeedFragment : Fragment() {
         binding.postList.layoutManager = LinearLayoutManager(requireContext())
         _recyclerView = binding.postList
 
+        getDataFromSharedPreferences()
+
         _adapter = FeedAdapter(SleepNightListener({ uid ->
             findNavController().navigate(FeedFragmentDirections.actionFeedFragmentToProfileFragment(uid))
         }, { postId, position ->
             confirmDeleteModal(postId, position)
-        }))
+        }), unit, avgSpeed)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.postList.adapter = adapter
 
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
-        viewModel.numNewPosts.observe(viewLifecycleOwner, Observer {
+        viewModel.numNewPosts.observe(viewLifecycleOwner, {
             binding.refreshLayout.isRefreshing = false
             adapter.submitList(viewModel.getData())
             if (!uiIsInitialized)
                 loadUi()
         })
 
-        viewModel.dbResponse.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.dbResponse.observe(viewLifecycleOwner, { response ->
             response?.let {
                 if (response.enabled) {
                     if (response.message == null) {
@@ -75,6 +82,18 @@ class FeedFragment : Fragment() {
         awaitScrollRequest()
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    private fun getDataFromSharedPreferences() {
+        val sharedPreferences = requireContext()
+            .getSharedPreferences("userData", Context.MODE_PRIVATE)
+
+        unit = sharedPreferences.getString("units", UNIT_MILES)!!
+        avgSpeed = when (unit) {
+            UNIT_MILES -> sharedPreferences.getFloat("avgSpeedMi", 0f)
+            UNIT_KILOMETERS -> sharedPreferences.getFloat("avgSpeedKm", 0f)
+            else -> 0f
+        }
     }
 
     private fun refresh() {

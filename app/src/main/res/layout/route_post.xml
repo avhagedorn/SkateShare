@@ -9,6 +9,14 @@
             type="com.skateshare.models.RoutePost" />
 
         <variable
+            name="unit"
+            type="String" />
+
+        <variable
+            name="avgSpeed"
+            type="Float" />
+
+        <variable
             name="listener"
             type="com.skateshare.views.feed.recyclerviewcomponents.SleepNightListener" />
     </data>
@@ -69,7 +77,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="4dp"
-            android:text="🤙 2.3 Miles \n ⚡ Mountainboards recommended! \n 🌄 Fairly Hilly \n 🔥 Your expected time: 36 minutes \n 🌎 Minneapolis, Minnesota, USA"
+            routeData="@{route}"
+            routeUnits="@{unit}"
+            userAvgSpeed="@{avgSpeed}"
+            tools:text="🤙 2.3 Miles \n 🌄 Fairly Hilly \n 🛣 Smooth Roads \n ⚡ Mountainboards recommended! \n 🔥 Your expected time: 36 minutes \n 🌎 Minneapolis, Minnesota, USA"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/route_announcement" />

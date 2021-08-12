@@ -45,7 +45,7 @@ data class Route(
     @ColumnInfo(name = "speed")
     var speed : MutableList<Float> = mutableListOf(),
 
-    @ColumnInfo(name = "image_url")
-    var image_url : String? = null
+    @ColumnInfo(name = "is_public")
+    var isPublic : Boolean = false
 )
 

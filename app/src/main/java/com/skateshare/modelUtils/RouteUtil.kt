@@ -25,8 +25,12 @@ suspend fun DocumentSnapshot.toRoutePost(cache: HashMap<String, HashMap<String, 
             startLng = getDouble("startLng")!!,
             lengthMi = getDouble("lengthMi")!!,
             lengthKm = getDouble("lengthKm")!!,
-            minBoardType = getString("minBoardType")!!,
-            altitudeRating = getString("altitudeRating")!!,
+            boardType = getString("boardType")!!,
+            terrainType = getString("terrainType")!!,
+            roadType = getString("roadType")!!,
+            city = getString("city")!!,
+            province = getString("province")!!,
+            country = getString("country")!!,
             imgUrl = getString("imageUrl")
         )
     } catch (e: Exception) {

@@ -81,7 +81,8 @@
         <action
             android:id="@+id/action_routesFragment_to_privateRoutesFragment"
             app:destination="@id/privateRoutesFragment"
-            app:enterAnim="@android:anim/fade_in" />
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/routesFragment" />
     </fragment>
     <fragment
         android:id="@+id/bugReportFragment"
@@ -91,5 +92,34 @@
         android:id="@+id/privateRoutesFragment"
         android:name="com.skateshare.views.routes.PrivateRoutesFragment"
         android:label="Private Routes"
-        tools:layout="@layout/fragment_private_routes" />
+        tools:layout="@layout/fragment_private_routes" >
+        <action
+            android:id="@+id/action_privateRoutesFragment_to_detailedRouteFragment"
+            app:destination="@id/detailedRouteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/privateRoutesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailedRouteFragment"
+        android:name="com.skateshare.views.routes.DetailedRouteFragment"
+        android:label="Private Route"
+        tools:layout="@layout/fragment_detailed_route">
+        <argument
+            android:name="routeId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_detailedRouteFragment_to_shareRouteFragment"
+            app:destination="@id/shareRouteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/detailedRouteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareRouteFragment"
+        android:name="com.skateshare.views.routes.ShareRouteFragment"
+        android:label="Share Route"
+        tools:layout="@layout/fragment_share_route">
+        <argument
+            android:name="routeId"
+            app:argType="long" />
+    </fragment>
 </navigation>
