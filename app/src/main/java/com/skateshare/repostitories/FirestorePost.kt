@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
@@ -22,6 +23,13 @@ object FirestorePost {
             .whereLessThan("datePosted", end)
             .orderBy("datePosted")
             .limitToLast(QUERY_LIMIT.toLong())
+            .get()
+            .await()
+    }
+
+    suspend fun getPost(postId: String) : DocumentSnapshot {
+        return FirebaseFirestore.getInstance()
+            .document("posts/$postId")
             .get()
             .await()
     }

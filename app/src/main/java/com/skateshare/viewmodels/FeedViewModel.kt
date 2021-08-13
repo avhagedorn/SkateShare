@@ -57,10 +57,7 @@ class FeedViewModel : ViewModel() {
         query.forEach { item ->
             val post = when (item.getLong("postType")?.toInt()) {
                 POST_MEDIA -> item.toPost(userDataCache)
-                POST_ROUTE -> {
-                    Log.i("1one", "ROUTE FOUND")
-                    item.toRoutePost(userDataCache)
-                }
+                POST_ROUTE -> item.toRoutePost(userDataCache)
                 else -> item.toPost(userDataCache)
             }
             if (post != null) {
@@ -86,6 +83,10 @@ class FeedViewModel : ViewModel() {
 
     fun resetRecyclerItemResponse() {
         _dbResponse.value = RecyclerItemResponse(-1, null, false)
+    }
+
+    fun resetNumNewPosts() {
+        _numNewPosts.postValue(0)
     }
 
     fun refreshData() {

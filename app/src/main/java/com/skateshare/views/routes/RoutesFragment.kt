@@ -8,23 +8,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRoutesBinding
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
 import com.skateshare.viewmodels.RoutesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,8 +35,6 @@ class RoutesFragment : Fragment() {
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
 
-    private var lastPosition: LatLng = LatLng(33.3, -110.0)
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,6 +42,7 @@ class RoutesFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_routes, container, false)
         viewModel = ViewModelProvider(this).get(RoutesViewModel::class.java)
+
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
 
@@ -65,6 +60,7 @@ class RoutesFragment : Fragment() {
         mapView?.getMapAsync { providedMap ->
             map = providedMap
             map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
+            goToLastPosition(savedInstanceState, RoutesFragmentArgs.fromBundle(requireArguments()))
             loadUi()
 
             map?.setOnCameraIdleListener {
@@ -96,6 +92,21 @@ class RoutesFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun goToLastPosition(bundle: Bundle?, argsFromPost: RoutesFragmentArgs) {
+        var lat: Double? = 0.0
+        var lng: Double? = 0.0
+        if (argsFromPost.containsArgs) {
+            lat = argsFromPost.lat.toDouble()
+            lng = argsFromPost.lng.toDouble()
+        } else {
+            lat = bundle?.getDouble("lastLat")
+            lng = bundle?.getDouble("lastLng")
+        }
+
+        if (lat != null && lng != null)
+            map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat, lng)))
     }
 
     private fun loadUi() {
@@ -130,6 +141,9 @@ class RoutesFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        val lastCoordinate = map?.cameraPosition?.target ?: DEFAULT_LOCATION
+        outState.putDouble("lastLat", lastCoordinate.latitude)
+        outState.putDouble("lastLng", lastCoordinate.longitude)
         mapView?.onSaveInstanceState(outState)
     }
 

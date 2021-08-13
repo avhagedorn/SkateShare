@@ -23,7 +23,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="100dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:onClick="@{() -> listener.onClick(route)}">
@@ -62,11 +62,11 @@
             android:layout_height="wrap_content"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:layout_marginEnd="8dp"
             app:distanceFormatterRoute="@{route}"
             app:distanceFormatterUnit="@{unit}"
             app:layout_constraintBottom_toTopOf="@+id/speed"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/delete_icon"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/date"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
@@ -84,41 +84,19 @@
             app:speedFormatterUnit="@{unit}"
             tools:text="17.3 MPH" />
 
-        <!--
-        <TextView
-            android:id="@+id/city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Minneapolis"
-            android:textSize="16sp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/province"
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_baseline_delete_forever_24"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/distance"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintStart_toEndOf="@+id/distance" />
 
-        <TextView
-            android:id="@+id/province"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Minnesota"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/country"
-            app:layout_constraintEnd_toEndOf="@+id/city"
-            app:layout_constraintTop_toBottomOf="@+id/city" />
-
-        <TextView
-            android:id="@+id/country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="US"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/city"
-            app:layout_constraintTop_toBottomOf="@+id/province" />
-        -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

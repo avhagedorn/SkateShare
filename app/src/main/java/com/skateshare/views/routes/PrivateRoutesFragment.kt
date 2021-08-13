@@ -9,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentPrivateRoutesBinding
 import com.skateshare.misc.UNIT_MILES
@@ -35,7 +37,6 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val adapter: RoutesAdapter get() = _adapter!!
     private lateinit var unit: String
     private lateinit var viewModel: PrivateRoutesViewModel
-    private val routes = mutableListOf<Route>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,8 +53,8 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         _adapter = RoutesAdapter(RouteListener ({ routeId ->
             goToDetailedView(routeId)
-        }, { itemPosition ->
-            Log.i("1one", itemPosition.toString())
+        }, { index, route ->
+            viewModel.deleteRoute(index, route)
         }), unit)
 
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -70,15 +71,29 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.sortOptions.adapter = adapter
         }
 
-        viewModel.hasNewRoutes.observe(viewLifecycleOwner, { hasNewRoutes ->
-            if (hasNewRoutes) {
-                adapter.submitList(viewModel.getCurrentRoutes())
-                viewModel.resetHasNewRoutes()
-                loadUi()
+        viewModel.numNewRoutes.observe(viewLifecycleOwner, { numRoutes ->
+            Log.i("1one", adapter.currentList.toString())
+            Log.i("1one", numRoutes.toString())
+            if (numRoutes > 0)
+                adapter.submitList(viewModel.getData())
+            loadUi()
+            viewModel.resetNumNewRoutes()
+        })
+
+        viewModel.deleteResponse.observe(viewLifecycleOwner, { response ->
+            if (response.status != null) {
+                if (response.success) {
+                    adapter.submitList(viewModel.getData())
+                    Snackbar.make(requireView(),
+                        R.string.route_deleted, Snackbar.LENGTH_SHORT).show()
+                } else
+                     Toast.makeText(requireContext(),
+                         response.status, Toast.LENGTH_SHORT).show()
+                viewModel.resetDeleteResponse()
             }
         })
 
-        // awaitScrollRequest()
+        //awaitScrollRequest()
         return binding.root
     }
 
@@ -93,11 +108,10 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 if (position == adapter.itemCount - 1
                     && viewModel.allRoutes.size > 1
                     && !viewModel.isLoadingData) {
-                        Log.i("1one", "loading more data")
-                    recyclerView.post {
-                        adapter.submitList(viewModel.getCurrentRoutes())
-                    }
                     viewModel.getRoutes()
+                    recyclerView.post {
+                        adapter.submitList(viewModel.getData())
+                    }
                 }
             }
         })
@@ -106,7 +120,7 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun goToDetailedView(routeId: Long) {
         findNavController().navigate(
             PrivateRoutesFragmentDirections
-                .actionPrivateRoutesFragmentToDetailedRouteFragment(routeId))
+                .actionPrivateRoutesFragmentToDetailedPrivateRouteFragment(routeId))
     }
 
     private fun loadUi() {
@@ -137,15 +151,7 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         fetchData()
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        Log.i("1one", "112312")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (viewModel.allRoutes.isNotEmpty())
-            adapter.submitList(viewModel.getTotalRoutes())
-    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onDestroyView() {
         super.onDestroyView()

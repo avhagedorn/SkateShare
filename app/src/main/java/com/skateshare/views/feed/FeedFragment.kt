@@ -49,10 +49,19 @@ class FeedFragment : Fragment() {
         getDataFromSharedPreferences()
 
         _adapter = FeedAdapter(SleepNightListener({ uid ->
-            findNavController().navigate(FeedFragmentDirections.actionFeedFragmentToProfileFragment(uid))
+            findNavController().navigate(
+                FeedFragmentDirections.actionFeedFragmentToProfileFragment(uid))
         }, { postId, position ->
             confirmDeleteModal(postId, position)
+        }, { lat, lng ->
+            findNavController().navigate(
+                FeedFragmentDirections.actionFeedFragmentToRoutesFragment(
+                    true,
+                    lat,
+                    lng
+                ))
         }), unit, avgSpeed)
+
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.postList.adapter = adapter
 

@@ -75,7 +75,7 @@ object ServiceModule {
     fun getWarningNotification(
         @ApplicationContext context: Context
     ) = NotificationCompat.Builder(context, WARNING_CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_baseline_add_24)
+        .setSmallIcon(R.drawable.ic_baseline_warning_24)
         .setContentTitle("SkateShare")
         .setStyle(NotificationCompat.BigTextStyle()
             .bigText("GPS tracking has been disabled, or battery saver is on. " +

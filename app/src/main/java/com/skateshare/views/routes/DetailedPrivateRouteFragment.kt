@@ -32,7 +32,7 @@ import com.skateshare.views.profile.ProfileFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailedRouteFragment : Fragment() {
+class DetailedPrivateRouteFragment : Fragment() {
 
     private var _binding: FragmentDetailedRouteBinding? = null
     private val binding: FragmentDetailedRouteBinding get() = _binding!!
@@ -47,7 +47,7 @@ class DetailedRouteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed_route, container, false)
-        routeId = DetailedRouteFragmentArgs.fromBundle(requireArguments()).routeId
+        routeId = DetailedPrivateRouteFragmentArgs.fromBundle(requireArguments()).routeId
         unit = requireContext()
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
             .getString("units", UNIT_MILES) ?: UNIT_MILES
@@ -89,8 +89,8 @@ class DetailedRouteFragment : Fragment() {
 
     private fun shareRoute() {
         findNavController().navigate(
-            DetailedRouteFragmentDirections
-                .actionDetailedRouteFragmentToShareRouteFragment(binding.route!!.id))
+            DetailedPrivateRouteFragmentDirections
+                .actionDetailedPrivateRouteFragmentToShareRouteFragment(binding.route!!.id))
     }
 
     private fun getStyledLineData(data : LineDataSet) = LineData(

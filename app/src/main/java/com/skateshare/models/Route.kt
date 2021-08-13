@@ -47,5 +47,14 @@ data class Route(
 
     @ColumnInfo(name = "is_public")
     var isPublic : Boolean = false
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        return other is Route
+                && duration == other.duration
+                && length_mi == other.length_mi
+                && lat_start == other.lat_start
+                && lng_start == other.lng_start
+    }
+}
 

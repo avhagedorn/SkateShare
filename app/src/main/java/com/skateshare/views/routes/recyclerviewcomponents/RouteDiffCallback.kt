@@ -6,7 +6,7 @@ import com.skateshare.models.Route
 class RouteDiffCallback : DiffUtil.ItemCallback<Route>() {
 
     override fun areItemsTheSame(oldItem: Route, newItem: Route): Boolean {
-        return oldItem === newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Route, newItem: Route): Boolean {

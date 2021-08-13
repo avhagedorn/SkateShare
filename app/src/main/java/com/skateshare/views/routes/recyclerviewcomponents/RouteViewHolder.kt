@@ -36,5 +36,9 @@ class RouteViewHolder private constructor(private val binding: PrivateRouteItemB
         binding.unit = unit
         binding.listener = clickListener
         binding.executePendingBindings()
+
+        binding.deleteIcon.setOnClickListener {
+            clickListener.onDelete(layoutPosition, route)
+        }
     }
 }

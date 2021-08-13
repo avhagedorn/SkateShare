@@ -22,9 +22,10 @@ class PrivateRoutesViewModel @Inject constructor(
 
     var isLoadingData = false
     val allRoutes = mutableListOf<Route>()
-    private var newRoutes = listOf<Route>()
-    private val _hasNewRoutes = MutableLiveData<Boolean>()
-    val hasNewRoutes: LiveData<Boolean> get() = _hasNewRoutes
+    private val _numNewRoutes = MutableLiveData<Int>()
+    val numNewRoutes: LiveData<Int> get() = _numNewRoutes
+    private val _deleteResponse = MutableLiveData<ExceptionResponse>()
+    val deleteResponse: LiveData<ExceptionResponse> get() = _deleteResponse
     var currentQueryAttribute = BY_DATE
     private var queryOffset = 0
 
@@ -36,20 +37,37 @@ class PrivateRoutesViewModel @Inject constructor(
         isLoadingData = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                newRoutes = when (currentQueryAttribute) {
+                val newRoutes = when (currentQueryAttribute) {
                     BY_DATE -> dao.routesByDate(QUERY_LIMIT, queryOffset)
                     BY_DISTANCE -> dao.routesByDistance(QUERY_LIMIT, queryOffset)
                     BY_DURATION -> dao.routesByDuration(QUERY_LIMIT, queryOffset)
                     BY_SPEED -> dao.routesBySpeed(QUERY_LIMIT, queryOffset)
                     else -> throw Exception("Invalid query code!")
                 }
-                queryOffset += newRoutes.size
-                allRoutes.addAll(getCurrentRoutes())
-                _hasNewRoutes.postValue(true)
+                if (newRoutes.isNotEmpty()) {
+                    queryOffset += newRoutes.size
+                    allRoutes.addAll(newRoutes)
+                    _numNewRoutes.postValue(newRoutes.size)
+                }
                 isLoadingData = false
             } catch (e: Exception) {
                 Log.i("1one", e.toString())
                 isLoadingData = false
+                resetNumNewRoutes()
+            }
+        }
+    }
+
+    fun deleteRoute(index: Int, route: Route) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                dao.delete(route)
+                allRoutes.removeAt(index)
+                _deleteResponse.postValue(
+                    ExceptionResponse("", true))
+            } catch (e: Exception) {
+                _deleteResponse.postValue(
+                    ExceptionResponse(e.message, false))
             }
         }
     }
@@ -65,15 +83,15 @@ class PrivateRoutesViewModel @Inject constructor(
     fun clearExistingRoutes() {
         queryOffset = 0
         allRoutes.clear()
-        newRoutes = listOf()
     }
 
-    fun resetHasNewRoutes() {
-        _hasNewRoutes.postValue(false)
+    fun resetNumNewRoutes() {
+        _numNewRoutes.postValue(0)
     }
 
-    fun getTotalRoutes() = allRoutes.toMutableList()
+    fun resetDeleteResponse() {
+        _deleteResponse.postValue(ExceptionResponse(null, false))
+    }
 
-    fun getCurrentRoutes() = newRoutes.toMutableList()
-
+    fun getData() = allRoutes.toMutableList<Route>()
 }

@@ -55,10 +55,12 @@
                 android:layout_height="0dp"
                 android:visibility="invisible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sort_choices"
-                tools:listitem="@layout/private_route_item" />
+                tools:listitem="@layout/private_route_item"
+                tools:visibility="visible" />
 
             <ProgressBar
                 android:id="@+id/posts_loading"

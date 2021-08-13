@@ -214,7 +214,7 @@ class MapService : LifecycleService() {
             Toast.makeText(applicationContext, e.message.toString(), Toast.LENGTH_LONG).show()
         }
     }
-    
+
     private suspend fun updateAvgSpeed() {
         val kmh = localRoutesDao.getAvgSpeedKm()
         applicationContext.getSharedPreferences("userData", Context.MODE_PRIVATE).edit()

@@ -5,8 +5,8 @@ import com.skateshare.models.Post
 import com.skateshare.models.Route
 
 class RouteListener(val clickListener: (id: Long) -> Unit,
-                    val deleteListener: (pos: Int) -> Unit) {
+                    val deleteListener: (index: Int, route: Route) -> Unit) {
 
     fun onClick(item: Route) = clickListener(item.id)
-    fun onDelete(position: Int) = deleteListener(position)
+    fun onDelete(index: Int, route: Route) = deleteListener(index, route)
 }

@@ -62,14 +62,27 @@
 
         <TextView
             android:id="@+id/route_announcement"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="@string/route_header"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:routeHeader="@{route}"
-            app:layout_constraintTop_toBottomOf="@+id/image_content" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_content"
+            app:routeHeader="@{route}" />
+
+        <ImageButton
+            android:id="@+id/button_to_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/red_500"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            android:layout_marginEnd="16dp"
+            android:onClick="@{() -> listener.onClickRoute(route)}"
+            app:layout_constraintBottom_toBottomOf="@+id/route_announcement"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/route_announcement" />
 
         <TextView
             android:id="@+id/route_tags"
@@ -90,7 +103,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_margin="16dp"
-            android:onClick="@{() -> listener.onClick(route)}"
+            android:onClick="@{() -> listener.onClickUser(route)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/post_description"
             app:itemProfilePicture="@{route}"
@@ -103,7 +116,7 @@
             android:layout_margin="16dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:onClick="@{() -> listener.onClick(route)}"
+            android:onClick="@{() -> listener.onClickUser(route)}"
             app:layout_constraintBottom_toBottomOf="@+id/profile_picture"
             app:layout_constraintStart_toEndOf="@+id/profile_picture"
             app:layout_constraintTop_toTopOf="@+id/profile_picture"
