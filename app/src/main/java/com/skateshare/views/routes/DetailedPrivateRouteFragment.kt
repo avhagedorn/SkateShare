@@ -68,12 +68,12 @@ class DetailedPrivateRouteFragment : Fragment() {
             viewModel.getRoute(routeId)
             viewModel.routeData.observe(viewLifecycleOwner, { route ->
                 binding.route = route
-                val lineDataSet = viewModel.getSpeedData()
+                val lineDataSet = viewModel.getSpeedData(unit)
                 removeChartDetail()
                 binding.speedChart.data = getStyledLineData(lineDataSet)
                 binding.speedChart.invalidate()
                 binding.executePendingBindings()
-                loadUi(false/*route.isPublic*/)
+                loadUi(route.isPublic)
                 frameRoute(route)
             })
         }
@@ -116,6 +116,7 @@ class DetailedPrivateRouteFragment : Fragment() {
     private fun removeChartDetail() {
         binding.speedChart.apply {
             description.text = ""
+            axisLeft.textColor = ContextCompat.getColor(requireContext(), R.color.red_500)
             xAxis.isEnabled = false
             description.isEnabled = false
             legend.isEnabled = false

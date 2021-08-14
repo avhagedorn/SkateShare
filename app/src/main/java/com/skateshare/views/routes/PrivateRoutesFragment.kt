@@ -70,10 +70,11 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         viewModel.numNewRoutes.observe(viewLifecycleOwner, { numRoutes ->
-            if (numRoutes > 0)
+            if (numRoutes >= 0) {
                 adapter.submitList(viewModel.getData())
-            loadUi()
-            viewModel.resetNumNewRoutes()
+                loadUi()
+                viewModel.resetNumNewRoutes()
+            }
         })
 
         viewModel.deleteResponse.observe(viewLifecycleOwner, { response ->

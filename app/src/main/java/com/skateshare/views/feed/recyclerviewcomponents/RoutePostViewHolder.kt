@@ -9,13 +9,9 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import com.skateshare.databinding.FeedPostBinding
 import com.skateshare.databinding.RoutePostBinding
-import com.skateshare.models.Post
 import com.skateshare.models.RoutePost
 
 class RoutePostViewHolder private constructor(private val binding: RoutePostBinding) : ItemViewHolder(binding.root) {
@@ -28,7 +24,7 @@ class RoutePostViewHolder private constructor(private val binding: RoutePostBind
         }
     }
 
-    fun bind(route: RoutePost, units: String, userAvgSpeed: Float, clickListener: SleepNightListener) {
+    fun bind(route: RoutePost, units: String, userAvgSpeed: Float, clickListener: FeedItemListener) {
         binding.route = route
         binding.unit = units
         binding.avgSpeed = userAvgSpeed

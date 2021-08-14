@@ -24,7 +24,7 @@ class PostViewHolder private constructor(private val binding: FeedPostBinding) :
         }
     }
 
-    fun bind(post: Post, clickListener: SleepNightListener) {
+    fun bind(post: Post, clickListener: FeedItemListener) {
         binding.post = post
         binding.listener = clickListener
         binding.executePendingBindings()

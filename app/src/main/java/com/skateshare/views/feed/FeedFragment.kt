@@ -19,7 +19,7 @@ import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.viewmodels.FeedViewModel
 import com.skateshare.views.feed.recyclerviewcomponents.FeedAdapter
-import com.skateshare.views.feed.recyclerviewcomponents.SleepNightListener
+import com.skateshare.views.feed.recyclerviewcomponents.FeedItemListener
 
 class FeedFragment : Fragment() {
 
@@ -46,7 +46,7 @@ class FeedFragment : Fragment() {
 
         getDataFromSharedPreferences()
 
-        _adapter = FeedAdapter(SleepNightListener({ uid ->
+        _adapter = FeedAdapter(FeedItemListener({ uid ->
             findNavController().navigate(
                 FeedFragmentDirections.actionFeedFragmentToProfileFragment(uid))
         }, { postId, position ->

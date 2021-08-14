@@ -91,7 +91,7 @@ class FeedViewModel : ViewModel() {
     }
 
     fun resetNumNewPosts() {
-        _numNewPosts.postValue(-1)
+        _numNewPosts.postValue(-1 )
     }
 
     fun refreshData() {

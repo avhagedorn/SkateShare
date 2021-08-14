@@ -18,7 +18,7 @@
 
         <variable
             name="listener"
-            type="com.skateshare.views.feed.recyclerviewcomponents.SleepNightListener" />
+            type="com.skateshare.views.feed.recyclerviewcomponents.FeedItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -4,9 +4,9 @@ import com.skateshare.models.FeedItem
 import com.skateshare.models.Post
 import com.skateshare.models.RoutePost
 
-class SleepNightListener(val clickUserListener: (uid: String) -> Unit,
-                         val deleteListener: (id: String, pos: Int) -> Unit,
-                         val clickRouteListener: (lat: Float, lng: Float) -> Unit) {
+class FeedItemListener(val clickUserListener: (uid: String) -> Unit,
+                       val deleteListener: (id: String, pos: Int) -> Unit,
+                       val clickRouteListener: (lat: Float, lng: Float) -> Unit) {
 
     fun onClickUser(item: FeedItem) = clickUserListener(item.posterId)
     fun onDelete(post: Post, position: Int) = deleteListener(post.id, position)

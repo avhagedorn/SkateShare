@@ -8,7 +8,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
-import com.skateshare.misc.ExceptionResponse
+import com.skateshare.misc.*
 import com.skateshare.models.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,14 +45,21 @@ class DetailedRouteViewModel @Inject constructor (
         }
     }
 
-    fun getSpeedData(): LineDataSet {
+    fun getSpeedData(unit: String): LineDataSet {
+        val multiplier = when (unit) {
+            UNIT_MILES -> METERS_SEC_TO_MI_HR
+            UNIT_KILOMETERS -> METERS_SEC_TO_KM_HR
+            else -> 0f
+        }
         val entries = mutableListOf<Entry>()
         val route = routeData.value
 
         route?.let {
             val speeds = it.speed
-            for (i in speeds.indices)
-                entries.add(Entry(i.toFloat(), speeds[i]))
+            for (i in speeds.indices) {
+                val speed = speeds[i]*multiplier
+                entries.add(Entry(i.toFloat(), speed))
+            }
         }
 
         return LineDataSet(entries, "Route speed")

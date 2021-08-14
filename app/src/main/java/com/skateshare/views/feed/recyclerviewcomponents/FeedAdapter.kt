@@ -9,7 +9,7 @@ import com.skateshare.models.FeedItem
 import com.skateshare.models.Post
 import com.skateshare.models.RoutePost
 
-class FeedAdapter(val listener: SleepNightListener, val units: String, val avgSpeed: Float)
+class FeedAdapter(val listener: FeedItemListener, val units: String, val avgSpeed: Float)
     : ListAdapter<FeedItem, ItemViewHolder>(FeedDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

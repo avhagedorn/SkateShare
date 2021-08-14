@@ -1,5 +1,7 @@
 package com.skateshare.views.routes
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentRoutesBinding
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
+import com.skateshare.models.RouteGlobalMap
 import com.skateshare.viewmodels.RoutesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -28,7 +31,7 @@ class RoutesFragment : Fragment() {
 
     @Inject
     lateinit var localRoutesDao: LocalRoutesDao
-
+    private lateinit var sharedPreferences: SharedPreferences
     private var _binding: FragmentRoutesBinding? = null
     private val binding: FragmentRoutesBinding get() = _binding!!
     private lateinit var viewModel: RoutesViewModel
@@ -39,45 +42,36 @@ class RoutesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_routes, container, false)
         viewModel = ViewModelProvider(this).get(RoutesViewModel::class.java)
-
+        sharedPreferences = requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE)
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
-
-        viewModel.publicRoutes.observe( viewLifecycleOwner, { routes ->
-            if (map != null) {
-                routes.forEach { route ->
-                    route.polyline.let { options ->
-                        map!!.addPolyline(options)
-                            .tag = route.id
-                    }
-                }
-            }
-        })
 
         mapView?.getMapAsync { providedMap ->
             map = providedMap
             map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style))
-            goToLastPosition(savedInstanceState, RoutesFragmentArgs.fromBundle(requireArguments()))
-            loadUi()
+            goToLastPosition(RoutesFragmentArgs.fromBundle(requireArguments()))
 
-            map?.setOnCameraIdleListener {
-                if (map!!.cameraPosition.zoom >= MIN_ZOOM_QUERY) {
-                    viewModel.geoQueryIfNeeded(
-                        currentCoordinate = map!!.cameraPosition.target,
-                        zoom = map!!.cameraPosition.zoom
-                    )
-                }
+            map?.setOnMapLoadedCallback {
+                loadUi()
             }
 
-            // TODO: Add popup to route
+            map?.setOnCameraIdleListener {
+                queryIfNeeded()
+            }
+
             map?.setOnPolylineClickListener {
                 findNavController().navigate(
                     RoutesFragmentDirections.actionRoutesFragmentToDetailedPublicRouteFragment(it.id)
                 )
             }
+
+            viewModel.publicRoutes.observe(viewLifecycleOwner, { routes ->
+                Log.i("1one", "observing!")
+                Log.i("1one", "observed routes -> $routes")
+                addRoutes(routes)
+            })
         }
 
         viewModel.firebaseResponse.observe(viewLifecycleOwner, { response ->
@@ -96,19 +90,39 @@ class RoutesFragment : Fragment() {
         return binding.root
     }
 
-    private fun goToLastPosition(bundle: Bundle?, argsFromPost: RoutesFragmentArgs) {
+    private fun addRoutes(routes: List<RouteGlobalMap>) {
+        routes.forEach { route ->
+            route.polyline.let { options ->
+                map?.addPolyline(options)?.apply {
+                    this.tag = route.id
+                }
+            }
+        }
+    }
+
+    private fun queryIfNeeded() {
+        if (map!!.cameraPosition.zoom >= MIN_ZOOM_QUERY) {
+            viewModel.geoQueryIfNeeded(
+                currentCoordinate = map!!.cameraPosition.target,
+                zoom = map!!.cameraPosition.zoom
+            )
+        }
+    }
+
+    private fun goToLastPosition(argsFromPost: RoutesFragmentArgs) {
         val lat: Double?
         val lng: Double?
+        val zoom: Float?
         if (argsFromPost.containsArgs) {
             lat = argsFromPost.lat.toDouble()
             lng = argsFromPost.lng.toDouble()
+            zoom = MAP_ZOOM
         } else {
-            lat = bundle?.getDouble("lastLat")
-            lng = bundle?.getDouble("lastLng")
+            lat = sharedPreferences.getFloat("lastLat", 0f).toDouble()
+            lng = sharedPreferences.getFloat("lastLng", 0f).toDouble()
+            zoom = sharedPreferences.getFloat("lastZoom", MAP_ZOOM)
         }
-
-        if (lat != null && lng != null)
-            map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat, lng)))
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), zoom))
     }
 
     private fun loadUi() {
@@ -124,6 +138,12 @@ class RoutesFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         mapView?.onStop()
+        val pos = map?.cameraPosition?.target ?: DEFAULT_LOCATION
+        sharedPreferences.edit()
+            .putFloat("lastLat", pos.latitude.toFloat())
+            .putFloat("lastLng", pos.longitude.toFloat())
+            .putFloat("lastZoom", map?.cameraPosition?.zoom ?: MAP_ZOOM)
+            .apply()
     }
 
     override fun onPause() {
@@ -143,13 +163,11 @@ class RoutesFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val lastCoordinate = map?.cameraPosition?.target ?: DEFAULT_LOCATION
-        outState.putDouble("lastLat", lastCoordinate.latitude)
-        outState.putDouble("lastLng", lastCoordinate.longitude)
         mapView?.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {
+        map?.clear()
         mapView?.onDestroy()
         map = null
         mapView = null

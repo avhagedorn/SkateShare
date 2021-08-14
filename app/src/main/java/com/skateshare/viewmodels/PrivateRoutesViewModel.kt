@@ -27,10 +27,6 @@ class PrivateRoutesViewModel @Inject constructor(
     var currentQueryAttribute = BY_DATE
     private var queryOffset = 0
 
-    init {
-        getRoutes()
-    }
-
     fun getRoutes() {
         isLoadingData = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -85,7 +81,7 @@ class PrivateRoutesViewModel @Inject constructor(
     }
 
     fun resetNumNewRoutes() {
-        _numNewRoutes.postValue(0)
+        _numNewRoutes.postValue(-1)
     }
 
     fun resetDeleteResponse() {
@@ -96,4 +92,5 @@ class PrivateRoutesViewModel @Inject constructor(
     }
 
     fun getData() = allRoutes.toMutableList<Route>()
+
 }

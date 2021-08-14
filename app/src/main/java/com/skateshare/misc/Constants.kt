@@ -63,3 +63,6 @@ const val BY_DATE = 0
 const val BY_DISTANCE = 1
 const val BY_DURATION = 2
 const val BY_SPEED = 3
+
+const val METERS_SEC_TO_MI_HR = 2.236936f
+const val METERS_SEC_TO_KM_HR = 3.6f
