@@ -63,13 +63,12 @@ class RoutesFragment : Fragment() {
 
             map?.setOnPolylineClickListener {
                 findNavController().navigate(
-                    RoutesFragmentDirections.actionRoutesFragmentToDetailedPublicRouteFragment(it.id)
+                    RoutesFragmentDirections.
+                    actionRoutesFragmentToDetailedPublicRouteFragment(it.tag.toString())
                 )
             }
 
             viewModel.publicRoutes.observe(viewLifecycleOwner, { routes ->
-                Log.i("1one", "observing!")
-                Log.i("1one", "observed routes -> $routes")
                 addRoutes(routes)
             })
         }
@@ -94,7 +93,7 @@ class RoutesFragment : Fragment() {
         routes.forEach { route ->
             route.polyline.let { options ->
                 map?.addPolyline(options)?.apply {
-                    this.tag = route.id
+                    tag = route.id
                 }
             }
         }

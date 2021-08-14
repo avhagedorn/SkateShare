@@ -34,7 +34,7 @@ suspend fun DocumentSnapshot.toRoutePost(cache: HashMap<String, HashMap<String, 
             imgUrl = getString("imageUrl")
         )
     } catch (e: Exception) {
-        Log.i("RouteUtil", e.message.toString())
+        Log.i("RouteUtil", e.toString())
         null
     }
 }

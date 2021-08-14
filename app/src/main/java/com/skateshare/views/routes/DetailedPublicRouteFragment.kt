@@ -1,25 +1,31 @@
 package com.skateshare.views.routes
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.google.firebase.Timestamp
 import com.skateshare.R
 import com.skateshare.databinding.FragmentDetailedPublicRouteBinding
-import com.skateshare.databinding.FragmentDetailedRouteBinding
+import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.models.Route
 import com.skateshare.models.RoutePost
-import com.skateshare.viewmodels.DetailedRouteViewModel
 import com.skateshare.viewmodels.PublicDetailedRouteViewModel
-import java.security.Timestamp
-import java.time.Instant.now
 
 class DetailedPublicRouteFragment : Fragment() {
 
@@ -39,11 +45,19 @@ class DetailedPublicRouteFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(PublicDetailedRouteViewModel::class.java)
         viewModel.getRoutePost(routeId)
 
-        unit = requireContext()
+        val sharedPreferences = requireContext()
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
-            .getString("units", UNIT_MILES) ?: UNIT_MILES
+        unit = sharedPreferences.getString("units", UNIT_MILES) ?: UNIT_MILES
+        val avgSpeed = when (unit) {
+            UNIT_MILES -> sharedPreferences.getFloat("avgSpeedMi", 0f)
+            UNIT_KILOMETERS -> sharedPreferences.getFloat("avgSpeedKm", 0f)
+            else -> 0f
+        }
+
         binding.unit = unit
-        // TODO: Figure out lateinit binding / initialize with dummy data
+        binding.route = RoutePost("", 0.0, 0.0, 0.0, 0.0, "", "", "", "", "", "", 0.0, "", "", "", "", Timestamp.now(), false, "")
+        binding.avgSpeed = avgSpeed
+        binding.executePendingBindings()
 
         binding.postUsername.setOnClickListener { goToProfile() }
         binding.postUsername.setOnClickListener { goToProfile() }
@@ -51,6 +65,7 @@ class DetailedPublicRouteFragment : Fragment() {
         viewModel.routeData.observe(viewLifecycleOwner, {
             binding.route = it
             loadUi()
+            loadImage()
         })
 
         viewModel.firebaseResponse.observe(viewLifecycleOwner, { response ->
@@ -61,6 +76,31 @@ class DetailedPublicRouteFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    private fun loadImage() {
+        val url = binding.route?.imgUrl
+        if (url != null) {
+            val postImage = binding.postImage
+            Glide.with(postImage.context)
+                .load(url)
+                .priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .listener(object: RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?, model: Any?, target: Target<Drawable>?,
+                        isFirstResource: Boolean) = false
+
+                    override fun onResourceReady(
+                        resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                        dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        binding.loading.visibility = View.GONE
+                        return false
+                    }
+                }).into(postImage)
+        } else {
+            binding.loading.visibility = View.GONE
+        }
     }
 
     private fun loadUi() {
@@ -75,5 +115,4 @@ class DetailedPublicRouteFragment : Fragment() {
                 .actionDetailedPublicRouteFragmentToProfileFragment(posterId)
         )
     }
-
 }

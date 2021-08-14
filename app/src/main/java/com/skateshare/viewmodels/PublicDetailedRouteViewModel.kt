@@ -1,5 +1,6 @@
 package com.skateshare.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,8 +23,14 @@ class PublicDetailedRouteViewModel : ViewModel() {
     fun getRoutePost(postId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                Log.i("1one", postId)
                 val snapshot = FirestorePost.getPost(postId)
-                _routeData.postValue(snapshot.toRoutePost(hashMapOf()))      // No hashmap cache
+                Log.i("1one", "snapshot -> ${snapshot.getString("id")}")
+                val route = snapshot.toRoutePost(hashMapOf())
+                if (route != null)
+                    _routeData.postValue(route)      // No hashmap cache
+                else
+                    Log.i("1one", "route is null!")
             } catch (e: Exception) {
                 _firebaseResponse.postValue(ExceptionResponse(
                     e.message,
