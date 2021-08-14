@@ -1,16 +1,15 @@
 package com.skateshare.views.routes
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentShareRouteBinding
 import com.skateshare.misc.*
@@ -37,12 +36,16 @@ class ShareRouteFragment : Fragment() {
         binding.cancel.setOnClickListener { returnToDetailedView() }
 
         viewModel.postResponse.observe(viewLifecycleOwner, { response ->
-            if (response.status != null) {
-                binding.loading.visibility = View.GONE
-                Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()
-                if (response.success)
+            if (response.isEnabled) {
+                if (response.isSuccessful) {
+                    Snackbar.make(
+                        requireView(), R.string.share_route_success, Snackbar.LENGTH_SHORT).show()
                     returnToDetailedView()
-                viewModel.resetPostResponse()
+                } else {
+                    Toast.makeText(
+                        requireContext(), response.message, Toast.LENGTH_SHORT).show()
+                }
+                viewModel.resetResponse()
             }
         })
 

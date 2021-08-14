@@ -46,15 +46,30 @@ class BugReportFragment : Fragment() {
         binding.submitButton.setOnClickListener { sendBugReport(updatedUri) }
         binding.cancelButton.setOnClickListener { returnToRecord() }
 
-        viewModel.reportResponse.observe(viewLifecycleOwner, {
-            it?.let { response ->
-                if (response.status != null) {
-                    Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()
-                    if (response.success) {
+        viewModel.reportResponse.observe(viewLifecycleOwner, { response ->
+            if (response.isEnabled) {
+                if (response.isSuccessful) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.bug_report_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else {
+                    if (response.message == null)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.bug_report_missing_field),
+                            Toast.LENGTH_SHORT).show()
+                    else {
+                        Toast.makeText(
+                            requireContext(),
+                            response.message,
+                            Toast.LENGTH_SHORT).show()
                         returnToRecord()
                     }
-                    viewModel.resetReportResponse()
                 }
+                viewModel.resetReportResponse()
             }
         })
 

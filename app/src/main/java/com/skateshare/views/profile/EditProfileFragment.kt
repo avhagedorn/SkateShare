@@ -68,12 +68,16 @@ class EditProfileFragment : Fragment() {
         }
 
         viewModel.exceptionResponse.observe(viewLifecycleOwner) { response ->
-            if (!response.success) {
-                sendToast(response.status!!)
-            } else
-                sendToast(getString(R.string.edit_success))
-                returnToProfile()
-            binding.progressBar.visibility = View.GONE
+            if (response.isEnabled) {
+                if (response.isSuccessful) {
+                    sendToast(getString(R.string.edit_success))
+                    returnToProfile()
+                } else {
+                    sendToast(response.message!!)
+                }
+                binding.progressBar.visibility = View.GONE
+                viewModel.resetResponse()
+            }
         }
 
         return binding.root

@@ -31,10 +31,14 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
         try {
             viewModelScope.launch(Dispatchers.IO) {
                 FirestoreUser.updateUserData(updatedData, uid)
-                _exceptionResponse.postValue(ExceptionResponse(null, true))
+                _exceptionResponse.postValue(ExceptionResponse(
+                    message = null,
+                    isSuccessful = true))
             }
         } catch (e: Exception) {
-            _exceptionResponse.postValue(ExceptionResponse(e.message, false))
+            _exceptionResponse.postValue(ExceptionResponse(
+                e.message,
+                isSuccessful = false))
         }
     }
 
@@ -42,10 +46,22 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 FirestoreUser.uploadProfilePicture(uid, uri)
-                _exceptionResponse.postValue(ExceptionResponse(null, true))
+                _exceptionResponse.postValue(ExceptionResponse(
+                    message = null,
+                    isSuccessful = true))
             } catch (e: Exception){
-                _exceptionResponse.postValue(ExceptionResponse(e.message, false))
+                _exceptionResponse.postValue(ExceptionResponse(
+                    e.message,
+                    isSuccessful = false))
             }
         }
+    }
+
+    fun resetResponse() {
+        _exceptionResponse.postValue(ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = false
+        ))
     }
 }

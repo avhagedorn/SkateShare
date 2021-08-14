@@ -2,12 +2,11 @@ package com.skateshare.views.feed
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -18,7 +17,6 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentFeedBinding
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.models.LoadingItem
 import com.skateshare.viewmodels.FeedViewModel
 import com.skateshare.views.feed.recyclerviewcomponents.FeedAdapter
 import com.skateshare.views.feed.recyclerviewcomponents.SleepNightListener
@@ -72,17 +70,18 @@ class FeedFragment : Fragment() {
             adapter.submitList(viewModel.getData())
             if (!uiIsInitialized)
                 loadUi()
+            viewModel.resetNumNewPosts()
         })
 
-        viewModel.dbResponse.observe(viewLifecycleOwner, { response ->
+        viewModel.deleteResponse.observe(viewLifecycleOwner, { response ->
             response?.let {
-                if (response.enabled) {
-                    if (response.message == null) {
+                if (response.isEnabled) {
+                    if (response.isSuccessful) {
                         adapter.submitList(viewModel.getData())
                         Snackbar.make(requireView(), R.string.post_deleted, Snackbar.LENGTH_SHORT).show()
                     }
                     else
-                        Snackbar.make(requireView(), response.message, Snackbar.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show()
                     viewModel.resetRecyclerItemResponse()
                 }
             }
@@ -131,9 +130,7 @@ class FeedFragment : Fragment() {
                 if ((position == adapter.itemCount - 2 || position == adapter.itemCount - 1)
                     && !viewModel.isLoadingData) {
                     recyclerView.post {
-                        val loadingList = viewModel.getData()
-                        loadingList.add(LoadingItem())
-                        adapter.submitList(loadingList)
+                        adapter.submitList(viewModel.getLoading())
                     }
                     viewModel.fetchPosts()
                 }
@@ -144,11 +141,6 @@ class FeedFragment : Fragment() {
     private fun loadUi() {
         binding.postsLoading.visibility = View.GONE
         binding.postList.visibility = View.VISIBLE
-    }
-
-    private fun hideUi() {
-        binding.postsLoading.visibility = View.VISIBLE
-        binding.postList.visibility = View.INVISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

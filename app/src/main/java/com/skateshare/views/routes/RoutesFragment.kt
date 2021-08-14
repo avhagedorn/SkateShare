@@ -72,6 +72,7 @@ class RoutesFragment : Fragment() {
                 }
             }
 
+            // TODO: Add popup to route
             map?.setOnPolylineClickListener {
                 Log.i("1one", it.tag.toString())
             }
@@ -79,8 +80,8 @@ class RoutesFragment : Fragment() {
         }
 
         viewModel.firebaseResponse.observe(viewLifecycleOwner, { response ->
-            if (response.status != null) {
-                Toast.makeText(requireContext(), response.status, Toast.LENGTH_SHORT).show()
+            if (response.isEnabled && !response.isSuccessful) {
+                Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show()
                 viewModel.resetResponse()
             }
         })
@@ -95,8 +96,8 @@ class RoutesFragment : Fragment() {
     }
 
     private fun goToLastPosition(bundle: Bundle?, argsFromPost: RoutesFragmentArgs) {
-        var lat: Double? = 0.0
-        var lng: Double? = 0.0
+        val lat: Double?
+        val lng: Double?
         if (argsFromPost.containsArgs) {
             lat = argsFromPost.lat.toDouble()
             lng = argsFromPost.lng.toDouble()

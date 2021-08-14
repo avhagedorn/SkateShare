@@ -21,14 +21,18 @@ class BugReportViewModel : ViewModel() {
                 try {
                     FirestoreBugReport.submitBugReport(bugLocation, bugDescription, uri)
                     _reportResponse.postValue(ExceptionResponse(
-                        "Thank you, your report has been recorded.", true))
+                        message = null,
+                        isSuccessful = true))
                 } catch (e: Exception) {
-                    _reportResponse.postValue(ExceptionResponse(e.message, false))
+                    _reportResponse.postValue(ExceptionResponse(
+                        e.message,
+                        isSuccessful = false))
                 }
             }
         } else {
             _reportResponse.postValue(ExceptionResponse(
-                "Please fill out all required fields!", false))
+                message = null,
+                isSuccessful = false))
         }
     }
 

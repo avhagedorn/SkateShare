@@ -4,13 +4,14 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.skateshare.interfaces.BugReportInterface
 import com.skateshare.misc.reportToHashMap
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-object FirestoreBugReport {
+object FirestoreBugReport : BugReportInterface {
 
-    suspend fun submitBugReport(bugLocation: String, bugDescription: String, uri: Uri?) {
+    override suspend fun submitBugReport(bugLocation: String, bugDescription: String, uri: Uri?) {
         val uid = FirebaseAuth.getInstance().uid!!
         val reportId = UUID.randomUUID().toString()
         val reportData = reportToHashMap(bugLocation, bugDescription, uid)
@@ -21,7 +22,6 @@ object FirestoreBugReport {
             screenshot.putFile(uri).await()
             screenshot.downloadUrl.addOnSuccessListener { newUri ->
                 reportData["bugScreenshot"] = newUri.toString()
-
                 saveReport(reportData)
             }
         } else {
@@ -29,7 +29,7 @@ object FirestoreBugReport {
         }
     }
 
-    private fun saveReport(report: HashMap<String, Any?>) {
+    override fun saveReport(report: HashMap<String, Any?>) {
         FirebaseFirestore.getInstance()
             .document("bugReports/${UUID.randomUUID()}")
             .set(report)

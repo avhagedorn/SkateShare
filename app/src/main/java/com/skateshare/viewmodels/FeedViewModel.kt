@@ -1,6 +1,5 @@
 package com.skateshare.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,14 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.QuerySnapshot
+import com.skateshare.misc.ExceptionResponse
 import com.skateshare.misc.POST_MEDIA
 import com.skateshare.misc.POST_ROUTE
-import com.skateshare.misc.RecyclerItemResponse
-import com.skateshare.models.FeedItem
-import com.skateshare.models.LoadingItem
-import com.skateshare.models.Post
 import com.skateshare.modelUtils.toPost
 import com.skateshare.modelUtils.toRoutePost
+import com.skateshare.models.FeedItem
+import com.skateshare.models.LoadingItem
 import com.skateshare.repostitories.FirestorePost
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,8 +30,8 @@ class FeedViewModel : ViewModel() {
     // Event responses
     val numNewPosts: LiveData<Int> get() = _numNewPosts
     private val userDataCache = HashMap<String, HashMap<String, String>>()
-    private val _dbResponse = MutableLiveData<RecyclerItemResponse>()
-    val dbResponse: LiveData<RecyclerItemResponse> get() = _dbResponse
+    private val _deleteResponse = MutableLiveData<ExceptionResponse>()
+    val deleteResponse: LiveData<ExceptionResponse> get() = _deleteResponse
 
     init {
         fetchPosts()
@@ -74,15 +72,22 @@ class FeedViewModel : ViewModel() {
             try {
                 FirestorePost.deletePost(id)
                 totalItems.removeAt(position)
-                _dbResponse.postValue(RecyclerItemResponse(position, null, true))
+                _deleteResponse.postValue(ExceptionResponse(
+                    message = null,
+                    isSuccessful = true))
             } catch (e: Exception) {
-                _dbResponse.postValue(RecyclerItemResponse(-1, e.message, true))
+                _deleteResponse.postValue(ExceptionResponse(
+                    e.message,
+                    isSuccessful = false))
             }
         }
     }
 
     fun resetRecyclerItemResponse() {
-        _dbResponse.value = RecyclerItemResponse(-1, null, false)
+        _deleteResponse.value = ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = false)
     }
 
     fun resetNumNewPosts() {

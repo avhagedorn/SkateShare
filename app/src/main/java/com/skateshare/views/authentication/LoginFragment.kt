@@ -46,13 +46,13 @@ class LoginFragment : Fragment() {
             }
         })
 
-        viewModel.loginException.observe(viewLifecycleOwner) { result ->
-            if (result.success) {
-                if (result.status == null) {
+        viewModel.loginResponse.observe(viewLifecycleOwner) { response ->
+            if (response.isEnabled) {
+                if (response.isSuccessful) {
                     saveLoginStatus()
                     goToMainActivity()
                 } else {
-                    displayError(result.status)
+                    displayError(response.message!!)
                     viewModel.resetLoginException()
                 }
             }

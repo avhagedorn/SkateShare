@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.maps.android.PolyUtil
+import com.skateshare.interfaces.RoutesInterface
 import com.skateshare.misc.routeToRoutePath
 import com.skateshare.misc.routeToRoutePost
 import com.skateshare.models.Route
@@ -27,9 +28,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-object FirestoreRoutes {
+object FirestoreRoutes : RoutesInterface {
 
-    suspend fun getRoutesAboutRadius(lat: Double, lng: Double, radius: Double) : List<RouteGlobalMap> {
+    override suspend fun getRoutesAboutRadius(lat: Double, lng: Double, radius: Double)
+                                                                : List<RouteGlobalMap> {
         try {
             val db = FirebaseFirestore.getInstance()
 
@@ -73,8 +75,8 @@ object FirestoreRoutes {
     // For greater efficiency, route data is denormalized to avoid double querying when post
     // data is required and to avoid querying unnecessarily large datasets.
 
-    suspend fun createRoute(route: Route, description: String, boardType: String,
-                            terrainType: String, roadType: String, path: String) {
+    override suspend fun createRoute(route: Route, description: String, boardType: String,
+                                     terrainType: String, roadType: String, path: String) {
         val posterId = FirebaseAuth.getInstance().uid!!
         val documentId = UUID.randomUUID().toString()
         val timestamp = Timestamp.now()
@@ -100,7 +102,7 @@ object FirestoreRoutes {
         createRoutePath(route, timestamp, posterId, documentId, path)
     }
 
-    private suspend fun createRoutePath(route: Route, date: Timestamp,
+    override suspend fun createRoutePath(route: Route, date: Timestamp,
                                         uid: String, id: String, path: String) {
         val routeMapData = routeToRoutePath(id, date, uid, route, path)
         FirebaseFirestore.getInstance()
@@ -108,10 +110,10 @@ object FirestoreRoutes {
             .set(routeMapData)
     }
 
-    suspend fun deleteRoute(id: String) {
-        val firestore = FirebaseFirestore.getInstance()
-        firestore.document("posts/$id").delete()
-        firestore.document("routesGlobalMap/$id").delete()
+    override suspend fun deleteRoute(id: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.document("posts/$id").delete()
+        db.document("routesGlobalMap/$id").delete()
         // Also delete image if needed
     }
 }

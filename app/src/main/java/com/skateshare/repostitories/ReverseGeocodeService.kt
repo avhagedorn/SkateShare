@@ -11,7 +11,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 fun createReverseGeocoder() : ReverseGeocoder {
     val retrofit = Retrofit.Builder()
         .baseUrl("https://api.bigdatacloud.net")

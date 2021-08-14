@@ -8,12 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
 import com.skateshare.models.Route
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 @HiltViewModel
 class PrivateRoutesViewModel @Inject constructor(
@@ -51,7 +49,6 @@ class PrivateRoutesViewModel @Inject constructor(
                 }
                 isLoadingData = false
             } catch (e: Exception) {
-                Log.i("1one", e.toString())
                 isLoadingData = false
                 resetNumNewRoutes()
             }
@@ -63,11 +60,13 @@ class PrivateRoutesViewModel @Inject constructor(
             try {
                 dao.delete(route)
                 allRoutes.removeAt(index)
-                _deleteResponse.postValue(
-                    ExceptionResponse("", true))
+                _deleteResponse.postValue(ExceptionResponse(
+                    message = null,
+                    isSuccessful = true))
             } catch (e: Exception) {
-                _deleteResponse.postValue(
-                    ExceptionResponse(e.message, false))
+                _deleteResponse.postValue(ExceptionResponse(
+                    e.message,
+                    isSuccessful = false))
             }
         }
     }
@@ -90,7 +89,10 @@ class PrivateRoutesViewModel @Inject constructor(
     }
 
     fun resetDeleteResponse() {
-        _deleteResponse.postValue(ExceptionResponse(null, false))
+        _deleteResponse.postValue(ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = true))
     }
 
     fun getData() = allRoutes.toMutableList<Route>()

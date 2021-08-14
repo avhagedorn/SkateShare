@@ -7,15 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.skateshare.R
 import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
-import com.skateshare.repostitories.AuthenticationService
+import com.skateshare.repostitories.FirebaseAuthentication
 import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
-    private val _loginException = MutableLiveData<ExceptionResponse>()
-    val loginException: LiveData<ExceptionResponse> get() = _loginException
+    private val _loginResponse = MutableLiveData<ExceptionResponse>()
+    val loginResponse: LiveData<ExceptionResponse> get() = _loginResponse
 
     private val _checkCredentialsEmpty = MutableLiveData<EventResponse>()
     val checkCredentialsEmpty: LiveData<EventResponse> get() = _checkCredentialsEmpty
@@ -25,7 +25,7 @@ class AuthViewModel : ViewModel() {
         if (verification.success) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    AuthenticationService.register(email, password)
+                    FirebaseAuthentication.register(email, password)
                     FirestoreUser.setUserData(
                         hashMapOf(
                             "username" to username,
@@ -34,9 +34,13 @@ class AuthViewModel : ViewModel() {
                             "profilePicture" to "https://firebasestorage.googleapis.com/v0/b/skateshare-b768a.appspot.com" +
                                                 "/o/profilePictures%2FdefaultProfilePicture.png?" +
                                                 "alt=media&token=2e7a831a-63d1-4036-a58a-a4704e737a4d"))
-                    _loginException.postValue(ExceptionResponse(null, true))
+                    _loginResponse.postValue(ExceptionResponse(
+                        message = null,
+                        isSuccessful = true))
                 } catch (e: Exception) {
-                    _loginException.postValue(ExceptionResponse(e.message, true))
+                    _loginResponse.postValue(ExceptionResponse(
+                        e.message,
+                        isSuccessful = true))
                 }
             }
         }
@@ -51,10 +55,14 @@ class AuthViewModel : ViewModel() {
         if (verification.success)
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    AuthenticationService.login(email, password)
-                    _loginException.postValue(ExceptionResponse(null, true))
+                    FirebaseAuthentication.login(email, password)
+                    _loginResponse.postValue(ExceptionResponse(
+                        message = null,
+                        isSuccessful = true))
                 } catch (e: Exception) {
-                    _loginException.postValue(ExceptionResponse(e.message, true))
+                    _loginResponse.postValue(ExceptionResponse(
+                        e.message,
+                        isSuccessful = false))
                 }
             }
         else
@@ -82,6 +90,9 @@ class AuthViewModel : ViewModel() {
     }
 
     fun resetLoginException() {
-        _loginException.postValue(ExceptionResponse(null, false))
+        _loginResponse.postValue(ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = false))
     }
 }

@@ -62,13 +62,13 @@ class CreatePostFragment : Fragment() {
         }
 
         viewModel.exceptionResponse.observe(viewLifecycleOwner, { response ->
-            response?.let {
-                if (response.success) {
+            if (response.isEnabled) {
+                if (response.isSuccessful) {
                     Snackbar.make(requireView(), R.string.post_created, Snackbar.LENGTH_LONG).show()
                     findNavController().navigate(CreatePostFragmentDirections.actionCreatePostFragmentToFeedFragment())
                 } else {
                     binding.postProgress.visibility = View.INVISIBLE
-                    Snackbar.make(requireView(), response.status!!, Snackbar.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show()
                 }
                 viewModel.resetException()
             }

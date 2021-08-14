@@ -118,4 +118,11 @@
     <string name="hours_time">%1$d hours %2$.1f minutes</string>
 
     <string name="route_deleted">Route deleted successfully!</string>
+    <string name="failed_to_delete">Failed to delete this route. Please try again!</string>
+
+    <string name="bug_report_success">Thank you, your report has been recorded.</string>
+    <string name="bug_report_missing_field">Please fill out all required fields!</string>
+
+    <string name="share_route_success">"Success! Thanks for sharing your route!"</string>
+
 </resources>

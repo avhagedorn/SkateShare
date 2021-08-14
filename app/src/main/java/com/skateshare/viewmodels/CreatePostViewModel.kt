@@ -31,14 +31,22 @@ class CreatePostViewModel : ViewModel() {
                         "datePosted" to Timestamp.now()
                     )
                 )
-                _exceptionResponse.postValue(ExceptionResponse(null, true))
+                _exceptionResponse.postValue(ExceptionResponse(
+                    message = null,
+                    isSuccessful = true))
             } catch(e: Exception) {
-                _exceptionResponse.postValue(ExceptionResponse(e.toString(), false))
+                _exceptionResponse.postValue(ExceptionResponse(
+                    message = e.toString(),
+                    isSuccessful = false))
             }
         }
     }
 
     fun resetException() {
-
+        _exceptionResponse.postValue(ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = false
+        ))
     }
 }

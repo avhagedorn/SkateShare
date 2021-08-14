@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,7 +24,7 @@ class DetailedPublicRouteFragment : Fragment() {
     private var _binding: FragmentDetailedPublicRouteBinding? = null
     private val binding: FragmentDetailedPublicRouteBinding get() = _binding!!
     private lateinit var viewModel: PublicDetailedRouteViewModel
-    private var routeId: Long = 0L
+    private lateinit var routeId: String
     private lateinit var unit: String
 
     override fun onCreateView(
@@ -32,7 +33,10 @@ class DetailedPublicRouteFragment : Fragment() {
     ): View? {
         _binding =  DataBindingUtil.inflate(
             inflater, R.layout.fragment_detailed_public_route, container, false)
+        routeId = DetailedPublicRouteFragmentArgs.fromBundle(requireArguments()).routeId
         viewModel = ViewModelProvider(this).get(PublicDetailedRouteViewModel::class.java)
+        viewModel.getRoutePost(routeId)
+
         unit = requireContext()
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
             .getString("units", UNIT_MILES) ?: UNIT_MILES
@@ -44,6 +48,13 @@ class DetailedPublicRouteFragment : Fragment() {
         viewModel.routeData.observe(viewLifecycleOwner, {
             binding.route = it
             loadUi()
+        })
+
+        viewModel.firebaseResponse.observe(viewLifecycleOwner, { response ->
+            if (response.isEnabled && !response.isSuccessful) {
+                Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show()
+                viewModel.resetResponse()
+            }
         })
 
         return binding.root

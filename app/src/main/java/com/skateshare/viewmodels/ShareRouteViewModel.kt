@@ -43,20 +43,23 @@ class ShareRouteViewModel @Inject constructor (
                         roadType = roadType,
                         path = encodePolylinePath(route)
                     )
-                    _postResponse.postValue(
-                        ExceptionResponse("Success! Thanks for sharing your route!", true))
+                    _postResponse.postValue(ExceptionResponse(
+                            message = null,
+                            isSuccessful = true))
                 } catch (e: Exception) {
-                    _postResponse.postValue(
-                        ExceptionResponse(e.message, false)
-                    )
+                    _postResponse.postValue(ExceptionResponse(
+                        e.message,
+                        isSuccessful = false))
                 }
             }
         }
     }
 
-    fun resetPostResponse() {
-        _postResponse.postValue(
-            ExceptionResponse(null, false))
+    fun resetResponse() {
+        _postResponse.postValue(ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = false))
     }
 
     private fun dataIsValid(description: String, postChoices: List<String>): Boolean {

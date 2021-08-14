@@ -3,7 +3,6 @@ package com.skateshare.views.routes
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentPrivateRoutesBinding
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.models.Route
 import com.skateshare.viewmodels.PrivateRoutesViewModel
 import com.skateshare.views.routes.recyclerviewcomponents.RouteListener
 import com.skateshare.views.routes.recyclerviewcomponents.RoutesAdapter
@@ -72,8 +70,6 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         viewModel.numNewRoutes.observe(viewLifecycleOwner, { numRoutes ->
-            Log.i("1one", adapter.currentList.toString())
-            Log.i("1one", numRoutes.toString())
             if (numRoutes > 0)
                 adapter.submitList(viewModel.getData())
             loadUi()
@@ -81,14 +77,14 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         })
 
         viewModel.deleteResponse.observe(viewLifecycleOwner, { response ->
-            if (response.status != null) {
-                if (response.success) {
+            if (response.isEnabled) {
+                if (response.isSuccessful) {
                     adapter.submitList(viewModel.getData())
                     Snackbar.make(requireView(),
                         R.string.route_deleted, Snackbar.LENGTH_SHORT).show()
                 } else
                      Toast.makeText(requireContext(),
-                         response.status, Toast.LENGTH_SHORT).show()
+                         response.message, Toast.LENGTH_SHORT).show()
                 viewModel.resetDeleteResponse()
             }
         })

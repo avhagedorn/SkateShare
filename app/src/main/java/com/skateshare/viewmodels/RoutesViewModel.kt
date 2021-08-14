@@ -34,19 +34,6 @@ class RoutesViewModel : ViewModel() {
     private var queryCenter = DEFAULT_LOCATION
     private var queryRadius = 0.0
 
-    fun deleteRouteFromFirestore(routeId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                FirestoreRoutes.deleteRoute(routeId)
-                _firebaseResponse.postValue(
-                    ExceptionResponse("Removed route successfully!", true))
-            } catch (e: Exception) {
-                _firebaseResponse.postValue(
-                    ExceptionResponse(e.message.toString(), false))
-            }
-        }
-    }
-
     private fun geoQueryAbout(coordinate: LatLng, radius: Double) {
         val lat = coordinate.latitude
         val lng = coordinate.longitude
@@ -55,7 +42,10 @@ class RoutesViewModel : ViewModel() {
                 _publicRoutes.postValue(
                     FirestoreRoutes.getRoutesAboutRadius(lat, lng, radius))
             } catch (e: Exception) {
-                Log.i("1one12", e.message.toString())
+                _firebaseResponse.postValue(ExceptionResponse(
+                    e.message,
+                    isSuccessful = false)
+                )
             }
         }
     }
@@ -83,6 +73,9 @@ class RoutesViewModel : ViewModel() {
     private fun calculateRadiusFromZoom(zoom: Float) = MAX_ZOOM_RADIUS / 2.0.pow(zoom + 4.0)
 
     fun resetResponse() {
-        _firebaseResponse.postValue(ExceptionResponse(null, false))
+        _firebaseResponse.postValue(ExceptionResponse(
+            message = null,
+            isSuccessful = false,
+            isEnabled = false))
     }
 }

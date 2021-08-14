@@ -2,16 +2,15 @@ package com.skateshare.views.routes
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -28,7 +27,6 @@ import com.skateshare.misc.POLYLINE_WIDTH
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.Route
 import com.skateshare.viewmodels.DetailedRouteViewModel
-import com.skateshare.views.profile.ProfileFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -77,8 +75,17 @@ class DetailedPrivateRouteFragment : Fragment() {
                 loadUi(route.isPublic)
                 frameRoute(route)
             })
-
         }
+
+        viewModel.routeResponse.observe (viewLifecycleOwner, { response ->
+            if (response.isEnabled && !response.isSuccessful) {
+                Toast.makeText(
+                    requireContext(),
+                    response.message!!,
+                    Toast.LENGTH_SHORT).show()
+                viewModel.resetResponse()
+            }
+        })
 
         binding.share.setOnClickListener {
             shareRoute()
@@ -119,7 +126,7 @@ class DetailedPrivateRouteFragment : Fragment() {
 
     private fun frameRoute(route: Route) {
         val bounds = LatLngBounds.builder()
-        route.let { it ->
+        route.let {
             val lats = it.lat_path
             val lngs = it.lng_path
             val path = mutableListOf<LatLng>()

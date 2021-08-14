@@ -23,8 +23,8 @@ class DetailedRouteViewModel @Inject constructor (
     var dao: LocalRoutesDao
     ): ViewModel() {
 
-    private val _routeExceptionResponse = MutableLiveData<ExceptionResponse>()
-    val routeExceptionResponse: LiveData<ExceptionResponse> get() = _routeExceptionResponse
+    private val _routeResponse = MutableLiveData<ExceptionResponse>()
+    val routeResponse: LiveData<ExceptionResponse> get() = _routeResponse
     private val _routeData = MutableLiveData<Route>()
     val routeData: LiveData<Route> get() = _routeData
 
@@ -32,9 +32,13 @@ class DetailedRouteViewModel @Inject constructor (
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _routeData.postValue(dao.getRouteById(routeId))
+                _routeResponse.postValue(ExceptionResponse(
+                    message = null,
+                    isSuccessful = true))
             } catch (e: Exception) {
-                _routeExceptionResponse.postValue(
-                    ExceptionResponse(e.message, false))
+                _routeResponse.postValue(ExceptionResponse(
+                    e.message,
+                    isSuccessful = false))
             }
         }
     }
@@ -53,7 +57,10 @@ class DetailedRouteViewModel @Inject constructor (
     }
 
     fun resetResponse() {
-        _routeExceptionResponse.postValue(
-            ExceptionResponse(null, true))
+        _routeResponse.postValue(
+            ExceptionResponse(
+                message = null,
+                isSuccessful = false,
+                isEnabled = false))
     }
 }
