@@ -65,12 +65,14 @@ class FeedFragment : Fragment() {
 
         binding.refreshLayout.setOnRefreshListener { refresh() }
 
-        viewModel.numNewPosts.observe(viewLifecycleOwner, {
-            binding.refreshLayout.isRefreshing = false
-            adapter.submitList(viewModel.getData())
-            if (!uiIsInitialized)
-                loadUi()
-            viewModel.resetNumNewPosts()
+        viewModel.numNewPosts.observe(viewLifecycleOwner, { num ->
+            if (num >= 0) {
+                binding.refreshLayout.isRefreshing = false
+                adapter.submitList(viewModel.getData())
+                if (!uiIsInitialized)
+                    loadUi()
+                viewModel.resetNumNewPosts()
+            }
         })
 
         viewModel.deleteResponse.observe(viewLifecycleOwner, { response ->

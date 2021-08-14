@@ -2,10 +2,7 @@ package com.skateshare.viewmodels
 
 import android.graphics.Color
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -17,6 +14,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+class ProfileViewModelFactory(private val profileUid: String?) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ProfileViewModel::class.java))
+            return ProfileViewModel(profileUid) as T
+        throw IllegalArgumentException("Unknown view model class!")
+    }
+}
 
 @HiltViewModel
 class DetailedRouteViewModel @Inject constructor (
@@ -32,9 +37,6 @@ class DetailedRouteViewModel @Inject constructor (
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _routeData.postValue(dao.getRouteById(routeId))
-                _routeResponse.postValue(ExceptionResponse(
-                    message = null,
-                    isSuccessful = true))
             } catch (e: Exception) {
                 _routeResponse.postValue(ExceptionResponse(
                     e.message,

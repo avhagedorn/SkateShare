@@ -18,6 +18,8 @@ import com.skateshare.models.Route
 import com.skateshare.models.RoutePost
 import com.skateshare.viewmodels.DetailedRouteViewModel
 import com.skateshare.viewmodels.PublicDetailedRouteViewModel
+import java.security.Timestamp
+import java.time.Instant.now
 
 class DetailedPublicRouteFragment : Fragment() {
 
@@ -41,6 +43,7 @@ class DetailedPublicRouteFragment : Fragment() {
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
             .getString("units", UNIT_MILES) ?: UNIT_MILES
         binding.unit = unit
+        // TODO: Figure out lateinit binding / initialize with dummy data
 
         binding.postUsername.setOnClickListener { goToProfile() }
         binding.postUsername.setOnClickListener { goToProfile() }

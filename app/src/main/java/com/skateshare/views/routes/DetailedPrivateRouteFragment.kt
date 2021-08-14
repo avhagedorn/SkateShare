@@ -52,6 +52,8 @@ class DetailedPrivateRouteFragment : Fragment() {
         binding.unit = unit
         binding.route = Route() // TODO: Examine this
 
+        viewModel = ViewModelProvider(this).get(DetailedRouteViewModel::class.java)
+
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync { providedMap ->
@@ -63,7 +65,6 @@ class DetailedPrivateRouteFragment : Fragment() {
                 showMap()
             }
 
-            viewModel = ViewModelProvider(this).get(DetailedRouteViewModel::class.java)
             viewModel.getRoute(routeId)
             viewModel.routeData.observe(viewLifecycleOwner, { route ->
                 binding.route = route
@@ -72,7 +73,7 @@ class DetailedPrivateRouteFragment : Fragment() {
                 binding.speedChart.data = getStyledLineData(lineDataSet)
                 binding.speedChart.invalidate()
                 binding.executePendingBindings()
-                loadUi(route.isPublic)
+                loadUi(false/*route.isPublic*/)
                 frameRoute(route)
             })
         }

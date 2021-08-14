@@ -74,9 +74,10 @@ class RoutesFragment : Fragment() {
 
             // TODO: Add popup to route
             map?.setOnPolylineClickListener {
-                Log.i("1one", it.tag.toString())
+                findNavController().navigate(
+                    RoutesFragmentDirections.actionRoutesFragmentToDetailedPublicRouteFragment(it.id)
+                )
             }
-
         }
 
         viewModel.firebaseResponse.observe(viewLifecycleOwner, { response ->

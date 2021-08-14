@@ -17,7 +17,7 @@ const val WARNING_ID = 2
 const val SHOW_RECORD_FRAGMENT = "SHOW_RECORD_FRAGMENT"
 
 const val LOGGING_INTERVAL = 2000L
-const val FASTEST_INTERVAL = 1500L
+const val FASTEST_INTERVAL = 2000L
 
 const val TIMER_UPDATE_INTERVAL = 50L
 
@@ -29,7 +29,7 @@ const val MAP_ZOOM = 17f
 const val UNIT_MILES = "mi"
 const val UNIT_KILOMETERS = "km"
 
-const val MAX_RADIUS_METERS = 20
+const val MAX_RADIUS_METERS = 30
 const val MAX_ZOOM_RADIUS = 591657550.5
 
 const val MIN_ZOOM_QUERY = 12f
