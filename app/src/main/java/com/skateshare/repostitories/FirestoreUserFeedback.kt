@@ -1,6 +1,7 @@
 package com.skateshare.repostitories
 
 import android.net.Uri
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -9,7 +10,7 @@ import com.skateshare.misc.reportToHashMap
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-object FirestoreBugReport : BugReportInterface {
+object FirestoreUserFeedback : BugReportInterface {
 
     override suspend fun submitBugReport(bugLocation: String, bugDescription: String, uri: Uri?) {
         val uid = FirebaseAuth.getInstance().uid!!
@@ -27,6 +28,14 @@ object FirestoreBugReport : BugReportInterface {
         } else {
             saveReport(reportData)
         }
+    }
+
+    suspend fun submitFeedback(feedback: String) {
+        FirebaseFirestore.getInstance()
+            .document("feedback/${UUID.randomUUID()}")
+            .set(hashMapOf(
+                "feedback" to feedback,
+                "datePosted" to Timestamp.now()))
     }
 
     override fun saveReport(report: HashMap<String, Any?>) {

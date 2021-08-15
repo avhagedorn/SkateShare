@@ -159,5 +159,21 @@
 
     <string name="speed_mph">%1$.1f MPH</string>
     <string name="speed_kph">%1$.1f KPH</string>
+    <string name="tags">Tags</string>
+    <string name="upload_image_optional">Upload an image! (optional)</string>
+    <string name="change_units">Change Units</string>
+
+    <string name="unit_change_message">
+        This will set all relevant units to ones of your preference.
+        \nUser generated units (i.e. in descriptions) will not change.
+    </string>
+    <string name="unit_change_header">Change Display Units</string>
+    <string name="units_imperial">Imperial \uD83D\uDE0E</string>
+    <string name="units_metric">Metric \uD83E\uDD2E</string>
+
+    <string name="feedback_header">Send Feedback</string>
+    <string name="feedback_message">We would love to hear your feedback! 🙂</string>
+
+    <string name="send_feedback">Send</string>
 
 </resources>

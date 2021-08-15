@@ -23,14 +23,10 @@ class PublicDetailedRouteViewModel : ViewModel() {
     fun getRoutePost(postId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.i("1one", postId)
                 val snapshot = FirestorePost.getPost(postId)
-                Log.i("1one", "snapshot -> ${snapshot.getString("id")}")
-                val route = snapshot.toRoutePost(hashMapOf())
+                val route = snapshot.toRoutePost(hashMapOf())       // No hashmap cache
                 if (route != null)
-                    _routeData.postValue(route)      // No hashmap cache
-                else
-                    Log.i("1one", "route is null!")
+                    _routeData.postValue(route)
             } catch (e: Exception) {
                 _firebaseResponse.postValue(ExceptionResponse(
                     e.message,

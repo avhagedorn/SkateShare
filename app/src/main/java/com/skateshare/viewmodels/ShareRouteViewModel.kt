@@ -1,5 +1,6 @@
 package com.skateshare.viewmodels
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,7 +27,7 @@ class ShareRouteViewModel @Inject constructor (
     val postResponse: LiveData<ExceptionResponse> get() = _postResponse
 
     fun submitPost(routeId: Long, routeDescription: String, boardType: String,
-                   terrainType: String, roadType: String) {
+                   terrainType: String, roadType: String, uri: Uri?) {
 
         if (dataIsValid(
                 routeDescription,
@@ -41,7 +42,8 @@ class ShareRouteViewModel @Inject constructor (
                         boardType = boardType,
                         terrainType = terrainType,
                         roadType = roadType,
-                        path = encodePolylinePath(route)
+                        path = encodePolylinePath(route),
+                        uri = uri
                     )
                     _postResponse.postValue(ExceptionResponse(
                             message = null,

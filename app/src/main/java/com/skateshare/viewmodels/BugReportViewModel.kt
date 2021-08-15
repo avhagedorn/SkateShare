@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skateshare.misc.ExceptionResponse
-import com.skateshare.repostitories.FirestoreBugReport
+import com.skateshare.repostitories.FirestoreUserFeedback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -19,7 +19,7 @@ class BugReportViewModel : ViewModel() {
         if (reportIsValid(bugLocation, bugDescription)) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    FirestoreBugReport.submitBugReport(bugLocation, bugDescription, uri)
+                    FirestoreUserFeedback.submitBugReport(bugLocation, bugDescription, uri)
                     _reportResponse.postValue(ExceptionResponse(
                         message = null,
                         isSuccessful = true))

@@ -190,7 +190,11 @@ class DetailedPrivateRouteFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        map?.clear()
         mapView?.onDestroy()
+        _binding = null
+        mapView = null
+        map = null
+        super.onDestroyView()
     }
 }
