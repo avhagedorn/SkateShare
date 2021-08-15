@@ -51,7 +51,6 @@ class RoutesViewModel : ViewModel() {
     }
 
     fun geoQueryIfNeeded(currentCoordinate: LatLng, zoom: Float) {
-        Log.i("1one", "zoom -> $zoom")
         if (zoom >= MIN_ZOOM_QUERY) {
             val currentRadius = calculateRadiusFromZoom(zoom)
             val distanceFromQueryToCenter = FloatArray(1)

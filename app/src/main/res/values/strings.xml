@@ -92,6 +92,23 @@
         <item>Speed</item>
     </string-array>
 
+    <string-array name="shared_sorting_choices">
+        <item>Distance To</item>
+        <item>Route Distance</item>
+    </string-array>
+
+    <string-array name="radius_choices_miles">
+        <item>1 Mile</item>
+        <item>2 Miles</item>
+        <item>5 Miles</item>
+    </string-array>
+
+    <string-array name="radius_choices_kilometers">
+        <item>1 Kilometer</item>
+        <item>2 Kilometers</item>
+        <item>5 Kilometers</item>
+    </string-array>
+
     <string name="speed">Speed</string>
     <string name="hint_board_type">What board type is best for this route?</string>
     <string name="hint_terrain_type">How would you describe the terrain?</string>
@@ -110,6 +127,14 @@
         🌎 %7$s
     </string>
 
+    <string name="route_post_data_no_location">
+        🤙 %1$.1f %2$s \n
+        🌄 %3$s \n
+        🛣 %4$s \n
+        ⚡ %5$s recommended! \n
+        🔥 Your expected time: %6$s
+    </string>
+
     <string name="unknown_location">Unknown Location</string>
 
     <string name="unknown_time">Unknown Time</string>
@@ -124,5 +149,15 @@
     <string name="bug_report_missing_field">Please fill out all required fields!</string>
 
     <string name="share_route_success">"Success! Thanks for sharing your route!"</string>
+    <string name="sort_by">Sort by:</string>
+
+    <string name="miles_away">%1$.1f Mi away</string>
+    <string name="kilometers_away">%1$.1f Km away</string>
+
+    <string name="distance_miles">%1$.1f Mi</string>
+    <string name="distance_kilometers">%1$.1f Km</string>
+
+    <string name="speed_mph">%1$.1f MPH</string>
+    <string name="speed_kph">%1$.1f KPH</string>
 
 </resources>

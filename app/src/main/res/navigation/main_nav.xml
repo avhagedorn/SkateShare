@@ -28,6 +28,7 @@
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"
             app:destination="@id/profileFragment"
+            app:enterAnim="@android:anim/fade_in"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="false" />
     </fragment>
@@ -38,6 +39,7 @@
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment"
+            app:enterAnim="@android:anim/fade_in"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="false" />
     </fragment>
@@ -51,6 +53,7 @@
         <action
             android:id="@+id/action_feedFragment_to_createPostFragment"
             app:destination="@id/createPostFragment"
+            app:enterAnim="@android:anim/fade_in"
             app:popUpTo="@id/feedFragment" />
         <action
             android:id="@+id/action_feedFragment_to_routesFragment"
@@ -63,6 +66,7 @@
         <action
             android:id="@+id/action_createPostFragment_to_feedFragment"
             app:destination="@id/feedFragment"
+            app:enterAnim="@android:anim/fade_in"
             app:popUpTo="@id/recordFragment"
             app:popUpToInclusive="false" />
     </fragment>
@@ -100,7 +104,12 @@
             android:defaultValue="0" />
         <action
             android:id="@+id/action_routesFragment_to_detailedPublicRouteFragment"
-            app:destination="@id/detailedPublicRouteFragment" />
+            app:destination="@id/detailedPublicRouteFragment"
+            app:enterAnim="@android:anim/fade_in" />
+        <action
+            android:id="@+id/action_routesFragment_to_publicRoutesFragment"
+            app:destination="@id/publicRoutesFragment"
+            app:enterAnim="@android:anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/bugReportFragment"
@@ -147,9 +156,26 @@
         tools:layout="@layout/fragment_detailed_public_route" >
         <action
             android:id="@+id/action_detailedPublicRouteFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@android:anim/fade_in" />
         <argument
             android:name="routeId"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/publicRoutesFragment"
+        android:name="com.skateshare.views.routes.PublicRoutesFragment"
+        android:label="Public Routes"
+        tools:layout="@layout/fragment_public_routes">
+        <argument
+            android:name="lat"
+            app:argType="float" />
+        <argument
+            android:name="lng"
+            app:argType="float" />
+        <action
+            android:id="@+id/action_publicRoutesFragment_to_detailedPublicRouteFragment"
+            app:destination="@id/detailedPublicRouteFragment"
+            app:enterAnim="@android:anim/fade_in" />
     </fragment>
 </navigation>

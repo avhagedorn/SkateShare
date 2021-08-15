@@ -68,6 +68,15 @@ class RoutesFragment : Fragment() {
                 )
             }
 
+            map?.setOnMapLongClickListener { coordinate ->
+                val lat = coordinate.latitude.toFloat()
+                val lng = coordinate.longitude.toFloat()
+                findNavController().navigate(
+                    RoutesFragmentDirections.
+                        actionRoutesFragmentToPublicRoutesFragment(lat, lng)
+                )
+            }
+
             viewModel.publicRoutes.observe(viewLifecycleOwner, { routes ->
                 addRoutes(routes)
             })

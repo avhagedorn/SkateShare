@@ -59,10 +59,29 @@ const val NO_ROADS = "Trail"
 
 const val QUERY_LIMIT = 10
 
+// Private route sorting
 const val BY_DATE = 0
 const val BY_DISTANCE = 1
 const val BY_DURATION = 2
 const val BY_SPEED = 3
 
+// Public route sorting
+
 const val METERS_SEC_TO_MI_HR = 2.236936f
 const val METERS_SEC_TO_KM_HR = 3.6f
+
+const val METERS_IN_MILE = 1609.344
+const val METERS_IN_KILOMETER = 1000
+
+// Radius sizes, in Meters
+const val SMALL_RADIUS_MI = 1609.344        // 1 Mile
+const val MEDIUM_RADIUS_MI = 3218.688       // 2 Miles
+const val LARGE_RADIUS_MI = 8046.72         // 5 Miles
+
+const val SMALL_RADIUS_KM = 1000.0          // 1 Kilometer
+const val MEDIUM_RADIUS_KM = 2000.0         // 2 Kilometers
+const val LARGE_RADIUS_KM = 5000.0          // 5 Kilometers
+
+const val SMALL_RADIUS_POSITION = 0
+const val MEDIUM_RADIUS_POSITION = 1
+const val LARGE_RADIUS_POSITION = 2

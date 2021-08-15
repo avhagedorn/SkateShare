@@ -8,9 +8,14 @@ import kotlin.math.pow
 fun bSpline(oldVals: MutableList<Double>) : MutableList<Double> {
     val newVals = mutableListOf<Double>()
 
-    var a = 0.0; var b = 0.0; var c = 0.0; var d = 0.0
-    var aCoeff = 0.0; var bCoeff = 0.0; var cCoeff = 0.0
-    var newVal = 0.0
+    var a: Double
+    var b: Double
+    var c: Double
+    var d: Double
+    var aCoeff: Double
+    var bCoeff: Double
+    var cCoeff: Double
+    var newVal: Double
 
     for (i in 2 until (oldVals.size - 2)) {
         for (j in listOf(0.33, 0.66, 0.99)) {

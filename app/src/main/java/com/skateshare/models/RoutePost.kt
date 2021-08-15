@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 import java.util.*
 
 data class RoutePost(
-    val id: String,
+    val id: String = "",
     val startLat: Double,
     val startLng: Double,
     val lengthMi: Double,
@@ -16,13 +16,14 @@ data class RoutePost(
     val province: String,
     val country: String,
     var expectedCompletionTime: Double = 0.0,
-    val imgUrl: String?,
-    override var description: String,
-    override var posterUsername: String,
-    override var postProfilePictureUrl: String,
-    override var datePosted: Timestamp,
+    val imgUrl: String? = null,
+    val distanceToCenter: Double = 0.0,             // Used for radius queries
+    override var description: String = "",
+    override var posterUsername: String = "",
+    override var postProfilePictureUrl: String = "",
+    override var datePosted: Timestamp = Timestamp.now(),
     override var isCurrentUser: Boolean = false,
-    override var posterId: String
+    override var posterId: String = ""
 ) : FeedItem()
 
 

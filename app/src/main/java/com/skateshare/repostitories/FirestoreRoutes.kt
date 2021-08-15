@@ -3,29 +3,19 @@ package com.skateshare.repostitories
 import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.maps.android.PolyUtil
 import com.skateshare.interfaces.RoutesInterface
 import com.skateshare.misc.routeToRoutePath
 import com.skateshare.misc.routeToRoutePost
+import com.skateshare.modelUtils.toRouteGlobalMap
 import com.skateshare.models.Route
 import com.skateshare.models.RouteGlobalMap
-import com.skateshare.modelUtils.toRouteGlobalMap
-import com.skateshare.models.ReverseGeocodeLocation
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 
 object FirestoreRoutes : RoutesInterface {
@@ -81,6 +71,8 @@ object FirestoreRoutes : RoutesInterface {
         val documentId = UUID.randomUUID().toString()
         val timestamp = Timestamp.now()
         val location = getLocationData(route.lat_start, route.lng_start)
+        val geohash = GeoFireUtils.getGeoHashForLocation(
+            GeoLocation(route.lat_start, route.lng_start))
 
         val routeDataPreview = routeToRoutePost(
             id = documentId,
@@ -94,17 +86,18 @@ object FirestoreRoutes : RoutesInterface {
             route = route,
             city = location.city,
             province = location.province,
-            country = location.country
+            country = location.country,
+            geohash = geohash
         )
         FirebaseFirestore.getInstance()
             .document("posts/$documentId")
             .set(routeDataPreview)
-        createRoutePath(route, timestamp, posterId, documentId, path)
+        createRoutePath(route, timestamp, posterId, documentId, path, geohash)
     }
 
     override suspend fun createRoutePath(route: Route, date: Timestamp,
-                                        uid: String, id: String, path: String) {
-        val routeMapData = routeToRoutePath(id, date, uid, route, path)
+                                        uid: String, id: String, path: String, geohash: String) {
+        val routeMapData = routeToRoutePath(id, date, uid, route, path, geohash)
         FirebaseFirestore.getInstance()
             .document("routesGlobalMap/$id")
             .set(routeMapData)

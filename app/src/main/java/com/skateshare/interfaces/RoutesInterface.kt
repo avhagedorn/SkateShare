@@ -10,7 +10,7 @@ interface RoutesInterface {
     suspend fun createRoute(route: Route, description: String, boardType: String,
                             terrainType: String, roadType: String, path: String)
     suspend fun createRoutePath(route: Route, date: Timestamp,
-                                        uid: String, id: String, path: String)
+                                        uid: String, id: String, path: String, geohash: String)
     suspend fun deleteRoute(id: String)
 
 }

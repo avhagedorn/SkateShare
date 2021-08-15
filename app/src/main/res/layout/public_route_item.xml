@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="route"
+            type="com.skateshare.models.RoutePost"/>
+
+        <variable
+            name="unit"
+            type="String"/>
+
+        <variable
+            name="avgSpeed"
+            type="Float"/>
+
+        <variable
+            name="listener"
+            type="com.skateshare.views.routes.publicrecyclerviewcomponents.RoutePostListener"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="@{() -> listener.onClick(route)}">
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:distanceTo="@{route}"
+            app:distanceUnits="@{unit}"
+            app:layout_constraintBottom_toTopOf="@+id/location"
+            app:layout_constraintEnd_toStartOf="@+id/route_tags"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="3 Km away" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:location="@{route}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/distance"
+            app:layout_constraintTop_toBottomOf="@+id/distance"
+            tools:text="Minneapolis" />
+
+        <TextView
+            android:id="@+id/route_tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textSize="14sp"
+            app:routePostData="@{route}"
+            app:unit="@{unit}"
+            app:avgSpeed="@{avgSpeed}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/distance"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="🤙 2.3 Miles \n 🌄 Fairly Hilly \n 🛣 Smooth Roads \n ⚡ Mountainboards recommended! \n 🔥 Your expected time: 36 minutes" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

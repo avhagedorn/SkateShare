@@ -1,5 +1,6 @@
 package com.skateshare.modelUtils
 
+import android.location.Location
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
@@ -32,6 +33,33 @@ suspend fun DocumentSnapshot.toRoutePost(cache: HashMap<String, HashMap<String, 
             province = getString("province")!!,
             country = getString("country")!!,
             imgUrl = getString("imageUrl")
+        )
+    } catch (e: Exception) {
+        Log.i("RouteUtil", e.toString())
+        null
+    }
+}
+
+fun DocumentSnapshot.toLiteRoutePost(centerLat: Double, centerLng: Double) : RoutePost? {
+    return try {
+        val lat = getDouble("startLat")!!
+        val lng = getDouble("startLng")!!
+        val distance = FloatArray(1)
+        Location.distanceBetween(centerLat, centerLng, lat, lng, distance)
+
+        RoutePost(
+            id = getString("id")!!,
+            startLat = lat,
+            startLng = lng,
+            lengthMi = getDouble("lengthMi")!!,
+            lengthKm = getDouble("lengthKm")!!,
+            boardType = getString("boardType")!!,
+            terrainType = getString("terrainType")!!,
+            roadType = getString("roadType")!!,
+            city = getString("city")!!,
+            province = getString("province")!!,
+            country = getString("country")!!,
+            distanceToCenter = distance[0].toDouble()
         )
     } catch (e: Exception) {
         Log.i("RouteUtil", e.toString())

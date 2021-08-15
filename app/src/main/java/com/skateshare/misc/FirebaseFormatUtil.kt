@@ -24,7 +24,8 @@ fun routeToRoutePost(id: String,
                      route: Route,
                      city: String,
                      province: String,
-                     country: String) =
+                     country: String,
+                     geohash: String) =
     hashMapOf<String, Any?>(
         "id" to id,
         "postedBy" to uid,
@@ -41,10 +42,12 @@ fun routeToRoutePost(id: String,
         "city" to city,
         "province" to province,
         "country" to country,
+        "geohash" to geohash,
         "imageUrl" to url
     )
 
-fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route, path: String) =
+fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route,
+                     path: String, geohash: String) =
     hashMapOf<String, Any?>(
         "id" to id,
         "postedBy" to uid,
@@ -55,6 +58,5 @@ fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route, pat
         "encodedPath" to path,
         "startLat" to route.lat_start,
         "startLng" to route.lng_start,
-        "geohash" to GeoFireUtils.getGeoHashForLocation(
-            GeoLocation(route.lat_start, route.lng_start))
+        "geohash" to geohash
     )
