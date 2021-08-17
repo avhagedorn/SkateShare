@@ -182,4 +182,15 @@
             app:destination="@id/detailedPublicRouteFragment"
             app:enterAnim="@android:anim/fade_in" />
     </fragment>
+    <fragment
+        android:id="@+id/editBoardFragment"
+        android:name="com.skateshare.views.profile.EditBoardFragment"
+        android:label="Edit Board">
+        <action
+            android:id="@+id/action_editBoardFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
 </navigation>

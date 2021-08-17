@@ -15,14 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ProfileViewModelFactory(private val profileUid: String?) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ProfileViewModel::class.java))
-            return ProfileViewModel(profileUid) as T
-        throw IllegalArgumentException("Unknown view model class!")
-    }
-}
-
 @HiltViewModel
 class DetailedRouteViewModel @Inject constructor (
     var dao: LocalRoutesDao

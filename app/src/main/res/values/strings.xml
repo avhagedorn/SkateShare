@@ -186,5 +186,14 @@
         💪 %4$s motors\n
         💸 %5$s
     </string>
+    <string name="board_tags_label">Board Tags</string>
+    <string name="amp_hours">Amp Hours</string>
+    <string name="battery_amp_hours">Battery Amp Hours</string>
+    <string name="battery_configuration">Battery Configuration</string>
+    <string name="motor_configuration">Motor Configuration</string>
+    <string name="top_speed">Top Speed</string>
+    <string name="esc">ESC</string>
+    <string name="board_description_prompt">Tell us about your board!</string>
+    <string name="edit_board_option">Edit Board</string>
 
 </resources>

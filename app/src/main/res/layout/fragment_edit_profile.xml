@@ -15,87 +15,102 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".views.profile.EditProfileFragment">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/profilePicture"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            android:visibility="invisible"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/confirm_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@color/black"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/edit_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
-            tools:visibility="visible">
-
-            <TextView
-                android:id="@+id/textView"
-                style="@style/editProfileHeader"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hint_username"
-                app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+                tools:context=".views.profile.EditProfileFragment">
+
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@color/black"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/edit_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    app:layout_constraintTop_toBottomOf="@+id/profilePicture"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        style="@style/menuHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hint_username"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
 
-            <EditText
-                android:id="@+id/edit_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLength="15"
-                android:text="@{model.user.username}"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                    <EditText
+                        android:id="@+id/edit_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLength="15"
+                        android:text="@{model.user.username}"
+                        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-            <TextView
-                android:id="@+id/textView3"
-                style="@style/editProfileHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/hint_name"
-                app:layout_constraintTop_toBottomOf="@+id/edit_username" />
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/menuHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hint_name"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_username" />
 
-            <EditText
-                android:id="@+id/edit_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLength="25"
-                android:text="@{model.user.name}"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    <EditText
+                        android:id="@+id/edit_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLength="25"
+                        android:text="@{model.user.name}"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/editProfileHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/hint_bio"
-                app:layout_constraintTop_toBottomOf="@+id/edit_name" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/menuHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hint_bio"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_name" />
 
-            <EditText
-                android:id="@+id/edit_bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:maxLength="200"
-                android:maxLines="3"
-                android:scrollbars="vertical"
-                android:text="@{model.user.bio}"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    <EditText
+                        android:id="@+id/edit_bio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:maxLength="200"
+                        android:maxLines="3"
+                        android:scrollbars="vertical"
+                        android:text="@{model.user.bio}"
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        </LinearLayout>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
         <Button
             android:id="@+id/cancel_edit"

@@ -8,6 +8,11 @@
 
     <item
         android:menuCategory="secondary"
+        android:id="@+id/editBoardFragment"
+        android:title="@string/edit_board_option"/>
+
+    <item
+        android:menuCategory="secondary"
         android:id="@+id/settingsFragment"
         android:title="@string/settings_option"/>
 
