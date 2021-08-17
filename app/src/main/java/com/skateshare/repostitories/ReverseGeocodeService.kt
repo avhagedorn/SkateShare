@@ -28,7 +28,7 @@ fun getLocationData(lat: Double, lng: Double) : ReverseGeocodeLocation {
 
     if (response.isSuccessful)
         return response.body()!!
-    return ReverseGeocodeLocation("", "", "")
+    return ReverseGeocodeLocation()
 }
 
 interface ReverseGeocoder {

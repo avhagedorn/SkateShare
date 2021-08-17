@@ -1,6 +1,5 @@
-package com.skateshare.views.routes.publicrecyclerviewcomponents
+package com.skateshare.views.routes.publicroutesrecyclerview
 
-import android.content.Context
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.skateshare.R
@@ -9,8 +8,7 @@ import com.skateshare.misc.METERS_IN_MILE
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.RoutePost
-import com.skateshare.views.feed.recyclerviewcomponents.formatExpectedTime
-import com.skateshare.views.feed.recyclerviewcomponents.formatLocationString
+import com.skateshare.views.feed.feedrecyclerview.formatExpectedTime
 
 @BindingAdapter("distanceTo", "distanceUnits")
 fun TextView.distanceTo(route: RoutePost, unit: String) {

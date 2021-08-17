@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skateshare.models.RoutePost
-import com.skateshare.repostitories.FirebaseRoutePosts
+import com.skateshare.repostitories.FirestoreRoutePosts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -20,7 +20,7 @@ class PublicRoutesViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val posts =
-                    FirebaseRoutePosts.getRoutePostsAboutRadius(
+                    FirestoreRoutePosts.getRoutePostsAboutRadius(
                         lat,
                         lng,
                         radius

@@ -11,7 +11,7 @@ import com.skateshare.modelUtils.toLiteRoutePost
 import com.skateshare.models.RoutePost
 import kotlinx.coroutines.tasks.await
 
-object FirebaseRoutePosts {
+object FirestoreRoutePosts {
 
     suspend fun getRoutePostsAboutRadius(lat: Double, lng: Double, radius: Double)
                                                                 : List<RoutePost> {

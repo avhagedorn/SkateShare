@@ -1,4 +1,4 @@
-package com.skateshare.views.routes.publicrecyclerviewcomponents
+package com.skateshare.views.routes.publicroutesrecyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.skateshare.models.RoutePost

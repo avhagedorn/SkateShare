@@ -1,4 +1,4 @@
-package com.skateshare.views.routes.recyclerviewcomponents
+package com.skateshare.views.routes.privaterecyclerview
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter

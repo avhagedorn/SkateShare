@@ -1,6 +1,5 @@
-package com.skateshare.views.routes.publicrecyclerviewcomponents
+package com.skateshare.views.routes.publicroutesrecyclerview
 
-import com.skateshare.models.Route
 import com.skateshare.models.RoutePost
 
 class RoutePostListener (val clickListener: (id: String) -> Unit) {

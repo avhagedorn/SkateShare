@@ -30,8 +30,8 @@ const val UNIT_MILES = "mi"
 const val UNIT_KILOMETERS = "km"
 
 const val MAX_RADIUS_METERS = 30
-const val MAX_ZOOM_RADIUS = 591657550.5
 
+const val MAX_ZOOM_RADIUS = 591657550.5
 const val MIN_ZOOM_QUERY = 12f
 
 val DEFAULT_LOCATION = LatLng(

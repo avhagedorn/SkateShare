@@ -175,5 +175,16 @@
     <string name="feedback_message">We would love to hear your feedback! 🙂</string>
 
     <string name="send_feedback">Send</string>
+    <string name="board">Board</string>
+    <string name="posts">Posts</string>
+
+    <string name="unshared_board">Oh no! It looks like this user hasn\'t shared their board info yet! 😞</string>
+    <string name="board_tags">
+        ⚡ %1$.1f amp hours\n
+        🔋 %2$s\n
+        🚀 %3$s top speed\n
+        💪 %4$s motors\n
+        💸 %5$s
+    </string>
 
 </resources>

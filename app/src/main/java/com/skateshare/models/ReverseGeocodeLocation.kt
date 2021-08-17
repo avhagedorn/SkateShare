@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 data class ReverseGeocodeLocation(
 
     @SerializedName("city")
-    val city: String,
+    val city: String = "",
 
     @SerializedName("principalSubdivision")
-    val province: String,
+    val province: String = "",
 
     @SerializedName("countryName")
-    val country: String
+    val country: String = ""
 )

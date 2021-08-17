@@ -1,4 +1,4 @@
-package com.skateshare.views.feed.recyclerviewcomponents
+package com.skateshare.views.feed.feedrecyclerview
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

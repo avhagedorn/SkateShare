@@ -1,4 +1,4 @@
-package com.skateshare.views.feed.recyclerviewcomponents
+package com.skateshare.views.feed.feedrecyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.skateshare.models.FeedItem

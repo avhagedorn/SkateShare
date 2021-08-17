@@ -1,5 +1,6 @@
 package com.skateshare.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,16 +17,17 @@ import com.skateshare.models.FeedItem
 import com.skateshare.models.LoadingItem
 import com.skateshare.repostitories.FirestorePost
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
-class FeedViewModel : ViewModel() {
+open class FeedViewModel : ViewModel() {
 
     private val currentUid = FirebaseAuth.getInstance().uid
-    private var end: Timestamp = Timestamp.now()
+    var end: Timestamp = Timestamp.now()
     var isLoadingData: Boolean = false
     var totalItems = mutableListOf<FeedItem>()
-    private val _numNewPosts = MutableLiveData<Int>()
+    protected val _numNewPosts = MutableLiveData<Int>()
 
     // Event responses
     val numNewPosts: LiveData<Int> get() = _numNewPosts
@@ -33,24 +35,26 @@ class FeedViewModel : ViewModel() {
     private val _deleteResponse = MutableLiveData<ExceptionResponse>()
     val deleteResponse: LiveData<ExceptionResponse> get() = _deleteResponse
 
-    init {
-        fetchPosts()
-    }
-
-    fun fetchPosts() {
+    open fun fetchPosts() {
         isLoadingData = true
         viewModelScope.launch(Dispatchers.IO) {
             val newItems = queryToList(query = FirestorePost.getPosts(end))
-            if (newItems.isNotEmpty()) {
-                totalItems.addAll(newItems)
+
+            if (newItems.isEmpty() && totalItems.last() is LoadingItem)
+                totalItems.removeLastOrNull()
+
+            else if (newItems.isNotEmpty()) {
+                totalItems.removeLastOrNull()
                 end = newItems[newItems.size - 1].datePosted
+                totalItems.addAll(newItems)
+                totalItems.add(LoadingItem())
             }
             _numNewPosts.postValue(newItems.size)
             isLoadingData = false
         }
     }
 
-    private suspend fun queryToList(query: QuerySnapshot) : MutableList<FeedItem> {
+    suspend fun queryToList(query: QuerySnapshot) : MutableList<FeedItem> {
         val queryResponse = mutableListOf<FeedItem>()
         query.forEach { item ->
             val post = when (item.getLong("postType")?.toInt()) {
@@ -91,7 +95,7 @@ class FeedViewModel : ViewModel() {
     }
 
     fun resetNumNewPosts() {
-        _numNewPosts.postValue(-1 )
+        _numNewPosts.postValue(-1)
     }
 
     fun refreshData() {

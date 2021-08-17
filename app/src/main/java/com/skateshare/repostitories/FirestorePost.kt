@@ -19,8 +19,20 @@ import java.util.*
 object FirestorePost : PostInterface {
 
     override suspend fun getPosts(end: Timestamp) : QuerySnapshot {
+        Log.i("1one", "FEED POSTS")
         return FirebaseFirestore.getInstance()
             .collection("posts")
+            .whereLessThan("datePosted", end)
+            .orderBy("datePosted")
+            .limitToLast(QUERY_LIMIT.toLong())
+            .get()
+            .await()
+    }
+
+    suspend fun getUserPosts(uid: String, end: Timestamp) : QuerySnapshot {
+        return FirebaseFirestore.getInstance()
+            .collection("posts")
+            .whereEqualTo("postedBy", uid)
             .whereLessThan("datePosted", end)
             .orderBy("datePosted")
             .limitToLast(QUERY_LIMIT.toLong())

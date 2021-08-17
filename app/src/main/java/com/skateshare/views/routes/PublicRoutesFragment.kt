@@ -17,8 +17,8 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentPublicRoutesBinding
 import com.skateshare.misc.*
 import com.skateshare.viewmodels.PublicRoutesViewModel
-import com.skateshare.views.routes.publicrecyclerviewcomponents.PublicRoutesAdapter
-import com.skateshare.views.routes.publicrecyclerviewcomponents.RoutePostListener
+import com.skateshare.views.routes.publicroutesrecyclerview.PublicRoutesAdapter
+import com.skateshare.views.routes.publicroutesrecyclerview.RoutePostListener
 
 class PublicRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
 

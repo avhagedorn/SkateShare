@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="com.skateshare.views.feed.recyclerviewcomponents.FeedItemListener" />
+            type="com.skateshare.views.feed.feedrecyclerview.FeedItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

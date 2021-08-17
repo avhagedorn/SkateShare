@@ -1,4 +1,4 @@
-package com.skateshare.views.routes.recyclerviewcomponents
+package com.skateshare.views.routes.privaterecyclerview
 
 import android.annotation.SuppressLint
 import android.widget.TextView
@@ -7,7 +7,6 @@ import com.skateshare.R
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.Route
-import com.skateshare.models.RoutePost
 import com.skateshare.services.MapHelper
 import java.text.DateFormat
 import java.util.*

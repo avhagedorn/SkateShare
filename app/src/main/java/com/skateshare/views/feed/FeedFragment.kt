@@ -2,6 +2,7 @@ package com.skateshare.views.feed
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,8 +19,8 @@ import com.skateshare.databinding.FragmentFeedBinding
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.viewmodels.FeedViewModel
-import com.skateshare.views.feed.recyclerviewcomponents.FeedAdapter
-import com.skateshare.views.feed.recyclerviewcomponents.FeedItemListener
+import com.skateshare.views.feed.feedrecyclerview.FeedAdapter
+import com.skateshare.views.feed.feedrecyclerview.FeedItemListener
 
 class FeedFragment : Fragment() {
 
@@ -40,6 +41,7 @@ class FeedFragment : Fragment() {
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_feed, container, false)
         viewModel = ViewModelProvider(this).get(FeedViewModel::class.java)
+        viewModel.fetchPosts()
         binding.lifecycleOwner = viewLifecycleOwner
         binding.postList.layoutManager = LinearLayoutManager(requireContext())
         _recyclerView = binding.postList
@@ -122,19 +124,18 @@ class FeedFragment : Fragment() {
     }
 
     private fun awaitScrollRequest() {
+        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                // adapter.itemCount - 2 enables the spinner to exist before the user
-                // reaches the bottom, resulting in a slightly smoother experience.
                 val position = layoutManager.findLastCompletelyVisibleItemPosition()
-                if ((position == adapter.itemCount - 2 || position == adapter.itemCount - 1)
+                if (dy > 0
+                    && position == adapter.itemCount - 1
                     && !viewModel.isLoadingData) {
                     recyclerView.post {
-                        adapter.submitList(viewModel.getLoading())
+                        viewModel.fetchPosts()
                     }
-                    viewModel.fetchPosts()
+
                 }
             }
         })

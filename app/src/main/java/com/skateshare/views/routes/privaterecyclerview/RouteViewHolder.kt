@@ -1,4 +1,4 @@
-package com.skateshare.views.routes.recyclerviewcomponents
+package com.skateshare.views.routes.privaterecyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -21,7 +21,7 @@
 
         <variable
             name="listener"
-            type="com.skateshare.views.routes.publicrecyclerviewcomponents.RoutePostListener"/>
+            type="com.skateshare.views.routes.publicroutesrecyclerview.RoutePostListener"/>
 
     </data>
 
