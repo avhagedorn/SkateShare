@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
+import com.skateshare.models.LoadingItem
 import com.skateshare.models.Route
+import com.skateshare.models.SimpleFeedItem
+import com.skateshare.models.SimpleLoadingItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,30 +22,36 @@ class PrivateRoutesViewModel @Inject constructor(
 ) : ViewModel() {
 
     var isLoadingData = false
-    val allRoutes = mutableListOf<Route>()
+    private val allItems = mutableListOf<SimpleFeedItem>()
     private val _numNewRoutes = MutableLiveData<Int>()
     val numNewRoutes: LiveData<Int> get() = _numNewRoutes
     private val _deleteResponse = MutableLiveData<ExceptionResponse>()
     val deleteResponse: LiveData<ExceptionResponse> get() = _deleteResponse
-    var currentQueryAttribute = BY_DATE
+    private var currentQueryAttribute = BY_DATE
     private var queryOffset = 0
 
     fun getRoutes() {
         isLoadingData = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val newRoutes = when (currentQueryAttribute) {
+                val newItems = when (currentQueryAttribute) {
                     BY_DATE -> dao.routesByDate(QUERY_LIMIT, queryOffset)
                     BY_DISTANCE -> dao.routesByDistance(QUERY_LIMIT, queryOffset)
                     BY_DURATION -> dao.routesByDuration(QUERY_LIMIT, queryOffset)
                     BY_SPEED -> dao.routesBySpeed(QUERY_LIMIT, queryOffset)
                     else -> throw Exception("Invalid query code!")
                 }
-                if (newRoutes.isNotEmpty()) {
-                    queryOffset += newRoutes.size
-                    allRoutes.addAll(newRoutes)
-                    _numNewRoutes.postValue(newRoutes.size)
+                if (newItems.isEmpty()) {
+                    if(allItems.isNotEmpty() && allItems.last() is SimpleLoadingItem)
+                        allItems.removeLastOrNull()
+                } else {
+                    allItems.removeLastOrNull()
+                    queryOffset += newItems.size
+                    allItems.addAll(newItems)
+                    if (newItems.size == QUERY_LIMIT)
+                        allItems.add(SimpleLoadingItem())
                 }
+                _numNewRoutes.postValue(newItems.size)
                 isLoadingData = false
             } catch (e: Exception) {
                 isLoadingData = false
@@ -55,7 +64,7 @@ class PrivateRoutesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 dao.delete(route)
-                allRoutes.removeAt(index)
+                allItems.removeAt(index)
                 _deleteResponse.postValue(ExceptionResponse(
                     message = null,
                     isSuccessful = true))
@@ -77,7 +86,7 @@ class PrivateRoutesViewModel @Inject constructor(
 
     fun clearExistingRoutes() {
         queryOffset = 0
-        allRoutes.clear()
+        allItems.clear()
     }
 
     fun resetNumNewRoutes() {
@@ -91,6 +100,6 @@ class PrivateRoutesViewModel @Inject constructor(
             isEnabled = true))
     }
 
-    fun getData() = allRoutes.toMutableList<Route>()
+    fun getData() = allItems.toMutableList()
 
 }

@@ -128,7 +128,7 @@ class RoutesFragment : Fragment() {
         } else {
             lat = sharedPreferences.getFloat("lastLat", 0f).toDouble()
             lng = sharedPreferences.getFloat("lastLng", 0f).toDouble()
-            zoom = sharedPreferences.getFloat("lastZoom", MAP_ZOOM)
+            zoom = sharedPreferences.getFloat("lastZoom", 2f)
         }
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), zoom))
     }

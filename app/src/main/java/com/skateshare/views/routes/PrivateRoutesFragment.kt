@@ -2,6 +2,7 @@ package com.skateshare.views.routes
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -89,7 +90,7 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
         })
 
-        //awaitScrollRequest()
+        awaitScrollRequest()
         return binding.root
     }
 
@@ -98,15 +99,12 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                // adapter.itemCount - 2 enables the spinner to exist before the user
-                // reaches the bottom, resulting in a slightly smoother experience.
                 val position = layoutManager.findLastCompletelyVisibleItemPosition()
-                if (position == adapter.itemCount - 1
-                    && viewModel.allRoutes.size > 1
+                if (dy > 0
+                    && position == adapter.itemCount - 1
                     && !viewModel.isLoadingData) {
-                    viewModel.getRoutes()
                     recyclerView.post {
-                        adapter.submitList(viewModel.getData())
+                        viewModel.getRoutes()
                     }
                 }
             }

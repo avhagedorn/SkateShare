@@ -11,6 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.misc.POST_MEDIA
 import com.skateshare.misc.POST_ROUTE
+import com.skateshare.misc.QUERY_LIMIT
 import com.skateshare.modelUtils.toPost
 import com.skateshare.modelUtils.toRoutePost
 import com.skateshare.models.FeedItem
@@ -40,14 +41,15 @@ open class FeedViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val newItems = queryToList(query = FirestorePost.getPosts(end))
 
-            if (newItems.isEmpty() && totalItems.last() is LoadingItem)
-                totalItems.removeLastOrNull()
-
+            if (newItems.isEmpty())
+                if (totalItems.isNotEmpty() && totalItems.last() is LoadingItem)
+                    totalItems.removeLastOrNull()
             else if (newItems.isNotEmpty()) {
                 totalItems.removeLastOrNull()
                 end = newItems[newItems.size - 1].datePosted
                 totalItems.addAll(newItems)
-                totalItems.add(LoadingItem())
+                if (newItems.size == QUERY_LIMIT)
+                    totalItems.add(LoadingItem())
             }
             _numNewPosts.postValue(newItems.size)
             isLoadingData = false

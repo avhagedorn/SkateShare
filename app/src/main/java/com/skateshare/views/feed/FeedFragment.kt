@@ -135,7 +135,6 @@ class FeedFragment : Fragment() {
                     recyclerView.post {
                         viewModel.fetchPosts()
                     }
-
                 }
             }
         })

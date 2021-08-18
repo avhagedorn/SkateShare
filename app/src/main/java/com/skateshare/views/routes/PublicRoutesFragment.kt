@@ -65,7 +65,6 @@ class PublicRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         binding.refreshLayout.setOnRefreshListener { refreshData() }
 
-        // viewModel.getData(lat, lng, 1000.0)
         viewModel.hasData.observe(viewLifecycleOwner, {
             adapter.submitList(viewModel.routes)
             loadUi()

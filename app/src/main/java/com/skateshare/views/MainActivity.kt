@@ -16,6 +16,7 @@ import com.skateshare.R
 import com.skateshare.misc.SHOW_RECORD_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navHostFragment: NavHostFragment

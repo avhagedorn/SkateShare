@@ -7,7 +7,7 @@ import com.skateshare.databinding.PrivateRouteItemBinding
 import com.skateshare.models.Route
 
 class RouteViewHolder private constructor(private val binding: PrivateRouteItemBinding)
-    : RecyclerView.ViewHolder(binding.root) {
+    : SimpleItemViewHolder(binding.root) {
 
     companion object {
         fun from(parent: ViewGroup) : RouteViewHolder {
