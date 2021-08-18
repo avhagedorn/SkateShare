@@ -12,7 +12,7 @@ import com.skateshare.misc.SHOW_RECORD_FRAGMENT
 import com.skateshare.misc.STOP_TRACKING
 import com.skateshare.misc.WARNING_CHANNEL_ID
 import com.skateshare.services.MapService
-import com.skateshare.views.profile.ProfileActivity
+import com.skateshare.views.MainActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +38,7 @@ object ServiceModule {
     ): PendingIntent = PendingIntent.getActivity(
         context,
         0,
-        Intent(context, ProfileActivity::class.java).also {
+        Intent(context, MainActivity::class.java).also {
             it.action = SHOW_RECORD_FRAGMENT
         },
         PendingIntent.FLAG_UPDATE_CURRENT

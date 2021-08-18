@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.skateshare.R
-import com.skateshare.views.profile.ProfileActivity
+import com.skateshare.views.MainActivity
 
 class AuthenticationActivity : AppCompatActivity() {
 
@@ -15,7 +15,7 @@ class AuthenticationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_authentication)
 
         if (userLoggedIn()) {
-            startActivity(Intent(this, ProfileActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }

@@ -1,4 +1,4 @@
-package com.skateshare.views.profile
+package com.skateshare.views
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,9 +16,7 @@ import com.skateshare.R
 import com.skateshare.misc.SHOW_RECORD_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Make ProfileActivity into a "MainActivity" class for all app fragments after authentication
-@AndroidEntryPoint      // TEMPORARY
-class ProfileActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController

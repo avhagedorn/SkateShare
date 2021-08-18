@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRegisterBinding
 import com.skateshare.viewmodels.AuthViewModel
-import com.skateshare.views.profile.ProfileActivity
+import com.skateshare.views.MainActivity
 
 class RegisterFragment : Fragment() {
 
@@ -60,7 +60,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun goToMainActivity() {
-        startActivity(Intent(requireActivity(), ProfileActivity::class.java))
+        startActivity(Intent(requireActivity(), MainActivity::class.java))
         requireActivity().finish()
     }
 

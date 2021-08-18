@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentLoginBinding
 import com.skateshare.viewmodels.AuthViewModel
-import com.skateshare.views.profile.ProfileActivity
+import com.skateshare.views.MainActivity
 
 class LoginFragment : Fragment() {
 
@@ -62,7 +62,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun goToMainActivity() {
-        startActivity(Intent(requireActivity(), ProfileActivity::class.java))
+        startActivity(Intent(requireActivity(), MainActivity::class.java))
         requireActivity().finish()
     }
 

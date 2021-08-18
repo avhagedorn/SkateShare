@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.profile.ProfileActivity"
+            android:name=".views.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
