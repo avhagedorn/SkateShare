@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skateshare.R
@@ -57,8 +58,8 @@ class PublicRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
         initializeChoices()
 
-        _adapter = PublicRoutesAdapter(RoutePostListener { routeId ->
-            Log.i("1one", routeId.toString())
+        _adapter = PublicRoutesAdapter(RoutePostListener { lat, lng ->
+            goToRouteMap(lat, lng)
         }, unit, avgSpeed)
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.postList.adapter = adapter
@@ -88,6 +89,15 @@ class PublicRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.sortOptions.adapter = adapter
         }
+    }
+
+    private fun goToRouteMap(lat: Float, lng: Float) {
+        findNavController().navigate(
+            PublicRoutesFragmentDirections.actionPublicRoutesFragmentToRoutesFragment(
+                containsArgs = true,
+                lat = lat,
+                lng = lng
+            ))
     }
 
     private fun loadUi() {

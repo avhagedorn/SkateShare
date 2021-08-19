@@ -113,7 +113,8 @@
         <action
             android:id="@+id/action_routesFragment_to_publicRoutesFragment"
             app:destination="@id/publicRoutesFragment"
-            app:enterAnim="@android:anim/fade_in" />
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/bugReportFragment"
@@ -178,9 +179,9 @@
             android:name="lng"
             app:argType="float" />
         <action
-            android:id="@+id/action_publicRoutesFragment_to_detailedPublicRouteFragment"
-            app:destination="@id/detailedPublicRouteFragment"
-            app:enterAnim="@android:anim/fade_in" />
+            android:id="@+id/action_publicRoutesFragment_to_routesFragment"
+            app:destination="@id/routesFragment"
+            app:popUpTo="@id/recordFragment" />
     </fragment>
     <fragment
         android:id="@+id/editBoardFragment"

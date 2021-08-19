@@ -9,20 +9,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.location.*
+import android.location.Location
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.model.LatLng
@@ -30,17 +25,15 @@ import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
 import com.skateshare.misc.PermissionsUtil.hasLocationPermissions
-import com.skateshare.models.ReverseGeocodeLocation
 import com.skateshare.models.Route
-import com.skateshare.repostitories.createReverseGeocoder
 import com.skateshare.services.MapHelper.calculateAvgSpeed
 import com.skateshare.services.MapHelper.formatTime
 import com.skateshare.services.MapHelper.metersToStandardUnits
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -80,7 +73,6 @@ class MapService : LifecycleService() {
                             addLocation(location)
                             addSpeed(location.speed)
                         }
-                        Log.i("1one", location.accuracy.toString())
                     }
                 }
             }
@@ -90,7 +82,6 @@ class MapService : LifecycleService() {
         override fun onLocationAvailability(p0: LocationAvailability) {
             super.onLocationAvailability(p0)
             if (!p0.isLocationAvailable) {
-                Log.i("1one", "Disconnected!")
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 createWarningChannel(notificationManager)
                 notificationManager.notify(WARNING_ID, warningBuilder.build())
@@ -179,10 +170,10 @@ class MapService : LifecycleService() {
             try {
                 saveRoute()
             } catch (e: Exception) {
-                Log.i("1one", e.message.toString())
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
             }
-            stopForeground(true)
             notificationManager.cancelAll()
+            stopForeground(true)
         }
     }
 
@@ -208,7 +199,7 @@ class MapService : LifecycleService() {
             insertRoute(newLats, newLngs)
             updateAvgSpeed()
         } catch (e: Exception) {
-            Toast.makeText(applicationContext, e.message.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 

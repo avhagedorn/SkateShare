@@ -41,6 +41,7 @@ class PrivateRoutesViewModel @Inject constructor(
                     BY_SPEED -> dao.routesBySpeed(QUERY_LIMIT, queryOffset)
                     else -> throw Exception("Invalid query code!")
                 }
+
                 if (newItems.isEmpty()) {
                     if(allItems.isNotEmpty() && allItems.last() is SimpleLoadingItem)
                         allItems.removeLastOrNull()
