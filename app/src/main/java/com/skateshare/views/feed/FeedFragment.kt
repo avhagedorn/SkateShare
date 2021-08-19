@@ -100,7 +100,7 @@ class FeedFragment : Fragment() {
         val sharedPreferences = requireContext()
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
 
-        unit = sharedPreferences.getString("units", UNIT_MILES)!!
+        unit = sharedPreferences.getString("units", UNIT_MILES) ?: UNIT_MILES
         avgSpeed = when (unit) {
             UNIT_MILES -> sharedPreferences.getFloat("avgSpeedMi", 0f)
             UNIT_KILOMETERS -> sharedPreferences.getFloat("avgSpeedKm", 0f)

@@ -44,15 +44,17 @@ class PrivateRoutesViewModel @Inject constructor(
                 if (newItems.isEmpty()) {
                     if(allItems.isNotEmpty() && allItems.last() is SimpleLoadingItem)
                         allItems.removeLastOrNull()
+                    _numNewRoutes.postValue(newItems.size)
+                    isLoadingData = false
                 } else {
                     allItems.removeLastOrNull()
                     queryOffset += newItems.size
                     allItems.addAll(newItems)
                     if (newItems.size == QUERY_LIMIT)
                         allItems.add(SimpleLoadingItem())
+                    _numNewRoutes.postValue(newItems.size)
+                    isLoadingData = false
                 }
-                _numNewRoutes.postValue(newItems.size)
-                isLoadingData = false
             } catch (e: Exception) {
                 isLoadingData = false
                 resetNumNewRoutes()

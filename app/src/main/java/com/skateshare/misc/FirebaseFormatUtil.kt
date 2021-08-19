@@ -52,11 +52,18 @@ fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route,
         "id" to id,
         "postedBy" to uid,
         "date" to date,
-        "accuracy" to route.accuracy,       // TODO: REMOVE ME
         "lengthMi" to route.length_mi,
         "lengthKm" to route.length_km,
         "encodedPath" to path,
         "startLat" to route.lat_start,
         "startLng" to route.lng_start,
         "geohash" to geohash
+    )
+
+fun postToHashMap(description: String, uid: String) =
+    hashMapOf<String, Any?>(
+        "id" to UUID.randomUUID().toString(),
+        "description" to description,
+        "postedBy" to uid,
+        "datePosted" to Timestamp.now()
     )

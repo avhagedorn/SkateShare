@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.misc.ExceptionResponse
+import com.skateshare.misc.postToHashMap
 import com.skateshare.repostitories.FirestorePost
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,12 +25,7 @@ class CreatePostViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 FirestorePost.createPost(uri,
-                    hashMapOf<String, Any?>(
-                        "id" to UUID.randomUUID().toString(),
-                        "description" to description,
-                        "postedBy" to uid,
-                        "datePosted" to Timestamp.now()
-                    )
+                    postToHashMap(description, uid)
                 )
                 _exceptionResponse.postValue(ExceptionResponse(
                     message = null,

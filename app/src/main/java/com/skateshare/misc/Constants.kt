@@ -85,3 +85,5 @@ const val LARGE_RADIUS_KM = 5000.0          // 5 Kilometers
 const val SMALL_RADIUS_POSITION = 0
 const val MEDIUM_RADIUS_POSITION = 1
 const val LARGE_RADIUS_POSITION = 2
+
+const val MI_TO_KM = 1.609344

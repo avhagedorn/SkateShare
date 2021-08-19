@@ -41,18 +41,21 @@ open class FeedViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val newItems = queryToList(query = FirestorePost.getPosts(end))
 
-            if (newItems.isEmpty())
+            if (newItems.isEmpty()) {
                 if (totalItems.isNotEmpty() && totalItems.last() is LoadingItem)
                     totalItems.removeLastOrNull()
+                _numNewPosts.postValue(newItems.size)
+                isLoadingData = false
+            }
             else if (newItems.isNotEmpty()) {
                 totalItems.removeLastOrNull()
                 end = newItems[newItems.size - 1].datePosted
                 totalItems.addAll(newItems)
                 if (newItems.size == QUERY_LIMIT)
                     totalItems.add(LoadingItem())
+                _numNewPosts.postValue(newItems.size)
+                isLoadingData = false
             }
-            _numNewPosts.postValue(newItems.size)
-            isLoadingData = false
         }
     }
 

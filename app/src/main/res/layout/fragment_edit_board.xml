@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:text='@{String.format("%.1f", viewModel.board.ampHours)}'
+                    android:hint="@string/hint_amps"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/amp_hour_label" />
@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:text="@{viewModel.board.batteryConfiguration}"
+                    android:hint="@string/hint_battery"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/battery_config_label" />
@@ -104,6 +104,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:text="@{viewModel.board.motorType}"
+                    android:hint="@string/hint_motor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/motor_config_label" />
@@ -124,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:text="@{viewModel.board.escType}"
+                    android:hint="@string/hint_esc"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/esc_config_label" />
@@ -143,6 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
+                    android:hint="@string/hint_speed"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/speed_label" />
@@ -163,8 +166,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:hint="@string/board_description_prompt"
-                    android:inputType="text"
-                    android:maxLines="3"
+                    android:inputType="textMultiLine"
+                    android:maxLength="300"
+                    android:maxLines="5"
                     android:text="@{viewModel.board.description}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -8,5 +8,5 @@ data class Board(
     val motorType: String = "",
     val escType: String = "",
     val description: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String? = null
 )

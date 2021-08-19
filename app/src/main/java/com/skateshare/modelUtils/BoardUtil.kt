@@ -9,12 +9,12 @@ fun DocumentSnapshot.toBoard() : Board? {
         Board (
             ampHours = getDouble("ampHours")!!,
             batteryConfiguration = getString("batteryConfig")!!,
-            escType = getString("escType")!!,
-            motorType = getString("motorType")!!,
+            escType = getString("escConfig")!!,
+            motorType = getString("motorConfig")!!,
             topSpeedMph = getDouble("topSpeedMph")!!,
             topSpeedKph = getDouble("topSpeedKph")!!,
             description = getString("description")!!,
-            imageUrl = getString("imageUrl")!!
+            imageUrl = getString("imageUrl")
         )
     } catch (e: Exception) {
         null

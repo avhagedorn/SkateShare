@@ -196,4 +196,13 @@
     <string name="board_description_prompt">Tell us about your board!</string>
     <string name="edit_board_option">Edit Board</string>
 
+    <string name="error_saving_board">There was an error saving your changes. Please make sure all fields are properly filled out.</string>
+    <string name="board_saved_successfully">Board updated successfully!</string>
+
+    <string name="decimal_format">%1$.1f</string>
+    <string name="hint_speed">(ex. 27.4)</string>
+    <string name="hint_esc">(ex. DIY 12s ESC)</string>
+    <string name="hint_motor">(ex. Dual 190kv 6355s)</string>
+    <string name="hint_battery">(ex. 12s4p Samsung 30Qs)</string>
+    <string name="hint_amps">(ex. 12.4)</string>
 </resources>

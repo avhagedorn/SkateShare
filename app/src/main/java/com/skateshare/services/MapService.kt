@@ -66,7 +66,6 @@ class MapService : LifecycleService() {
         val elapsedMilliseconds = MutableLiveData<Long>()
         val routeData = MutableLiveData<Polyline>()
         val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
-        val accuracyData = MutableLiveData<MutableList<Float>>()
         val isTracking = MutableLiveData<Boolean>()
         val errorMessage = MutableLiveData<String?>()
     }
@@ -79,7 +78,6 @@ class MapService : LifecycleService() {
                         if (location.accuracy <= MAX_RADIUS_METERS) {
                             addDistance(location)
                             addLocation(location)
-                            addAccuracy(location.accuracy)
                             addSpeed(location.speed)
                         }
                         Log.i("1one", location.accuracy.toString())
@@ -109,7 +107,6 @@ class MapService : LifecycleService() {
     }
 
     private fun initializeLiveData() {
-        accuracyData.postValue(mutableListOf<Float>())
         routeData.postValue(mutableListOf<LatLng>())
         speedData.postValue(mutableListOf<Float>())
         isTracking.postValue(true)
@@ -244,7 +241,6 @@ class MapService : LifecycleService() {
                 avg_speed_mi = speeds[UNIT_MILES]!!,
                 length_mi = distances[UNIT_MILES]!!,
                 speed = speedData.value!!,
-                accuracy = accuracyData.value!!,
                 lat_start = lats[0],
                 lng_start = lngs[0],
                 lat_path = lats,
@@ -287,13 +283,6 @@ class MapService : LifecycleService() {
         speedData.value?.apply {
             add(speed)
             speedData.postValue(this)
-        }
-    }
-
-    private fun addAccuracy(accuracy: Float) {
-        accuracyData.value?.apply {
-            add(accuracy)
-            accuracyData.postValue(this)
         }
     }
 

@@ -42,9 +42,6 @@ data class Route(
     @ColumnInfo(name = "route_lng")
     var lng_path : MutableList<Double> = mutableListOf(),
 
-    @ColumnInfo(name = "route_accuracy")
-    var accuracy : MutableList<Float> = mutableListOf(),
-
     @ColumnInfo(name = "speed")
     var speed : MutableList<Float> = mutableListOf(),
 
@@ -73,7 +70,6 @@ data class Route(
         result = 31 * result + lng_start.hashCode()
         result = 31 * result + lat_path.hashCode()
         result = 31 * result + lng_path.hashCode()
-        result = 31 * result + accuracy.hashCode()
         result = 31 * result + speed.hashCode()
         result = 31 * result + isPublic.hashCode()
         return result
