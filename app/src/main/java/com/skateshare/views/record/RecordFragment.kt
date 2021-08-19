@@ -30,6 +30,7 @@ import com.skateshare.services.MapHelper.metersToStandardSpeed
 import com.skateshare.services.MapService
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
 
 class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
@@ -59,12 +60,12 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
             // Re-initialize existing polyline in case of app restart
             MapService.isTracking.observe(viewLifecycleOwner, { newStatus ->
-                newStatus?.let {
-                    if (it) {
+                newStatus?.let { serviceIsTracking ->
+                    if (serviceIsTracking) {
                         map?.clear()
                         loadServicePolyline()
                     }
-                    isTracking = it
+                    isTracking = serviceIsTracking
                 }
             })
         }
@@ -104,8 +105,8 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             panCameraToLastLocation()
         })
 
-        MapService.elapsedMilliseconds.observe(viewLifecycleOwner, { time ->
-            binding.displayDuration.text = formatTime(time, false)
+        MapService.elapsedSeconds.observe(viewLifecycleOwner, { time ->
+            binding.displayDuration.text = formatTime(time)
         })
 
         MapService.speedData.observe(viewLifecycleOwner, { metersPerSecond ->
@@ -123,7 +124,6 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun addAllLocations() {
-        Log.i("1one", "addAllLocations")
         val polylineOptions = PolylineOptions()
             .color(POLYLINE_COLOR)
             .width(POLYLINE_WIDTH)
@@ -154,7 +154,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 EasyPermissions.requestPermissions(
                     this,
-                    "Location permissions are required for recording and viewing routes!",
+                    requireContext().getString(R.string.location_permissions_prompt),
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -162,7 +162,7 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             } else {
                 EasyPermissions.requestPermissions(
                     this,
-                    "Location permissions are required for recording and viewing routes!",
+                    requireContext().getString(R.string.location_permissions_prompt),
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -178,14 +178,15 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun sendCommand(command: String) =
-            Intent(requireContext(), MapService::class.java).also { intent ->// MapService::class.java).also { intent ->
-        intent.action = command
-        requireContext().startService(intent)
+            Intent(requireContext(), MapService::class.java).also { intent ->
+                intent.action = command
+                requireContext().startService(intent)
     }
 
-    private fun startRecording() = Intent(requireContext(), MapService::class.java).also {// MapService::class.java).also { _ ->
-        sendCommand(BEGIN_TRACKING)
-        showStopButton()
+    private fun startRecording() =
+        Intent(requireContext(), MapService::class.java).also {
+            sendCommand(BEGIN_TRACKING)
+            showStopButton()
     }
 
     private fun confirmStopRecording() {

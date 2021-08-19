@@ -78,14 +78,14 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
         })
 
         viewModel.deleteResponse.observe(viewLifecycleOwner, { response ->
+            Log.i("1one", response.toString())
             if (response.isEnabled) {
                 if (response.isSuccessful) {
                     adapter.submitList(viewModel.getData())
                     Snackbar.make(requireView(),
                         R.string.route_deleted, Snackbar.LENGTH_SHORT).show()
                 } else
-                     Toast.makeText(requireContext(),
-                         response.message, Toast.LENGTH_SHORT).show()
+                    Log.i("1one", response.message.toString())
                 viewModel.resetDeleteResponse()
             }
         })

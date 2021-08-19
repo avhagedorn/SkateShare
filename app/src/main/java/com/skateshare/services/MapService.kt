@@ -48,7 +48,6 @@ class MapService : LifecycleService() {
     @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     @Inject lateinit var localRoutesDao: LocalRoutesDao
 
-    private val elapsedSeconds = MutableLiveData<Long>()
     private var timerEnabled = false
     private var startTime = 0L
     private var prevSecondTime = 0L
@@ -57,6 +56,7 @@ class MapService : LifecycleService() {
     companion object {
         val distanceMeters = MutableLiveData<Double>()
         val elapsedMilliseconds = MutableLiveData<Long>()
+        val elapsedSeconds = MutableLiveData<Long>()
         val routeData = MutableLiveData<Polyline>()
         val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
         val isTracking = MutableLiveData<Boolean>()
@@ -149,7 +149,7 @@ class MapService : LifecycleService() {
         elapsedSeconds.observe(this, { time ->
             time?.let{
                 val notification = notificationBuilder
-                    .setContentText(formatTime(time * 1000L))
+                    .setContentText(formatTime(time))
                 notificationManager.notify(NOTIFICATION_ID, notification.build())
             }
         })
@@ -169,11 +169,12 @@ class MapService : LifecycleService() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 saveRoute()
+                notificationManager.cancelAll()
+                stopForeground(true)
             } catch (e: Exception) {
-                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+                notificationManager.cancelAll()
+                stopForeground(true)
             }
-            notificationManager.cancelAll()
-            stopForeground(true)
         }
     }
 

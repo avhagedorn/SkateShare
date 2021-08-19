@@ -100,7 +100,7 @@ class PrivateRoutesViewModel @Inject constructor(
         _deleteResponse.postValue(ExceptionResponse(
             message = null,
             isSuccessful = false,
-            isEnabled = true))
+            isEnabled = false))
     }
 
     fun getData() = allItems.toMutableList()

@@ -6,20 +6,14 @@ import java.util.concurrent.TimeUnit
 
 object MapHelper {
 
-    fun formatTime(ms: Long, includesMs: Boolean = false) : String {
-        var millis = ms
-        val hours = TimeUnit.MILLISECONDS.toHours(millis)
-        millis -= TimeUnit.HOURS.toMillis(hours)
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
-        millis -= TimeUnit.MINUTES.toMillis(minutes)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(millis)
-        if (!includesMs)
-            return "$hours:${if (minutes < 10) "0" else ""}$minutes:" +
-                    "${if (seconds < 10) "0" else ""}$seconds"
-        millis /= 10
+    fun formatTime(s: Long) : String {
+        var sec = s
+        val hours = TimeUnit.SECONDS.toHours(sec)
+        sec -= TimeUnit.HOURS.toSeconds(hours)
+        val minutes = TimeUnit.SECONDS.toMinutes(sec)
+        sec -= TimeUnit.MINUTES.toSeconds(minutes)
         return "$hours:${if (minutes < 10) "0" else ""}$minutes:" +
-                "${if (seconds < 10) "0" else ""}$seconds:" +
-                "${if (millis < 10) "0" else ""}$millis"
+                "${if (sec < 10) "0" else ""}$sec"
     }
 
     fun metersToStandardUnits(meters: Double) =

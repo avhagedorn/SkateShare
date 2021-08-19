@@ -31,7 +31,7 @@ fun TextView.distanceFormatter(route: Route, unit: String) {
 
 @BindingAdapter("durationFormatter")
 fun TextView.durationFormatter(route: Route) {
-    text = MapHelper.formatTime(route.duration, false)
+    text = MapHelper.formatTime(route.duration)
 }
 
 @BindingAdapter("speedFormatterRoute", "speedFormatterUnit")
