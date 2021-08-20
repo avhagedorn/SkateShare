@@ -208,4 +208,9 @@
 
     <string name="location_permissions_prompt">Location permissions are required for recording and viewing routes!</string>
     <string name="radius">Radius</string>
+
+    <string name="gps_warning">
+        GPS tracking has been disabled, or battery saver is on.
+        Please re-enable GPS and disable battery saver to resume route tracking!
+    </string>
 </resources>

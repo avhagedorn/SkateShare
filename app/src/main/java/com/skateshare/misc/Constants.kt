@@ -87,3 +87,6 @@ const val MEDIUM_RADIUS_POSITION = 1
 const val LARGE_RADIUS_POSITION = 2
 
 const val MI_TO_KM = 1.609344
+
+const val NO_GPS = 0
+const val HAS_GPS = 1

@@ -48,50 +48,47 @@ class MapService : LifecycleService() {
     @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     @Inject lateinit var localRoutesDao: LocalRoutesDao
 
+    private lateinit var notificationManager: NotificationManager
+    private var _locationCallback: LocationCallback? = null
+    private val locationCallback: LocationCallback get() = _locationCallback!!
     private var timerEnabled = false
     private var startTime = 0L
     private var prevSecondTime = 0L
-    private lateinit var lastLocation: Location
 
     companion object {
+        val warning = MutableLiveData<Int>()
         val distanceMeters = MutableLiveData<Double>()
-        val elapsedMilliseconds = MutableLiveData<Long>()
         val elapsedSeconds = MutableLiveData<Long>()
         val routeData = MutableLiveData<Polyline>()
-        val speedData = MutableLiveData<MutableList<Float>>()           // Speed in m/s
+        val speedData = MutableLiveData<MutableList<Float>>()   // Speed in m/s
         val isTracking = MutableLiveData<Boolean>()
         val errorMessage = MutableLiveData<String?>()
     }
 
-    private val locationCallback = object: LocationCallback() {
-        override fun onLocationResult(result: LocationResult) {
-            if (isTracking.value!!) {
-                result.locations.let { locations ->
-                    for (location in locations) {
-                        if (location.accuracy <= MAX_RADIUS_METERS) {
-                            addDistance(location)
-                            addLocation(location)
-                            addSpeed(location.speed)
-                        }
-                    }
-                }
-            }
-            super.onLocationResult(result)
-        }
-
-        override fun onLocationAvailability(p0: LocationAvailability) {
-            super.onLocationAvailability(p0)
-            if (!p0.isLocationAvailable) {
-                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                createWarningChannel(notificationManager)
-                notificationManager.notify(WARNING_ID, warningBuilder.build())
-            }
-        }
+    init {
+        _locationCallback = MyLocationCallback(routeData, speedData, distanceMeters, warning)
     }
 
+    @SuppressLint("VisibleForTests")
     override fun onCreate() {
         super.onCreate()
-        fusedLocationProviderClient = FusedLocationProviderClient(this)
+        // fusedLocationProviderClient = FusedLocationProviderClient(this)
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        warning.observe(this, { message ->
+            when (message) {
+                NO_GPS -> {
+                    createWarningChannel(notificationManager)
+                    notificationManager.notify(WARNING_ID, warningBuilder.build())
+                    resetWarning()
+                }
+                HAS_GPS -> {
+                    notificationManager.cancel(WARNING_ID)
+                    resetWarning()
+                }
+            }
+        })
+
         isTracking.observe(this, { trackingStatus ->
             updateLocationTracking(trackingStatus)
         })
@@ -101,7 +98,6 @@ class MapService : LifecycleService() {
         routeData.postValue(mutableListOf<LatLng>())
         speedData.postValue(mutableListOf<Float>())
         isTracking.postValue(true)
-        elapsedMilliseconds.postValue(0L)
         elapsedSeconds.postValue(0L)
         distanceMeters.postValue(0.0)
         errorMessage.postValue(null)
@@ -127,11 +123,10 @@ class MapService : LifecycleService() {
 
         CoroutineScope(Dispatchers.Main).launch {
             while (isTracking.value!!) {
-                val routeTime = System.currentTimeMillis() - startTime
-                elapsedMilliseconds.postValue(routeTime)
-                if (routeTime >= 1000L + prevSecondTime) {
-                    elapsedSeconds.postValue(elapsedSeconds.value!! + 1)
-                    prevSecondTime = routeTime
+                if (System.currentTimeMillis() >= prevSecondTime+1000L) {
+                    elapsedSeconds.postValue(
+                        ((System.currentTimeMillis() - startTime)/1000).toLong())
+                    prevSecondTime = System.currentTimeMillis()
                 }
                 delay(TIMER_UPDATE_INTERVAL)
             }
@@ -142,7 +137,7 @@ class MapService : LifecycleService() {
     private fun startForegroundService() {
         initializeLiveData()
         isTracking.postValue(true)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         createNotificationChannel(notificationManager)
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 
@@ -150,6 +145,7 @@ class MapService : LifecycleService() {
             time?.let{
                 val notification = notificationBuilder
                     .setContentText(formatTime(time))
+                    .setProgress(0, 0, false)
                 notificationManager.notify(NOTIFICATION_ID, notification.build())
             }
         })
@@ -157,30 +153,24 @@ class MapService : LifecycleService() {
 
     // Stops recording route
     private fun stopForegroundService() {
+        notificationManager.cancelAll()
         isTracking.postValue(false)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val notification = notificationBuilder
-            .clearActions()
-            .setContentText(getString(R.string.start_processing))
-            .setProgress(100, 5, false)
-        notificationManager.notify(NOTIFICATION_ID, notification.build())
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 saveRoute()
-                notificationManager.cancelAll()
                 stopForeground(true)
+                stopSelf()
             } catch (e: Exception) {
-                notificationManager.cancelAll()
+                Log.i("1one", e.toString())
                 stopForeground(true)
+                stopSelf()
             }
         }
     }
 
     private suspend fun saveRoute() {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        updateNotification(notificationManager, R.string.converting_coordinates, 15)
+        updateNotification(R.string.converting_coordinates, 15)
 
         val lats = mutableListOf<Double>()
         val lngs = mutableListOf<Double>()
@@ -189,19 +179,20 @@ class MapService : LifecycleService() {
             lngs.add(it.longitude)
         }
 
-        updateNotification(notificationManager, R.string.smoothing_route, 45)
+        updateNotification(R.string.smoothing_route, 45)
         val newLats = bSpline(lats)
         val newLngs = bSpline(lngs)
         lats.clear()
         lngs.clear()
 
-        updateNotification(notificationManager, R.string.saving_to_database, 75)
+        updateNotification(R.string.saving_to_database, 75)
         try {
             insertRoute(newLats, newLngs)
-            updateAvgSpeed()
         } catch (e: Exception) {
-            Toast.makeText(applicationContext, e.toString(), Toast.LENGTH_SHORT).show()
+            Log.i("1one", e.message.toString())
         }
+
+        updateAvgSpeed()
     }
 
     private suspend fun updateAvgSpeed() {
@@ -212,11 +203,15 @@ class MapService : LifecycleService() {
             .apply()
     }
 
-    private fun updateNotification(manager: NotificationManager, messageId: Int, progress: Int) {
+    private fun updateNotification(messageId: Int, progress: Int) {
         val notification = notificationBuilder
             .setContentText(getString(messageId))
             .setProgress(100, progress, false)
-        manager.notify(NOTIFICATION_ID, notification.build())
+        notificationManager.notify(NOTIFICATION_ID, notification.build())
+    }
+
+    private fun resetWarning() {
+        warning.postValue(-1)
     }
 
     private suspend fun insertRoute(lats: MutableList<Double>, lngs: MutableList<Double>) {
@@ -260,31 +255,6 @@ class MapService : LifecycleService() {
         }
     }
 
-    // Adds location to Polyline
-    private fun addLocation(location: Location?) {
-        location?.let { loc ->
-            val newLatLng = LatLng(loc.latitude, loc.longitude)
-            routeData.value?.apply {
-                add(newLatLng)
-                routeData.postValue(this)
-            }
-        }
-    }
-
-    private fun addSpeed(speed: Float) {
-        speedData.value?.apply {
-            add(speed)
-            speedData.postValue(this)
-        }
-    }
-
-    private fun addDistance(currentLocation: Location) {
-        if (routeData.value!!.isNotEmpty())
-            distanceMeters.postValue(
-                distanceMeters.value!! + currentLocation.distanceTo(lastLocation))
-        lastLocation = currentLocation
-    }
-
     private fun createNotificationChannel(notificationManager: NotificationManager) {
         val channel = NotificationChannel(
             CHANNEL_ID,
@@ -300,7 +270,6 @@ class MapService : LifecycleService() {
             WARNING_NAME,
             NotificationManager.IMPORTANCE_DEFAULT
         )
-
         notificationManager.createNotificationChannel(channel)
     }
 }

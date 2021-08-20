@@ -53,7 +53,7 @@ object ServiceModule {
     ) = NotificationCompat.Builder(context, CHANNEL_ID)
         .setAutoCancel(false)
         .setOngoing(true)
-        .setSmallIcon(R.drawable.ic_baseline_add_24) // TODO: Add custom icon
+        .setSmallIcon(R.drawable.ic_baseline_add_24)
         .setContentTitle(context.getString(R.string.app_name))
         .setContentText("00:00:00")
         .addAction(
@@ -78,8 +78,7 @@ object ServiceModule {
         .setSmallIcon(R.drawable.ic_baseline_warning_24)
         .setContentTitle("SkateShare")
         .setStyle(NotificationCompat.BigTextStyle()
-            .bigText("GPS tracking has been disabled, or battery saver is on. " +
-                    "Please re-enable GPS and disable battery saver to resume route tracking!"))
+            .bigText(context.getString(R.string.gps_warning)))
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setContentIntent(
             PendingIntent.getActivity(

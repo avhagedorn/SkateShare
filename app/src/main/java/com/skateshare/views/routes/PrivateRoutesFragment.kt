@@ -135,6 +135,7 @@ class PrivateRoutesFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun fetchData() {
         hideUi()
+        recyclerView.scrollToPosition(0)
         viewModel.clearExistingRoutes()
         viewModel.getRoutes()
     }
