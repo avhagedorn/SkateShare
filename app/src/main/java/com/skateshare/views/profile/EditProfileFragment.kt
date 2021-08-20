@@ -19,6 +19,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.skateshare.R
 import com.skateshare.databinding.FragmentEditProfileBinding
+import com.skateshare.misc.MAX_POST_IMAGE_SIZE
+import com.skateshare.misc.MAX_PROFILE_PICTURE_SIZE
+import com.skateshare.misc.fileSizeMb
 import com.skateshare.viewmodels.EditProfileViewModel
 
 class EditProfileFragment : Fragment() {
@@ -40,15 +43,23 @@ class EditProfileFragment : Fragment() {
         setupLayout()
 
         var updatedUri: Uri? = null
-        val getProfileImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            if (uri != null) {
-                Glide.with(this)
-                    .load(uri)
-                    .circleCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .into(binding.profilePicture)
-                updatedUri = uri
+        val getProfileImage = registerForActivityResult(ActivityResultContracts.GetContent()) { nullableUri ->
+            nullableUri?.let { uri ->
+                if (uri.fileSizeMb(requireContext()) < MAX_PROFILE_PICTURE_SIZE) {
+                    Glide.with(this)
+                        .load(uri)
+                        .circleCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.profilePicture)
+                    updatedUri = uri
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.image_mb_too_large).format(MAX_PROFILE_PICTURE_SIZE),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
 

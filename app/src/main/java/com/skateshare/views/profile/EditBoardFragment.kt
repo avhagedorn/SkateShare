@@ -23,8 +23,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentEditBoardBinding
-import com.skateshare.misc.UNIT_KILOMETERS
-import com.skateshare.misc.UNIT_MILES
+import com.skateshare.misc.*
 import com.skateshare.viewmodels.EditBoardViewModel
 
 class EditBoardFragment : Fragment() {
@@ -49,15 +48,23 @@ class EditBoardFragment : Fragment() {
             .getString("units", UNIT_MILES) ?: UNIT_MILES
 
         var updatedUri: Uri? = null
-        val getProfileImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            if (uri != null) {
-                Glide.with(this)
-                    .load(uri)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .into(binding.boardImage)
-                updatedUri = uri
+        val getProfileImage = registerForActivityResult(ActivityResultContracts.GetContent()) { nullableUri ->
+            nullableUri?.let { uri ->
+                if (uri.fileSizeMb(requireContext()) < MAX_BOARD_IMAGE_SIZE) {
+                    Glide.with(this)
+                        .load(uri)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.boardImage)
+                    updatedUri = uri
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.image_mb_too_large).format(MAX_BOARD_IMAGE_SIZE),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
         

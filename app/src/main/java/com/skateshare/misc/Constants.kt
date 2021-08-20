@@ -90,3 +90,8 @@ const val MI_TO_KM = 1.609344
 
 const val NO_GPS = 0
 const val HAS_GPS = 1
+
+const val MAX_POST_IMAGE_SIZE = 4
+const val MAX_PROFILE_PICTURE_SIZE = 3
+const val MAX_BUG_REPORT_IMAGE_SIZE = 6
+const val MAX_BOARD_IMAGE_SIZE = 4

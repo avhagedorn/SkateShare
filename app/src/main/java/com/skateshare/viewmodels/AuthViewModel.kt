@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.skateshare.R
 import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
+import com.skateshare.models.User.Companion.createUserData
 import com.skateshare.repostitories.FirebaseAuthentication
 import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
@@ -26,14 +27,7 @@ class AuthViewModel : ViewModel() {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     FirebaseAuthentication.register(email, password)
-                    FirestoreUser.setUserData(
-                        hashMapOf(
-                            "username" to username,
-                            "bio" to "This user hasn't told us anything about themselves yet! \uD83D\uDE1E",
-                            "name" to "",
-                            "profilePicture" to "https://firebasestorage.googleapis.com/v0/b/skateshare-b768a.appspot.com" +
-                                                "/o/profilePictures%2FdefaultProfilePicture.png?" +
-                                                "alt=media&token=2e7a831a-63d1-4036-a58a-a4704e737a4d"))
+                    FirestoreUser.setUserData(createUserData(username))
                     _loginResponse.postValue(ExceptionResponse(
                         message = null,
                         isSuccessful = true))
@@ -45,7 +39,7 @@ class AuthViewModel : ViewModel() {
             }
         }
         else
-            _checkCredentialsEmpty.value = verification
+            _checkCredentialsEmpty.postValue(verification)
     }
 
     fun login(email: String, password: String) {
@@ -69,7 +63,6 @@ class AuthViewModel : ViewModel() {
             _checkCredentialsEmpty.value = verification
     }
 
-    // Replace EventResponse with nullable int?
     private fun credentialsAreValid(email: String, password: String, username: String) : EventResponse {
         return when {
             username.trim{it<=' '}.isEmpty() -> {

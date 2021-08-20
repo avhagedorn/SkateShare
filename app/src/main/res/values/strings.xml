@@ -213,4 +213,8 @@
         GPS tracking has been disabled, or battery saver is on.
         Please re-enable GPS and disable battery saver to resume route tracking!
     </string>
+
+    <string name="image_mb_too_large">Please select an image smaller than %1$dMB!</string>
+
+    <string name="default_bio">This user hasn\'t told us anything about themselves yet! 😞</string>
 </resources>

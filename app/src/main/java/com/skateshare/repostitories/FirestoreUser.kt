@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.skateshare.R
 import com.skateshare.interfaces.UserInterface
 import com.skateshare.models.User
 import com.skateshare.models.User.Companion.toUser

@@ -1,20 +1,26 @@
 package com.skateshare.viewmodels
 
+import android.app.Application
+import android.app.Instrumentation
+import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.core.net.toFile
+import androidx.lifecycle.*
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.misc.postToHashMap
 import com.skateshare.repostitories.FirestorePost
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
+import javax.inject.Inject
 
-class CreatePostViewModel : ViewModel() {
+class CreatePostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _exceptionResponse = MutableLiveData<ExceptionResponse>()
     val exceptionResponse: LiveData<ExceptionResponse> = _exceptionResponse

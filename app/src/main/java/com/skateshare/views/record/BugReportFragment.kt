@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.skateshare.R
 import com.skateshare.databinding.FragmentBugReportBinding
+import com.skateshare.misc.MAX_BUG_REPORT_IMAGE_SIZE
+import com.skateshare.misc.MAX_PROFILE_PICTURE_SIZE
+import com.skateshare.misc.fileSizeMb
 import com.skateshare.viewmodels.BugReportViewModel
 
 class BugReportFragment : Fragment() {
@@ -31,14 +34,22 @@ class BugReportFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(BugReportViewModel::class.java)
 
         var updatedUri: Uri? = null
-        val getBugScreenshot = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            if (uri != null) {
-                Glide.with(this)
-                    .load(uri)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .into(binding.bugScreenshot)
-                updatedUri = uri
+        val getBugScreenshot = registerForActivityResult(ActivityResultContracts.GetContent()) { nullableUri ->
+            nullableUri?.let { uri ->
+                if (uri.fileSizeMb(requireContext()) < MAX_BUG_REPORT_IMAGE_SIZE) {
+                    Glide.with(this)
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.bugScreenshot)
+                    updatedUri = uri
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.image_mb_too_large).format(MAX_BUG_REPORT_IMAGE_SIZE),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
 
