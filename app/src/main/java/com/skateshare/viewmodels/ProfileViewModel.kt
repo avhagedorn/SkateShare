@@ -46,9 +46,12 @@ class ProfileViewModel(private var profileUid: String?) : FeedViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val newItems = queryToList(query = FirestorePost.getUserPosts(profileUid!!, end))
 
-            if (newItems.isEmpty() && totalItems.last() is LoadingItem)
-                totalItems.removeLastOrNull()
-
+            if (newItems.isEmpty()) {
+                if (totalItems.isNotEmpty() && totalItems.last() is LoadingItem)
+                    totalItems.removeLastOrNull()
+                _numNewPosts.postValue(newItems.size)
+                isLoadingData = false
+            }
             if (newItems.isNotEmpty()) {
                 totalItems.removeLastOrNull()
                 end = newItems[newItems.size - 1].datePosted
