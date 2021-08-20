@@ -11,8 +11,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.interfaces.PostInterface
 import com.skateshare.misc.QUERY_LIMIT
 import com.skateshare.models.User
-import com.skateshare.models.User.Companion.newDefaultUser
-import com.skateshare.models.User.Companion.toUser
 import kotlinx.coroutines.tasks.await
 import java.util.*
 

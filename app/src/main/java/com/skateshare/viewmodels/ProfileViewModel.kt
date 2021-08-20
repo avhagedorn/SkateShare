@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.modelUtils.toBoard
+import com.skateshare.modelUtils.toUser
 import com.skateshare.models.Board
 import com.skateshare.models.LoadingItem
 import com.skateshare.models.User
@@ -23,8 +24,8 @@ class ProfileViewModelFactory(private val profileUid: String?) : ViewModelProvid
 
 class ProfileViewModel(private var profileUid: String?) : FeedViewModel() {
     private val currentUserUid = FirebaseAuth.getInstance().uid
-    private val _user = MutableLiveData<User>()
-    val user: LiveData<User> get() = _user
+    private val _user = MutableLiveData<User?>()
+    val user: LiveData<User?> get() = _user
     private val _board = MutableLiveData<Board?>()
     val board: LiveData<Board?> get() = _board
     var profileUserIsCurrentUser = false
@@ -36,7 +37,7 @@ class ProfileViewModel(private var profileUid: String?) : FeedViewModel() {
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            _user.postValue(FirestoreUser.getUserData(profileUid!!))
+            _user.postValue(FirestoreUser.getUserData(profileUid!!).toUser())
         }
     }
 

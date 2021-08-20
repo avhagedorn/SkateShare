@@ -217,4 +217,5 @@
     <string name="image_mb_too_large">Please select an image smaller than %1$dMB!</string>
 
     <string name="default_bio">This user hasn\'t told us anything about themselves yet! 😞</string>
+    <string name="user_not_found">Something went wrong. 😓\nIf you\'re seeing this page, an error has occurred. Please try again later, or submit a bug report if this behavior continues.</string>
 </resources>

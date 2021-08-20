@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.misc.ExceptionResponse
+import com.skateshare.modelUtils.toUser
 import com.skateshare.models.User
 import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +20,11 @@ class EditProfileViewModel() : ViewModel() {
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _user.postValue(FirestoreUser.getUserData(uid))
+            _user.postValue(FirestoreUser.getUserData(uid).toUser()!!)
         }
     }
 
-    fun updateProfile(updatedData: Map<String, Any?>) {
+    fun updateProfile(updatedData: HashMap<String, Any?>) {
         try {
             viewModelScope.launch(Dispatchers.IO) {
                 FirestoreUser.updateUserData(updatedData, uid)

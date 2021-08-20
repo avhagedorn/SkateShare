@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.skateshare.R
 import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
-import com.skateshare.models.User.Companion.createUserData
 import com.skateshare.repostitories.FirebaseAuthentication
 import com.skateshare.repostitories.FirestoreUser
 import kotlinx.coroutines.Dispatchers
@@ -21,13 +20,13 @@ class AuthViewModel : ViewModel() {
     private val _checkCredentialsEmpty = MutableLiveData<EventResponse>()
     val checkCredentialsEmpty: LiveData<EventResponse> get() = _checkCredentialsEmpty
 
-    fun register(email: String, password: String, username: String) {
+    fun register(email: String, password: String, username: String, userData: HashMap<String, Any?>) {
         val verification = credentialsAreValid(email, password, username)
         if (verification.success) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     FirebaseAuthentication.register(email, password)
-                    FirestoreUser.setUserData(createUserData(username))
+                    FirestoreUser.setUserData(userData)
                     _loginResponse.postValue(ExceptionResponse(
                         message = null,
                         isSuccessful = true))

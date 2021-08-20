@@ -119,25 +119,29 @@ class ProfileFragment : Fragment() {
 
     private fun setViewModelListeners() {
         viewModel.user.observe(viewLifecycleOwner, { userData ->
-            Glide.with(this)
-                .load(userData.profilePicture)
-                .circleCrop()
-                .listener(object: RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?, model: Any?, target: Target<Drawable>?,
-                        isFirstResource: Boolean): Boolean {
-                        Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
-                        showProfile()
-                        return false
-                    }
+            if (userData == null) {
+                binding.progress.visibility = View.GONE
+                binding.userNotFound.visibility = View.VISIBLE
+            } else
+                Glide.with(this)
+                    .load(userData.profilePicture)
+                    .circleCrop()
+                    .listener(object: RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?, model: Any?, target: Target<Drawable>?,
+                            isFirstResource: Boolean): Boolean {
+                            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
+                            showProfile()
+                            return false
+                        }
 
-                    override fun onResourceReady(
-                        resource: Drawable?, model: Any?, target: Target<Drawable>?,
-                        dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        showProfile()
-                        return false
-                    }
-                }).into(binding.profilePicture)
+                        override fun onResourceReady(
+                            resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                            dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                            showProfile()
+                            return false
+                        }
+                    }).into(binding.profilePicture)
         })
 
         viewModel.board.observe(viewLifecycleOwner, { board ->

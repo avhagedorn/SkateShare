@@ -95,3 +95,5 @@ const val MAX_POST_IMAGE_SIZE = 4
 const val MAX_PROFILE_PICTURE_SIZE = 3
 const val MAX_BUG_REPORT_IMAGE_SIZE = 6
 const val MAX_BOARD_IMAGE_SIZE = 4
+
+const val DEFAULT_PROFILE_PICTURE_URL = "https://firebasestorage.googleapis.com/v0/b/skateshare-b768a.appspot.com/o/profilePictures%2FdefaultProfilePicture.png?alt=media&token=2e7a831a-63d1-4036-a58a-a4704e737a4d"

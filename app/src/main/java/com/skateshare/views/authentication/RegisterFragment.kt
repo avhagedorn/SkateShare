@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRegisterBinding
+import com.skateshare.misc.DEFAULT_PROFILE_PICTURE_URL
 import com.skateshare.viewmodels.AuthViewModel
 import com.skateshare.views.MainActivity
 
@@ -30,11 +31,13 @@ class RegisterFragment : Fragment() {
         binding.registerHint.setOnClickListener { goToLogin() }
 
         binding.submitRegistration.setOnClickListener {
+            val username = binding.usernameInput.text.toString()
             binding.progressBar.visibility = View.VISIBLE
             viewModel.register(
                 email=binding.emailInput.text.toString(),
                 password=binding.passwordInput.text.toString(),
-                username=binding.usernameInput.text.toString())
+                username=username,
+                createNewUserData(username))
         }
 
         viewModel.checkCredentialsEmpty.observe(viewLifecycleOwner, { event ->
@@ -58,6 +61,14 @@ class RegisterFragment : Fragment() {
 
         return binding.root
     }
+
+    private fun createNewUserData(username: String) : HashMap<String, Any?> =
+        hashMapOf(
+            "username" to username,
+            "name" to "",
+            "bio" to getString(R.string.default_bio),
+            "profilePicture" to DEFAULT_PROFILE_PICTURE_URL
+        )
 
     private fun goToMainActivity() {
         startActivity(Intent(requireActivity(), MainActivity::class.java))

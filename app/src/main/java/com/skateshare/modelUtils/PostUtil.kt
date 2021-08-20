@@ -27,11 +27,13 @@ suspend fun DocumentSnapshot.toPost(cache: HashMap<String, HashMap<String, Strin
 suspend fun getUser(uid: String, cache: HashMap<String, HashMap<String, String>>)
                                                 : java.util.HashMap<String, String>? {
     if (!cache.containsKey(uid)) {
-        val user = FirestoreUser.getUserData(uid)
-        cache[uid] = hashMapOf<String, String>(
-            "username" to user.username,
-            "profilePicture" to user.profilePicture
-        )
+        val user = FirestoreUser.getUserData(uid).toUser()
+        user?.let {
+            cache[uid] = hashMapOf<String, String>(
+                "username" to user.username,
+                "profilePicture" to user.profilePicture
+            )
+        }
     }
     return cache[uid]
 }

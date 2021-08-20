@@ -3,27 +3,25 @@ package com.skateshare.repostitories
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.R
 import com.skateshare.interfaces.UserInterface
+import com.skateshare.modelUtils.toUser
 import com.skateshare.models.User
-import com.skateshare.models.User.Companion.toUser
 import kotlinx.coroutines.tasks.await
 
 object FirestoreUser : UserInterface {
 
-    override suspend fun getUserData(uid: String) : User {
-        return try {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(uid).get().await().toUser()
-        } catch (e: Exception) {
-            Log.d("FirestorePost", e.toString())
-            User.newDefaultUser()
-        }
+    override suspend fun getUserData(uid: String) : DocumentSnapshot {
+        return FirebaseFirestore.getInstance()
+            .document("users/$uid")
+            .get()
+            .await()
     }
 
-    override suspend fun setUserData(user: Map<String, Any?>) {
+    override suspend fun setUserData(user: HashMap<String, Any?>) {
         try {
             val uid = FirebaseAuth.getInstance().uid!!
             FirebaseFirestore.getInstance().collection("users")
@@ -44,7 +42,7 @@ object FirestoreUser : UserInterface {
         }
     }
 
-    override suspend fun updateUserData(user: Map<String, Any?>, uid: String) {
+    override suspend fun updateUserData(user: HashMap<String, Any?>, uid: String) {
         try {
             FirebaseFirestore.getInstance().collection("users")
                 .document(uid).update(user).await()
