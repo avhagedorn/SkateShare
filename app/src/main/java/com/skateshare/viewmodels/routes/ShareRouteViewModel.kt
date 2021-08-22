@@ -1,7 +1,6 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.routes
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import com.skateshare.db.LocalRoutesDao
-import com.skateshare.misc.EventResponse
 import com.skateshare.misc.ExceptionResponse
 import com.skateshare.models.Route
 import com.skateshare.repostitories.FirestoreRoutes

@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -15,9 +15,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.skateshare.R
 import com.skateshare.databinding.FragmentBugReportBinding
 import com.skateshare.misc.MAX_BUG_REPORT_IMAGE_SIZE
-import com.skateshare.misc.MAX_PROFILE_PICTURE_SIZE
 import com.skateshare.misc.fileSizeMb
-import com.skateshare.viewmodels.BugReportViewModel
+import com.skateshare.viewmodels.record.BugReportViewModel
 
 class BugReportFragment : Fragment() {
 

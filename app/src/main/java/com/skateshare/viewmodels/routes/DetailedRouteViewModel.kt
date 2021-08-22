@@ -1,12 +1,8 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.routes
 
-import android.graphics.Color
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
 import com.skateshare.models.Route

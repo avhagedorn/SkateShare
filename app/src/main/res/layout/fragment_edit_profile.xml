@@ -10,7 +10,7 @@
 
         <variable
             name="model"
-            type="com.skateshare.viewmodels.EditProfileViewModel" />
+            type="com.skateshare.viewmodels.profile.EditProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

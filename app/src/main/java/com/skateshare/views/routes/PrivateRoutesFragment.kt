@@ -2,13 +2,11 @@ package com.skateshare.views.routes
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentPrivateRoutesBinding
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.viewmodels.PrivateRoutesViewModel
+import com.skateshare.viewmodels.routes.PrivateRoutesViewModel
 import com.skateshare.views.routes.privaterecyclerview.RouteListener
 import com.skateshare.views.routes.privaterecyclerview.RoutesAdapter
 import dagger.hilt.android.AndroidEntryPoint

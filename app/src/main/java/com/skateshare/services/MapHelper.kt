@@ -1,5 +1,7 @@
 package com.skateshare.services
 
+import android.content.Context
+import com.skateshare.R
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import java.util.concurrent.TimeUnit
@@ -22,17 +24,17 @@ object MapHelper {
             UNIT_KILOMETERS to (meters / 1000.0)
         )
 
-    fun metersToStandardSpeed(meters: Float, unit: String) =
+    fun metersToStandardSpeed(meters: Float, unit: String, context: Context) =
         when (unit) {
-            UNIT_KILOMETERS -> "%.1f km/hr".format(meters * 3.6)
-            UNIT_MILES -> "%.1f mi/hr".format(meters * 2.23694)
+            UNIT_KILOMETERS -> context.getString(R.string.speed_kph).format(meters * 3.6)
+            UNIT_MILES -> context.getString(R.string.speed_mph).format(meters * 2.23694)
             else -> "UNDEFINED"
         }
 
-    fun metersToFormattedUnits(meters: Double, unit: String) =
+    fun metersToFormattedUnits(meters: Double, unit: String, context: Context) =
         when (unit) {
-            UNIT_KILOMETERS -> "%.1f km".format(meters*1000)
-            UNIT_MILES -> "%.1f mi".format(meters/1609.344)
+            UNIT_KILOMETERS -> context.getString(R.string.distance_kilometers).format(meters*1000)
+            UNIT_MILES -> context.getString(R.string.distance_miles).format(meters/1609.344)
             else -> "UNDEFINED"
         }
 

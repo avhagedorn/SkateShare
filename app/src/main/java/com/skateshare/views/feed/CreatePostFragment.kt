@@ -18,7 +18,7 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentCreatePostBinding
 import com.skateshare.misc.MAX_POST_IMAGE_SIZE
 import com.skateshare.misc.fileSizeMb
-import com.skateshare.viewmodels.CreatePostViewModel
+import com.skateshare.viewmodels.feed.CreatePostViewModel
 
 class CreatePostFragment : Fragment() {
 

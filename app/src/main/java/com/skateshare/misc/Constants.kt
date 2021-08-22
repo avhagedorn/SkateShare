@@ -6,6 +6,7 @@ import com.skateshare.R
 
 const val BEGIN_TRACKING = "BEGIN TRACKING"
 const val STOP_TRACKING = "STOP TRACKING"
+const val RESET_ERROR_MESSAGE = "RESET MESSAGE"
 
 const val CHANNEL_ID = "tracking_channel"
 const val CHANNEL_NAME = "Tracking"

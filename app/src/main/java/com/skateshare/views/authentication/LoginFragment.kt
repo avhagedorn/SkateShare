@@ -3,7 +3,6 @@ package com.skateshare.views.authentication
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentLoginBinding
-import com.skateshare.viewmodels.AuthViewModel
+import com.skateshare.viewmodels.authentication.AuthViewModel
 import com.skateshare.views.MainActivity
 
 class LoginFragment : Fragment() {

@@ -1,6 +1,5 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.feed
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,6 @@ import com.skateshare.models.FeedItem
 import com.skateshare.models.LoadingItem
 import com.skateshare.repostitories.FirestorePost
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 

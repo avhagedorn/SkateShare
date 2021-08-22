@@ -3,7 +3,6 @@ package com.skateshare.views.routes
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ import com.skateshare.databinding.FragmentDetailedPublicRouteBinding
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.RoutePost
-import com.skateshare.viewmodels.PublicDetailedRouteViewModel
+import com.skateshare.viewmodels.routes.PublicDetailedRouteViewModel
 
 class DetailedPublicRouteFragment : Fragment() {
 

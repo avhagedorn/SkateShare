@@ -30,7 +30,7 @@ object FirestoreUserFeedback : BugReportInterface {
         }
     }
 
-    suspend fun submitFeedback(feedback: String) {
+    override suspend fun submitFeedback(feedback: String) {
         FirebaseFirestore.getInstance()
             .document("feedback/${UUID.randomUUID()}")
             .set(hashMapOf(

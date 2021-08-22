@@ -15,7 +15,7 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentSettingsBinding
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.viewmodels.SettingsViewModel
+import com.skateshare.viewmodels.profile.SettingsViewModel
 import com.skateshare.views.authentication.AuthenticationActivity
 
 

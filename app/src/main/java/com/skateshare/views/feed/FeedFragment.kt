@@ -2,7 +2,6 @@ package com.skateshare.views.feed
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +17,7 @@ import com.skateshare.R
 import com.skateshare.databinding.FragmentFeedBinding
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
-import com.skateshare.viewmodels.FeedViewModel
+import com.skateshare.viewmodels.feed.FeedViewModel
 import com.skateshare.views.feed.feedrecyclerview.FeedAdapter
 import com.skateshare.views.feed.feedrecyclerview.FeedItemListener
 

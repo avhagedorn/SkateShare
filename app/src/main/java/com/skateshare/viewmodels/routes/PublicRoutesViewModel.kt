@@ -1,6 +1,5 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.routes
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +27,6 @@ class PublicRoutesViewModel : ViewModel() {
                 routes = sortList(posts)
                 _hasData.postValue(true)
             } catch (e: Exception) {
-                // TODO
             }
         }
     }

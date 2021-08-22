@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.record
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

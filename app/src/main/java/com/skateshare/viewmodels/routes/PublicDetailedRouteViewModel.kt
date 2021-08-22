@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.routes
 
 import android.util.Log
 import androidx.lifecycle.LiveData

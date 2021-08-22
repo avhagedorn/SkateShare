@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.routes
 
 import android.location.Location
 import android.util.Log

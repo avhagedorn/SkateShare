@@ -19,10 +19,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.skateshare.R
 import com.skateshare.databinding.FragmentEditProfileBinding
-import com.skateshare.misc.MAX_POST_IMAGE_SIZE
 import com.skateshare.misc.MAX_PROFILE_PICTURE_SIZE
 import com.skateshare.misc.fileSizeMb
-import com.skateshare.viewmodels.EditProfileViewModel
+import com.skateshare.viewmodels.profile.EditProfileViewModel
 
 class EditProfileFragment : Fragment() {
 

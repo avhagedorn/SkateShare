@@ -66,7 +66,7 @@ class MapService : LifecycleService() {
     }
 
     init {
-        _locationCallback = MyLocationCallback(routeData, speedData, distanceMeters, warning)
+        _locationCallback = MyLocationCallback()
     }
 
     @SuppressLint("VisibleForTests")
@@ -110,9 +110,8 @@ class MapService : LifecycleService() {
                 startForegroundService()
                 startTimer()
             }
-            STOP_TRACKING -> {
-                stopForegroundService()
-            }
+            STOP_TRACKING -> { stopForegroundService() }
+            RESET_ERROR_MESSAGE -> { resetErrorMessage() }
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -188,9 +187,8 @@ class MapService : LifecycleService() {
         try {
             insertRoute(newLats, newLngs)
         } catch (e: Exception) {
-            // TODO
+            errorMessage.postValue(e.message)
         }
-
         updateAvgSpeed()
     }
 
@@ -211,6 +209,10 @@ class MapService : LifecycleService() {
 
     private fun resetWarning() {
         warning.postValue(-1)
+    }
+
+    private fun resetErrorMessage() {
+        errorMessage.postValue(null)
     }
 
     private suspend fun insertRoute(lats: MutableList<Double>, lngs: MutableList<Double>) {

@@ -2,7 +2,6 @@ package com.skateshare.views.routes
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.skateshare.R
 import com.skateshare.databinding.FragmentPublicRoutesBinding
 import com.skateshare.misc.*
-import com.skateshare.viewmodels.PublicRoutesViewModel
+import com.skateshare.viewmodels.routes.PublicRoutesViewModel
 import com.skateshare.views.routes.publicroutesrecyclerview.PublicRoutesAdapter
 import com.skateshare.views.routes.publicroutesrecyclerview.RoutePostListener
 

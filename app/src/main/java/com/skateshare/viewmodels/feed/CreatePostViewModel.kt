@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.feed
 
 import android.app.Application
 import android.app.Instrumentation

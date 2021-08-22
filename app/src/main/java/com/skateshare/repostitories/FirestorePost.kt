@@ -26,7 +26,7 @@ object FirestorePost : PostInterface {
             .await()
     }
 
-    suspend fun getUserPosts(uid: String, end: Timestamp) : QuerySnapshot {
+    override suspend fun getUserPosts(uid: String, end: Timestamp) : QuerySnapshot {
         return FirebaseFirestore.getInstance()
             .collection("posts")
             .whereEqualTo("postedBy", uid)

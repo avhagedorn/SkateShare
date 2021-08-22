@@ -1,4 +1,4 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.authentication
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

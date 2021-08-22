@@ -26,7 +26,7 @@ import com.skateshare.misc.POLYLINE_COLOR
 import com.skateshare.misc.POLYLINE_WIDTH
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.Route
-import com.skateshare.viewmodels.DetailedRouteViewModel
+import com.skateshare.viewmodels.routes.DetailedRouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,7 +50,7 @@ class DetailedPrivateRouteFragment : Fragment() {
             .getSharedPreferences("userData", Context.MODE_PRIVATE)
             .getString("units", UNIT_MILES) ?: UNIT_MILES
         binding.unit = unit
-        binding.route = Route() // TODO: Examine this
+        binding.route = Route()
 
         viewModel = ViewModelProvider(this).get(DetailedRouteViewModel::class.java)
 

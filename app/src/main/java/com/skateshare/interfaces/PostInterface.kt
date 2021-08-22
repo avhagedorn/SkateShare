@@ -10,6 +10,7 @@ interface PostInterface {
 
     suspend fun getPosts(end: Timestamp) : QuerySnapshot
     suspend fun getPost(postId: String) : DocumentSnapshot
+    suspend fun getUserPosts(uid: String, end: Timestamp) : QuerySnapshot
     suspend fun createPost(uri: Uri, postData: HashMap<String, Any?>)
     suspend fun deletePost(id: String)
 

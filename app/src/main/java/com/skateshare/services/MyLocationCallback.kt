@@ -1,7 +1,6 @@
 package com.skateshare.services
 
 import android.location.Location
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -10,11 +9,7 @@ import com.skateshare.misc.HAS_GPS
 import com.skateshare.misc.MAX_RADIUS_METERS
 import com.skateshare.misc.NO_GPS
 
-class MyLocationCallback(routeData: MutableLiveData<Polyline>,
-                         speedData: MutableLiveData<MutableList<Float>>,
-                         distanceMeters: MutableLiveData<Double>,
-                         warning: MutableLiveData<Int>
-): LocationCallback() {
+class MyLocationCallback(): LocationCallback() {
 
     private lateinit var lastLocation: Location
 

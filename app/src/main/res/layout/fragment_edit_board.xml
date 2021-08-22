@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.skateshare.viewmodels.EditBoardViewModel"/>
+            type="com.skateshare.viewmodels.profile.EditBoardViewModel"/>
 
         <variable
             name="unit"

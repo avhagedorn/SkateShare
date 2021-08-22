@@ -16,8 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentShareRouteBinding
-import com.skateshare.misc.*
-import com.skateshare.viewmodels.ShareRouteViewModel
+import com.skateshare.viewmodels.routes.ShareRouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

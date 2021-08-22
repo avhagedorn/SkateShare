@@ -1,6 +1,5 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.profile
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.skateshare.modelUtils.toBoard
@@ -11,6 +10,7 @@ import com.skateshare.models.User
 import com.skateshare.repostitories.FirestoreBoards
 import com.skateshare.repostitories.FirestorePost
 import com.skateshare.repostitories.FirestoreUser
+import com.skateshare.viewmodels.feed.FeedViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

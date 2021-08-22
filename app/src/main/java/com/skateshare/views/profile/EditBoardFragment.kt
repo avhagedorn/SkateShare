@@ -24,7 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.skateshare.R
 import com.skateshare.databinding.FragmentEditBoardBinding
 import com.skateshare.misc.*
-import com.skateshare.viewmodels.EditBoardViewModel
+import com.skateshare.viewmodels.profile.EditBoardViewModel
 
 class EditBoardFragment : Fragment() {
 

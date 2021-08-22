@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,7 +29,6 @@ import com.skateshare.services.MapHelper.metersToStandardSpeed
 import com.skateshare.services.MapService
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import java.util.*
 
 class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
@@ -112,13 +110,27 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         MapService.speedData.observe(viewLifecycleOwner, { metersPerSecond ->
             usersUnits?.let { units ->
                 if (metersPerSecond.isNotEmpty())
-                    binding.displaySpeed.text = metersToStandardSpeed(metersPerSecond.last(), units)
+                    binding.displaySpeed.text = metersToStandardSpeed(
+                        meters = metersPerSecond.last(),
+                        unit = units,
+                        context = requireActivity().applicationContext
+                    )
             }
         })
 
         MapService.distanceMeters.observe(viewLifecycleOwner, { meters ->
             usersUnits?.let { units ->
-                binding.displayLength.text = metersToFormattedUnits(meters, units)
+                binding.displayLength.text = metersToFormattedUnits(
+                    meters = meters,
+                    unit = units,
+                    context = requireActivity().applicationContext
+                )
+            }
+        })
+
+        MapService.errorMessage.observe(viewLifecycleOwner, { nullableMessage ->
+            nullableMessage?.let { message ->
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
             }
         })
     }

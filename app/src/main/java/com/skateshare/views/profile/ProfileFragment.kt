@@ -3,7 +3,6 @@ package com.skateshare.views.profile
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -26,8 +24,8 @@ import com.skateshare.databinding.FragmentProfileBinding
 import com.skateshare.misc.UNIT_KILOMETERS
 import com.skateshare.misc.UNIT_MILES
 import com.skateshare.models.Board
-import com.skateshare.viewmodels.ProfileViewModel
-import com.skateshare.viewmodels.ProfileViewModelFactory
+import com.skateshare.viewmodels.profile.ProfileViewModel
+import com.skateshare.viewmodels.profile.ProfileViewModelFactory
 import com.skateshare.views.feed.feedrecyclerview.FeedAdapter
 import com.skateshare.views.feed.feedrecyclerview.FeedItemListener
 

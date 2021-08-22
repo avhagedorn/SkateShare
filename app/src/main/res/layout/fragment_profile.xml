@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.skateshare.viewmodels.ProfileViewModel" />
+            type="com.skateshare.viewmodels.profile.ProfileViewModel" />
 
         <variable
             name="units"

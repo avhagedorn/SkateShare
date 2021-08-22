@@ -3,7 +3,6 @@ package com.skateshare.views.routes
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,7 @@ import com.skateshare.databinding.FragmentRoutesBinding
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
 import com.skateshare.models.RouteGlobalMap
-import com.skateshare.viewmodels.RoutesViewModel
+import com.skateshare.viewmodels.routes.RoutesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

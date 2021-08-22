@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.skateshare.R
 import com.skateshare.databinding.FragmentRegisterBinding
 import com.skateshare.misc.DEFAULT_PROFILE_PICTURE_URL
-import com.skateshare.viewmodels.AuthViewModel
+import com.skateshare.viewmodels.authentication.AuthViewModel
 import com.skateshare.views.MainActivity
 
 class RegisterFragment : Fragment() {

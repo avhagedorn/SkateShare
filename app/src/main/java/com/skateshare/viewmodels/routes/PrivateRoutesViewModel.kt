@@ -1,13 +1,11 @@
-package com.skateshare.viewmodels
+package com.skateshare.viewmodels.routes
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
-import com.skateshare.models.LoadingItem
 import com.skateshare.models.Route
 import com.skateshare.models.SimpleFeedItem
 import com.skateshare.models.SimpleLoadingItem
