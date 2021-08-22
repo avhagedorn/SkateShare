@@ -68,7 +68,7 @@ class ProfileViewModel(private var profileUid: String?) : FeedViewModel() {
             try {
                 _board.postValue(FirestoreBoards.getBoard(profileUid!!).toBoard())
             } catch (e: Exception) {
-                Log.i("1one", e.toString())
+                // TODO
             }
         }
     }

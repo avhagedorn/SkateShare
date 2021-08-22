@@ -18,9 +18,6 @@ interface LocalRoutesDao {
     @Query("SELECT COUNT(*) FROM my_routes")
     suspend fun getNumPrivateRoutes() : Int
 
-    @Query("DELETE FROM my_routes")
-    suspend fun deleteALl()
-
     @Query("SELECT SUM(length_mi) FROM my_routes")
     suspend fun getTotalDistanceMi() : Double
 

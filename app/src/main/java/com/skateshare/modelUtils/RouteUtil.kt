@@ -35,7 +35,6 @@ suspend fun DocumentSnapshot.toRoutePost(cache: HashMap<String, HashMap<String, 
             imgUrl = getString("imageUrl")
         )
     } catch (e: Exception) {
-        Log.i("RouteUtil", e.toString())
         null
     }
 }
@@ -62,7 +61,6 @@ fun DocumentSnapshot.toLiteRoutePost(centerLat: Double, centerLng: Double) : Rou
             distanceToCenter = distance[0].toDouble()
         )
     } catch (e: Exception) {
-        Log.i("RouteUtil", e.toString())
         null
     }
 }
@@ -79,7 +77,6 @@ fun DocumentSnapshot.toRouteGlobalMap() : RouteGlobalMap? {
             polyline = generatePolyline(encodedPath)
         )
     } catch (e: Exception) {
-        Log.i("RouteUtil", e.message.toString())
         null
     }
 }

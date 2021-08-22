@@ -19,7 +19,6 @@ suspend fun DocumentSnapshot.toPost(cache: HashMap<String, HashMap<String, Strin
             posterId = uid
         )
     } catch (e: Exception) {
-        Log.d("Post", e.toString())
         null
     }
 }

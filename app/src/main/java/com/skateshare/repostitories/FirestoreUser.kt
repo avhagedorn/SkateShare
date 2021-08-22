@@ -22,53 +22,33 @@ object FirestoreUser : UserInterface {
     }
 
     override suspend fun setUserData(user: HashMap<String, Any?>) {
-        try {
-            val uid = FirebaseAuth.getInstance().uid!!
-            FirebaseFirestore.getInstance().collection("users")
-                .document(uid).set(user).await()
-        } catch(e: Exception) {
-            Log.d("FirestorePost", e.toString())
-            throw e
-        }
+        val uid = FirebaseAuth.getInstance().uid!!
+        FirebaseFirestore.getInstance().collection("users")
+            .document(uid).set(user).await()
     }
 
     override suspend fun deleteUserData(uid: String) {
-        try {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(uid).delete()
-        } catch(e: Exception) {
-            Log.d("FirestorePost", e.toString())
-            throw e
-        }
+        FirebaseFirestore.getInstance().collection("users")
+            .document(uid).delete()
     }
 
     override suspend fun updateUserData(user: HashMap<String, Any?>, uid: String) {
-        try {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(uid).update(user).await()
-        } catch(e: Exception) {
-            Log.d("FirestorePost", e.toString())
-            throw e
-        }
+        FirebaseFirestore.getInstance().collection("users")
+            .document(uid).update(user).await()
     }
 
     override suspend fun uploadProfilePicture(uid: String, uri: Uri) {
-        try {
-            val imageReference = FirebaseStorage.getInstance()
-                .getReference("profilePictures/$uid")
-            // Upload file
-            imageReference.putFile(uri).addOnSuccessListener {
-                imageReference.downloadUrl.addOnSuccessListener { newUri ->
-                    // Save profile picture
-                    FirebaseFirestore.getInstance().collection("users")
-                        .document(uid).update(
-                            hashMapOf<String, Any?>(
-                                "profilePicture" to newUri.toString()))
-                }
+        val imageReference = FirebaseStorage.getInstance()
+            .getReference("profilePictures/$uid")
+        // Upload file
+        imageReference.putFile(uri).addOnSuccessListener {
+            imageReference.downloadUrl.addOnSuccessListener { newUri ->
+                // Save profile picture
+                FirebaseFirestore.getInstance().collection("users")
+                    .document(uid).update(
+                        hashMapOf<String, Any?>(
+                            "profilePicture" to newUri.toString()))
             }
-        } catch(e: Exception) {
-            Log.e("FirestorePost", e.toString())
-            throw e
         }
     }
 }

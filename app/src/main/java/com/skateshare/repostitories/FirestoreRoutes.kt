@@ -60,7 +60,6 @@ object FirestoreRoutes : RoutesInterface {
             }
             return result
         } catch (e: Exception) {
-            Log.i("FirestoreRoutes", e.message.toString())
             return listOf()
         }
     }

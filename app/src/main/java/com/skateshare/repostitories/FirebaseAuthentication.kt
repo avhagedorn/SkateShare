@@ -11,7 +11,6 @@ object FirebaseAuthentication : AuthenticationInterface {
         try {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()
         } catch(e: Exception){
-            Log.d("FirebaseAuthentication", e.toString())
             throw e
         }
     }
@@ -20,7 +19,6 @@ object FirebaseAuthentication : AuthenticationInterface {
         try {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
         } catch(e: Exception){
-            Log.d("FirebaseAuthentication", e.toString())
             throw e
         }
     }
@@ -36,7 +34,6 @@ object FirebaseAuthentication : AuthenticationInterface {
             user.delete()
         }
         catch (e: Exception) {
-            Log.d("FirebaseAuthentication", e.toString())
         }
 
     }

@@ -62,7 +62,6 @@ class RoutesViewModel : ViewModel() {
                 distanceFromQueryToCenter
             )
             if (distanceFromQueryToCenter[0] + currentRadius > queryRadius) {
-                Log.i("1one", "query")
                 geoQueryAbout(currentCoordinate, currentRadius*2)
                 queryCenter = currentCoordinate
                 queryRadius = currentRadius*2

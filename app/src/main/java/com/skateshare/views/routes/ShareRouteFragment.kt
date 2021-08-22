@@ -93,17 +93,28 @@ class ShareRouteFragment : Fragment() {
 
     private fun setupFormChoices() {
         binding.contentBoardType.setAdapter(
-            ArrayAdapter(requireContext(), R.layout.menu_choice_item,
-                listOf(SHORTBOARD, LONGBOARD, MOUNTAINBOARD)))
+            ArrayAdapter(
+                requireContext(),
+                R.layout.menu_choice_item,
+                resources.getStringArray(R.array.board_choices)
+            )
+        )
 
         binding.contentTerrainType.setAdapter(
-            ArrayAdapter(requireContext(), R.layout.menu_choice_item,
-                listOf(LOW_HILLS, MEDIUM_HILLS, HIGH_HILLS))
+            ArrayAdapter(
+                requireContext(),
+                R.layout.menu_choice_item,
+                resources.getStringArray(R.array.hill_choices)
+            )
         )
 
         binding.contentRoadType.setAdapter(
-            ArrayAdapter(requireContext(), R.layout.menu_choice_item,
-                listOf(SMOOTH_ROADS, AVERAGE_ROADS, ROUGH_ROADS, NO_ROADS))
+            ArrayAdapter(
+                requireContext(),
+                R.layout.menu_choice_item,
+                resources.getStringArray(R.array.road_choices)
+            )
         )
+
     }
 }

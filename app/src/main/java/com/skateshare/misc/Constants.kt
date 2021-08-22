@@ -2,6 +2,7 @@ package com.skateshare.misc
 
 import android.graphics.Color
 import com.google.android.gms.maps.model.LatLng
+import com.skateshare.R
 
 const val BEGIN_TRACKING = "BEGIN TRACKING"
 const val STOP_TRACKING = "STOP TRACKING"
@@ -43,19 +44,6 @@ val DEFAULT_LOCATION = LatLng(
 const val POST_LOADING = 0
 const val POST_MEDIA = 1
 const val POST_ROUTE = 2
-
-const val SHORTBOARD = "Shortboard"
-const val LONGBOARD = "Longboard"
-const val MOUNTAINBOARD = "Mountainboard"
-
-const val LOW_HILLS = "Nearly Flat"
-const val MEDIUM_HILLS = "Moderately Hilly"
-const val HIGH_HILLS = "Very Hilly"
-
-const val SMOOTH_ROADS = "Smooth Roads"
-const val AVERAGE_ROADS = "Average Roads"
-const val ROUGH_ROADS = "Rough Roads"
-const val NO_ROADS = "Trail"
 
 const val QUERY_LIMIT = 10
 

@@ -218,4 +218,24 @@
 
     <string name="default_bio">This user hasn\'t told us anything about themselves yet! 😞</string>
     <string name="user_not_found">Something went wrong. 😓\nIf you\'re seeing this page, an error has occurred. Please try again later, or submit a bug report if this behavior continues.</string>
+
+    <string-array name="board_choices">
+        <item>Shortboard</item>
+        <item>Longboard</item>
+        <item>Mountainboard</item>
+    </string-array>
+
+    <string-array name="hill_choices">
+        <item>Nearly Flat</item>
+        <item>Moderately Hilly</item>
+        <item>Very Hilly</item>
+    </string-array>
+
+    <string-array name="road_choices">
+        <item>Smooth Roads</item>
+        <item>Average Roads</item>
+        <item>Rough Roads</item>
+        <item>Trail</item>
+    </string-array>
+
 </resources>

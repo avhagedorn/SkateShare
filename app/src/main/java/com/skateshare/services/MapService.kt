@@ -162,7 +162,6 @@ class MapService : LifecycleService() {
                 stopForeground(true)
                 stopSelf()
             } catch (e: Exception) {
-                Log.i("1one", e.toString())
                 stopForeground(true)
                 stopSelf()
             }
@@ -189,7 +188,7 @@ class MapService : LifecycleService() {
         try {
             insertRoute(newLats, newLngs)
         } catch (e: Exception) {
-            Log.i("1one", e.message.toString())
+            // TODO
         }
 
         updateAvgSpeed()

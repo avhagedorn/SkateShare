@@ -18,7 +18,7 @@ class Converter {
     }
 
     @TypeConverter
-    fun floatlistToJson(raw: List<Float>) : String {
+    fun floatListToJson(raw: List<Float>) : String {
         return Gson().toJson(raw)
     }
 

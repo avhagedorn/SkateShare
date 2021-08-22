@@ -50,7 +50,6 @@ object FirestoreRoutePosts {
             }
             return result
         } catch (e: Exception) {
-            Log.i("FirebaseRouteUtil", e.message.toString())
             return listOf()
         }
     }

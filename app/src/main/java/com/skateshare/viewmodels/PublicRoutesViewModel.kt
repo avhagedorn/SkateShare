@@ -28,7 +28,7 @@ class PublicRoutesViewModel : ViewModel() {
                 routes = sortList(posts)
                 _hasData.postValue(true)
             } catch (e: Exception) {
-                Log.i("1one", e.message.toString())
+                // TODO
             }
         }
     }
