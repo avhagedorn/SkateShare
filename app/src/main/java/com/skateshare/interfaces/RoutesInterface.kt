@@ -10,9 +10,9 @@ interface RoutesInterface {
 
     suspend fun getRoutesAboutRadius(lat: Double, lng: Double, radius: Double) : List<RouteGlobalMap>
     suspend fun createRoute(route: Route, description: String, boardType: String,
-                            terrainType: String, roadType: String, path: String, uri: Uri?)
+                            terrainType: String, roadType: String, uri: Uri?)
     suspend fun createRoutePath(route: Route, date: Timestamp,
-                                        uid: String, id: String, path: String, geohash: String)
+                                        uid: String, id: String, geohash: String)
     suspend fun deleteRoute(id: String)
     suspend fun saveRouteWithImage(data: HashMap<String, Any?>, documentId: String, uri: Uri)
 

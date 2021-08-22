@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
 
+    // Firebase dependencies
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
@@ -114,9 +115,6 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.3.0'
     implementation 'androidx.room:room-runtime:2.3.0'
     kapt 'androidx.room:room-compiler:2.3.0'
-
-    // MPAndroid
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // GeoFire (For geo queries)
     implementation 'com.firebase:geofire-android-common:3.1.0'

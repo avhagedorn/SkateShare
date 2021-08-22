@@ -6,6 +6,12 @@ import kotlin.math.pow
 // https://en.wikipedia.org/wiki/B-spline
 // https://johan.karlsteen.com/2011/07/30/improving-google-maps-polygons-with-b-splines/
 fun bSpline(oldVals: MutableList<Double>) : MutableList<Double> {
+
+    // If we have less than 5 points, we will not be able to interpolate the line properly.
+    // This fringe case is so rare that we handle it by simply using using raw gps data.
+    if (oldVals.size < 5)
+        return oldVals
+
     val newVals = mutableListOf<Double>()
 
     var a: Double

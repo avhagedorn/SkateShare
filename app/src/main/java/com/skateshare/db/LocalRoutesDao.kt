@@ -30,8 +30,8 @@ interface LocalRoutesDao {
     @Query("SELECT AVG(avg_speed_mi) FROM my_routes")
     suspend fun getAvgSpeedMi() : Float
 
-    @Query("SELECT SUM(duration_millis) FROM my_routes")
-    suspend fun getTotalRideTimeMillis() : Long
+    @Query("SELECT SUM(duration_seconds) FROM my_routes")
+    suspend fun getTotalRideTimeSeconds() : Long
 
     @Query("SELECT * FROM my_routes WHERE ID = :paramId LIMIT 1")
     suspend fun getRouteById(paramId: Long) : Route?
@@ -42,7 +42,7 @@ interface LocalRoutesDao {
     @Query("SELECT * FROM my_routes ORDER BY start_time_millis DESC LIMIT :limit OFFSET :offset")
     suspend fun routesByDate(limit: Int, offset: Int) : List<Route>
 
-    @Query("SELECT * FROM my_routes ORDER BY duration_millis DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM my_routes ORDER BY duration_seconds DESC LIMIT :limit OFFSET :offset")
     suspend fun routesByDuration(limit: Int, offset: Int) : List<Route>
 
     @Query("SELECT * FROM my_routes ORDER BY length_km DESC LIMIT :limit OFFSET :offset")

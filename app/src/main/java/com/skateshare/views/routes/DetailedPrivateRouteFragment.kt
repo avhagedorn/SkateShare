@@ -16,10 +16,10 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.PolyUtil
 import com.skateshare.R
 import com.skateshare.databinding.FragmentDetailedRouteBinding
 import com.skateshare.misc.POLYLINE_COLOR
@@ -129,14 +129,10 @@ class DetailedPrivateRouteFragment : Fragment() {
     private fun frameRoute(route: Route) {
         val bounds = LatLngBounds.builder()
         route.let {
-            val lats = it.lat_path
-            val lngs = it.lng_path
-            val path = mutableListOf<LatLng>()
+            val path = PolyUtil.decode(route.path)
 
-            for (i in it.lat_path.indices) {
-                path.add(LatLng(lats[i], lngs[i]))
+            for (i in path.indices)
                 bounds.include(path[i])
-            }
 
             map?.addPolyline(PolylineOptions()
                 .color(POLYLINE_COLOR)

@@ -1,7 +1,6 @@
 package com.skateshare.repostitories
 
 import android.net.Uri
-import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
@@ -17,7 +16,6 @@ import com.skateshare.misc.routeToRoutePost
 import com.skateshare.modelUtils.toRouteGlobalMap
 import com.skateshare.models.Route
 import com.skateshare.models.RouteGlobalMap
-import com.skateshare.models.RoutePost
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
@@ -29,7 +27,7 @@ object FirestoreRoutes : RoutesInterface {
             val db = FirebaseFirestore.getInstance()
 
             val center = GeoLocation(lat, lng)
-            val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radius);
+            val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radius)
             val tasks = mutableListOf<Task<QuerySnapshot>>()
             val result = mutableListOf<RouteGlobalMap>()
 
@@ -67,7 +65,7 @@ object FirestoreRoutes : RoutesInterface {
     // For greater efficiency, route data is denormalized to avoid double querying when post
     // data is required and to avoid querying unnecessarily large datasets.
     override suspend fun createRoute(route: Route, description: String, boardType: String,
-                                     terrainType: String, roadType: String, path: String, uri: Uri?) {
+                                     terrainType: String, roadType: String, uri: Uri?) {
         val posterId = FirebaseAuth.getInstance().uid!!
         val documentId = UUID.randomUUID().toString()
         val timestamp = Timestamp.now()
@@ -97,7 +95,7 @@ object FirestoreRoutes : RoutesInterface {
             FirebaseFirestore.getInstance()
                 .document("posts/$documentId").set(routeDataPreview)
 
-        createRoutePath(route, timestamp, posterId, documentId, path, geohash)
+        createRoutePath(route, timestamp, posterId, documentId, geohash)
     }
 
     override suspend fun saveRouteWithImage(data: HashMap<String, Any?>, documentId: String, uri: Uri) {
@@ -113,8 +111,8 @@ object FirestoreRoutes : RoutesInterface {
     }
 
     override suspend fun createRoutePath(route: Route, date: Timestamp,
-                                        uid: String, id: String, path: String, geohash: String) {
-        val routeMapData = routeToRoutePath(id, date, uid, route, path, geohash)
+                                        uid: String, id: String, geohash: String) {
+        val routeMapData = routeToRoutePath(id, date, uid, route, geohash)
         FirebaseFirestore.getInstance()
             .document("routesGlobalMap/$id")
             .set(routeMapData)

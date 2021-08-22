@@ -15,7 +15,7 @@ data class Route(
     @ColumnInfo(name = "start_time_millis")
     val time_start : Long = 0L,
 
-    @ColumnInfo(name="duration_millis")
+    @ColumnInfo(name="duration_seconds")
     var duration : Long = 0L,
 
     @ColumnInfo(name = "length_mi")
@@ -36,11 +36,8 @@ data class Route(
     @ColumnInfo(name = "start_lng")
     var lng_start : Double = 0.0,
 
-    @ColumnInfo(name = "route_lat")
-    var lat_path : MutableList<Double> = mutableListOf(),
-
-    @ColumnInfo(name = "route_lng")
-    var lng_path : MutableList<Double> = mutableListOf(),
+    @ColumnInfo(name = "route")
+    var path : String = "",
 
     @ColumnInfo(name = "speed")
     var speed : MutableList<Float> = mutableListOf(),
@@ -68,8 +65,7 @@ data class Route(
         result = 31 * result + avg_speed_mi.hashCode()
         result = 31 * result + lat_start.hashCode()
         result = 31 * result + lng_start.hashCode()
-        result = 31 * result + lat_path.hashCode()
-        result = 31 * result + lng_path.hashCode()
+        result = 31 * result + path.hashCode()
         result = 31 * result + speed.hashCode()
         result = 31 * result + isPublic.hashCode()
         return result

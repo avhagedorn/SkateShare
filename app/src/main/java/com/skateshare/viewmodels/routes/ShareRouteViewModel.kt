@@ -40,7 +40,6 @@ class ShareRouteViewModel @Inject constructor (
                         boardType = boardType,
                         terrainType = terrainType,
                         roadType = roadType,
-                        path = encodePolylinePath(route),
                         uri = uri
                     )
                     _postResponse.postValue(ExceptionResponse(
@@ -81,17 +80,4 @@ class ShareRouteViewModel @Inject constructor (
         }
         return true
     }
-
-    private fun encodePolylinePath(route: Route) : String {
-        val latLngPath = mutableListOf<LatLng>()
-        val lats = route.lat_path
-        val lngs = route.lng_path
-
-        for (i in lats.indices) {
-            latLngPath.add(LatLng(lats[i], lngs[i]))
-        }
-
-        return PolyUtil.encode(latLngPath)
-    }
-
 }

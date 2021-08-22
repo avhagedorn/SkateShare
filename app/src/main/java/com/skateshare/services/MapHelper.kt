@@ -14,7 +14,8 @@ object MapHelper {
         sec -= TimeUnit.HOURS.toSeconds(hours)
         val minutes = TimeUnit.SECONDS.toMinutes(sec)
         sec -= TimeUnit.MINUTES.toSeconds(minutes)
-        return "$hours:${if (minutes < 10) "0" else ""}$minutes:" +
+        return "${if (hours < 10) "0" else ""}$hours:" +
+                "${if (minutes < 10) "0" else ""}$minutes:" +
                 "${if (sec < 10) "0" else ""}$sec"
     }
 

@@ -67,6 +67,7 @@
     <string name="start_processing">Starting route processing…</string>
     <string name="converting_coordinates">Converting coordinates…</string>
     <string name="smoothing_route">Smoothing route…</string>
+    <string name="encoding_route">Encoding route…</string>
     <string name="saving_to_database">Saving route to database…</string>
 
     <string name="finish_recording_prompt">End Route</string>

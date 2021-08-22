@@ -1,4 +1,4 @@
-// Credit to Philipp Lackner for much of the code in this class.
+// Credit to Philipp Lackner for much of the code in this service.
 // Modifications were made to suit my needs, but the core logic is his.
 // Source: https://www.youtube.com/playlist?list=PLQkwcJG4YTCQ6emtoqSZS2FVwZR9FT3BV
 
@@ -21,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.PolyUtil
 import com.skateshare.R
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.misc.*
@@ -69,7 +70,6 @@ class MapService : LifecycleService() {
         _locationCallback = MyLocationCallback()
     }
 
-    @SuppressLint("VisibleForTests")
     override fun onCreate() {
         super.onCreate()
         // fusedLocationProviderClient = FusedLocationProviderClient(this)
@@ -94,10 +94,9 @@ class MapService : LifecycleService() {
         })
     }
 
-    private fun initializeLiveData() {
+    private fun resetLiveData() {
         routeData.postValue(mutableListOf<LatLng>())
         speedData.postValue(mutableListOf<Float>())
-        isTracking.postValue(true)
         elapsedSeconds.postValue(0L)
         distanceMeters.postValue(0.0)
         errorMessage.postValue(null)
@@ -124,7 +123,8 @@ class MapService : LifecycleService() {
             while (isTracking.value!!) {
                 if (System.currentTimeMillis() >= prevSecondTime+1000L) {
                     elapsedSeconds.postValue(
-                        ((System.currentTimeMillis() - startTime)/1000).toLong())
+                        (System.currentTimeMillis() - startTime)/1000
+                    )
                     prevSecondTime = System.currentTimeMillis()
                 }
                 delay(TIMER_UPDATE_INTERVAL)
@@ -134,7 +134,7 @@ class MapService : LifecycleService() {
 
     // Updates tracking status and creates route recording notification
     private fun startForegroundService() {
-        initializeLiveData()
+        resetLiveData()
         isTracking.postValue(true)
 
         createNotificationChannel(notificationManager)
@@ -157,39 +157,58 @@ class MapService : LifecycleService() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                saveRoute()
+                processRoute()
+                resetLiveData()
                 stopForeground(true)
                 stopSelf()
             } catch (e: Exception) {
+                Log.i("1one", e.message!!)
+                errorMessage.postValue(e.message)
+                resetLiveData()
                 stopForeground(true)
                 stopSelf()
             }
         }
     }
 
-    private suspend fun saveRoute() {
+    private suspend fun processRoute() {
         updateNotification(R.string.converting_coordinates, 15)
 
-        val lats = mutableListOf<Double>()
-        val lngs = mutableListOf<Double>()
+        if (routeData.value!!.isEmpty())
+            throw Exception("Cannot save route with empty dataset!")
+
+        var lats = mutableListOf<Double>()
+        var lngs = mutableListOf<Double>()
         routeData.value!!.forEach {
             lats.add(it.latitude)
             lngs.add(it.longitude)
         }
 
         updateNotification(R.string.smoothing_route, 45)
-        val newLats = bSpline(lats)
-        val newLngs = bSpline(lngs)
+
+        lats = bSpline(lats)
+        lngs = bSpline(lngs)
+        val latStart = lats.first()
+        val lngStart = lats.first()
+
+        updateNotification(R.string.encoding_route, 60)
+
+        val smoothedLatLngs = mutableListOf<LatLng>()
+        for (i in lats.indices)
+            smoothedLatLngs.add(LatLng(lats[i], lngs[i]))
+
+        val path = PolyUtil.encode(smoothedLatLngs)
         lats.clear()
         lngs.clear()
 
-        updateNotification(R.string.saving_to_database, 75)
+        updateNotification(R.string.saving_to_database, 85)
+
         try {
-            insertRoute(newLats, newLngs)
+            insertRoute(latStart, lngStart, path)
+            updateAvgSpeed()
         } catch (e: Exception) {
             errorMessage.postValue(e.message)
         }
-        updateAvgSpeed()
     }
 
     private suspend fun updateAvgSpeed() {
@@ -215,7 +234,7 @@ class MapService : LifecycleService() {
         errorMessage.postValue(null)
     }
 
-    private suspend fun insertRoute(lats: MutableList<Double>, lngs: MutableList<Double>) {
+    private suspend fun insertRoute(latStart: Double, lngStart: Double, path: String) {
         val routeDuration = System.currentTimeMillis() - startTime
         val distances = metersToStandardUnits(distanceMeters.value!!)
         val speeds = calculateAvgSpeed(distanceMeters.value!!, routeDuration)
@@ -229,10 +248,9 @@ class MapService : LifecycleService() {
                 avg_speed_mi = speeds[UNIT_MILES]!!,
                 length_mi = distances[UNIT_MILES]!!,
                 speed = speedData.value!!,
-                lat_start = lats[0],
-                lng_start = lngs[0],
-                lat_path = lats,
-                lng_path = lngs
+                lat_start = latStart,
+                lng_start = lngStart,
+                path = path
             )
         )
     }

@@ -46,15 +46,14 @@ fun routeToRoutePost(id: String,
         "imageUrl" to url
     )
 
-fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route,
-                     path: String, geohash: String) =
+fun routeToRoutePath(id: String, date: Timestamp, uid: String, route: Route, geohash: String) =
     hashMapOf<String, Any?>(
         "id" to id,
         "postedBy" to uid,
         "date" to date,
         "lengthMi" to route.length_mi,
         "lengthKm" to route.length_km,
-        "encodedPath" to path,
+        "encodedPath" to route.path,
         "startLat" to route.lat_start,
         "startLng" to route.lng_start,
         "geohash" to geohash
