@@ -99,7 +99,6 @@ class MapService : LifecycleService() {
         speedData.postValue(mutableListOf<Float>())
         elapsedSeconds.postValue(0L)
         distanceMeters.postValue(0.0)
-        errorMessage.postValue(null)
     }
 
     // Handles communication with fragment intents
@@ -141,7 +140,7 @@ class MapService : LifecycleService() {
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 
         elapsedSeconds.observe(this, { time ->
-            time?.let{
+            if (isTracking.value == true) {
                 val notification = notificationBuilder
                     .setContentText(formatTime(time))
                     .setProgress(0, 0, false)
@@ -158,15 +157,13 @@ class MapService : LifecycleService() {
             try {
                 processRoute()
                 resetLiveData()
-                stopForeground(true)
-                stopSelf()
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
                 resetLiveData()
-                stopForeground(true)
-                stopSelf()
             }
         }
+        stopForeground(true)
+        stopSelf()
     }
 
     private suspend fun processRoute() {
@@ -207,6 +204,8 @@ class MapService : LifecycleService() {
         } catch (e: Exception) {
             errorMessage.postValue(e.message)
         }
+        // Used to clear the progress notification, after all notifications are cleared.
+        notificationManager.cancel(NOTIFICATION_ID)
     }
 
     private suspend fun updateAvgSpeed() {
@@ -289,4 +288,5 @@ class MapService : LifecycleService() {
         )
         notificationManager.createNotificationChannel(channel)
     }
+
 }
