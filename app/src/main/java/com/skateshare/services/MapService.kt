@@ -152,7 +152,6 @@ class MapService : LifecycleService() {
 
     // Stops recording route
     private fun stopForegroundService() {
-        notificationManager.cancelAll()
         isTracking.postValue(false)
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -162,7 +161,6 @@ class MapService : LifecycleService() {
                 stopForeground(true)
                 stopSelf()
             } catch (e: Exception) {
-                Log.i("1one", e.message!!)
                 errorMessage.postValue(e.message)
                 resetLiveData()
                 stopForeground(true)
@@ -189,7 +187,7 @@ class MapService : LifecycleService() {
         lats = bSpline(lats)
         lngs = bSpline(lngs)
         val latStart = lats.first()
-        val lngStart = lats.first()
+        val lngStart = lngs.first()
 
         updateNotification(R.string.encoding_route, 60)
 

@@ -4,6 +4,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.PolyUtil
 import com.skateshare.db.LocalRoutesDao
 import com.skateshare.db.LocalRoutesDatabase
 import com.skateshare.models.Route
@@ -36,7 +37,7 @@ class LocalRoutesDatabaseTest {
         db.close()
     }
 
-    private fun generateDummyData() : HashMap<String, MutableList<out Any>> {
+    private fun generateDummyData() : HashMap<String, Any> {
 
         val altitude = mutableListOf<Double>()
         val speed = mutableListOf<Float>()
@@ -46,13 +47,12 @@ class LocalRoutesDatabaseTest {
             val x = Math.random() * 100.0
             val y = Math.random() * 100.0
 
-            altitude.add(x)
             speed.add(y.toFloat())
             routeData.add(LatLng(x, y))
         }
 
         return hashMapOf(
-            "rawRoute" to routeData,
+            "path" to PolyUtil.encode(routeData),
             "rawAltitude" to altitude,
             "rawSpeed" to speed
         )
@@ -63,17 +63,10 @@ class LocalRoutesDatabaseTest {
     fun insertRoute() = runBlocking {
         for (i in 0 until 5) {
             val rawData = generateDummyData()
-            val rawRoute = rawData["rawRoute"] as MutableList<LatLng>
+            val rawRoute = rawData["path"] as String
             val rawAltitude = rawData["rawAltitude"] as MutableList<Double>
             val rawSpeed = rawData["rawSpeed"] as MutableList<Float>
 
-            val lats = mutableListOf<Double>()
-            val lngs = mutableListOf<Double>()
-
-            rawRoute.forEach {
-                lats.add(it.latitude)
-                lngs.add(it.longitude)
-            }
 
             localRoutesDao.insert(
                 Route(
@@ -82,13 +75,12 @@ class LocalRoutesDatabaseTest {
                     length_km = 0.0,
                     length_mi = 0.0,
                     speed = rawSpeed,
-                    lat_path = lats,
-                    lng_path = lngs
+                    path = rawRoute
                 )
             )
         }
         assertEquals(localRoutesDao.getNumPrivateRoutes(), 5)
-        localRoutesDao.deleteALl()
+        localRoutesDao.deleteAll()
         assertEquals(localRoutesDao.getNumPrivateRoutes(), 0)
     }
 
@@ -99,32 +91,23 @@ class LocalRoutesDatabaseTest {
         var targetDuration = 0L
         for (i in 0 until iterations) {
             val rawData = generateDummyData()
-            val rawRoute = rawData["rawRoute"] as MutableList<LatLng>
+            val rawRoute = rawData["path"] as String
             val rawAltitude = rawData["rawAltitude"] as MutableList<Double>
             val rawSpeed = rawData["rawSpeed"] as MutableList<Float>
-
-            val lats = mutableListOf<Double>()
-            val lngs = mutableListOf<Double>()
-
-            rawRoute.forEach {
-                lats.add(it.latitude)
-                lngs.add(it.longitude)
-            }
 
             localRoutesDao.insert(
                 Route(
                     time_start = 0L,
-                    duration = 2700000L,
+                    duration = 2700L,
                     length_km = 0.0,
                     length_mi = 0.0,
                     speed = rawSpeed,
-                    lat_path = lats,
-                    lng_path = lngs
+                    path = rawRoute
                 )
             )
         }
-        assertEquals(localRoutesDao.getTotalRideTimeMillis(), iterations * 2700000L)
-        localRoutesDao.deleteALl()
+        assertEquals(localRoutesDao.getTotalRideTimeSeconds(), iterations * 270L)
+        localRoutesDao.deleteAll()
     }
 
     @Test
@@ -133,17 +116,9 @@ class LocalRoutesDatabaseTest {
         var startTime = 1000L
         for (i in 0 until 15) {
             val rawData = generateDummyData()
-            val rawRoute = rawData["rawRoute"] as MutableList<LatLng>
+            val rawRoute = rawData["path"] as String
             val rawAltitude = rawData["rawAltitude"] as MutableList<Double>
             val rawSpeed = rawData["rawSpeed"] as MutableList<Float>
-
-            val lats = mutableListOf<Double>()
-            val lngs = mutableListOf<Double>()
-
-            rawRoute.forEach {
-                lats.add(it.latitude)
-                lngs.add(it.longitude)
-            }
 
             localRoutesDao.insert(
                 Route(
@@ -152,8 +127,7 @@ class LocalRoutesDatabaseTest {
                     length_km = 0.0,
                     length_mi = 0.0,
                     speed = rawSpeed,
-                    lat_path = lats,
-                    lng_path = lngs
+                    path = rawRoute
                 )
             )
             startTime += 1000L
@@ -162,6 +136,6 @@ class LocalRoutesDatabaseTest {
 
         assertEquals(query.size, 10)
         assertEquals(query.last().time_start, 6000L)
-        localRoutesDao.deleteALl()
+        localRoutesDao.deleteAll()
     }
 }

@@ -5,11 +5,10 @@ import com.skateshare.models.Post
 import com.skateshare.models.RoutePost
 
 class FeedItemListener(val clickUserListener: (uid: String) -> Unit,
-                       val deleteListener: (id: String, pos: Int) -> Unit,
+                       val deleteListener: (id: String, type: Int, pos: Int) -> Unit,
                        val clickRouteListener: (lat: Float, lng: Float) -> Unit) {
 
     fun onClickUser(item: FeedItem) = clickUserListener(item.posterId)
-    fun onDelete(post: Post, position: Int) = deleteListener(post.id, position)
     fun onClickRoute(route: RoutePost) = clickRouteListener(
         route.startLat.toFloat(), route.startLng.toFloat()
     )

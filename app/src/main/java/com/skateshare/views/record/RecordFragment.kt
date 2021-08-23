@@ -109,12 +109,11 @@ class RecordFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         MapService.speedData.observe(viewLifecycleOwner, { metersPerSecond ->
             usersUnits?.let { units ->
-                if (metersPerSecond.isNotEmpty())
-                    binding.displaySpeed.text = metersToStandardSpeed(
-                        meters = metersPerSecond.last(),
-                        unit = units,
-                        context = requireActivity().applicationContext
-                    )
+                binding.displaySpeed.text = metersToStandardSpeed(
+                    meters = if (metersPerSecond.isNotEmpty()) metersPerSecond.last() else 0f,
+                    unit = units,
+                    context = requireActivity().applicationContext
+                )
             }
         })
 

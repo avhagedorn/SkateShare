@@ -15,6 +15,9 @@ interface LocalRoutesDao {
     @Delete
     suspend fun delete(route: Route)
 
+    @Query("DELETE FROM my_routes")
+    suspend fun deleteAll()
+
     @Query("SELECT COUNT(*) FROM my_routes")
     suspend fun getNumPrivateRoutes() : Int
 

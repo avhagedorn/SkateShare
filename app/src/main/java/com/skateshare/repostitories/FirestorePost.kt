@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.interfaces.PostInterface
+import com.skateshare.misc.POST_ROUTE
 import com.skateshare.misc.QUERY_LIMIT
 import com.skateshare.models.User
 import kotlinx.coroutines.tasks.await
@@ -57,8 +58,11 @@ object FirestorePost : PostInterface {
         }.await()
     }
 
-    override suspend fun deletePost(id: String) {
-        FirebaseFirestore.getInstance().document("posts/$id").delete()
+    override suspend fun deletePost(id: String, type: Int) {
+        val db = FirebaseFirestore.getInstance()
+        db.document("posts/$id").delete()
         FirebaseStorage.getInstance().getReference("postPictures/$id").delete()
+        if (type == POST_ROUTE)
+            db.document("routesGlobalMap/$id").delete()
     }
 }

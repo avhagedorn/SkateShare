@@ -74,10 +74,10 @@ open class FeedViewModel : ViewModel() {
         return queryResponse
     }
 
-    fun deletePost(id: String, position: Int) {
+    fun deletePost(id: String, type: Int, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                FirestorePost.deletePost(id)
+                FirestorePost.deletePost(id, type)
                 totalItems.removeAt(position)
                 _deleteResponse.postValue(ExceptionResponse(
                     message = null,

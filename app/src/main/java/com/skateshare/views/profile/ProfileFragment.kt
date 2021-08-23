@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
 
         _adapter = FeedAdapter(FeedItemListener(
             { _ -> },
-            { postId, position -> viewModel.deletePost(postId, position) },
+            { postId, postType, position -> viewModel.deletePost(postId, postType, position) },
             { lat, lng ->
                 findNavController().navigate(
                     ProfileFragmentDirections.actionProfileFragmentToRoutesFragment(

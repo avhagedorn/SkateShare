@@ -54,6 +54,7 @@ class DetailedPublicRouteFragment : Fragment() {
         }
 
         binding.unit = unit
+        // TODO
         binding.route = RoutePost("", 0.0, 0.0, 0.0, 0.0, "", "", "", "", "", "", 0.0, "", 0.0, "", "", "", Timestamp.now(), false, "")
         binding.avgSpeed = avgSpeed
         binding.executePendingBindings()

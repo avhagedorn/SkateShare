@@ -11,6 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.skateshare.interfaces.RoutesInterface
+import com.skateshare.misc.POST_MEDIA
+import com.skateshare.misc.POST_ROUTE
 import com.skateshare.misc.routeToRoutePath
 import com.skateshare.misc.routeToRoutePost
 import com.skateshare.modelUtils.toRouteGlobalMap

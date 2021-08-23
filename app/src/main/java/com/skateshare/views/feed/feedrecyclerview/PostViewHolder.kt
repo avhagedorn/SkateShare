@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.skateshare.databinding.FeedPostBinding
+import com.skateshare.misc.POST_MEDIA
 import com.skateshare.models.Post
 
 class PostViewHolder private constructor(private val binding: FeedPostBinding) : ItemViewHolder(binding.root) {
@@ -48,7 +49,7 @@ class PostViewHolder private constructor(private val binding: FeedPostBinding) :
             }).into(postImage)
 
         binding.deleteIcon.setOnClickListener {
-            clickListener.deleteListener(post.id, layoutPosition)
+            clickListener.deleteListener(post.id, POST_MEDIA, layoutPosition)
         }
     }
 }

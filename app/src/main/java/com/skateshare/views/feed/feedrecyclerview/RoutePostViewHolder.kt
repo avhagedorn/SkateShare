@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.skateshare.databinding.RoutePostBinding
+import com.skateshare.misc.POST_ROUTE
 import com.skateshare.models.RoutePost
 
 class RoutePostViewHolder private constructor(private val binding: RoutePostBinding) : ItemViewHolder(binding.root) {
@@ -54,7 +55,7 @@ class RoutePostViewHolder private constructor(private val binding: RoutePostBind
         }
 
         binding.deleteIcon.setOnClickListener {
-            clickListener.deleteListener(route.id, layoutPosition)
+            clickListener.deleteListener(route.id, POST_ROUTE, layoutPosition)
         }
     }
 }

@@ -6,10 +6,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.skateshare.R
 import com.skateshare.interfaces.UserInterface
-import com.skateshare.modelUtils.toUser
-import com.skateshare.models.User
+import com.skateshare.misc.POST_ROUTE
 import kotlinx.coroutines.tasks.await
 
 object FirestoreUser : UserInterface {
@@ -25,11 +23,6 @@ object FirestoreUser : UserInterface {
         val uid = FirebaseAuth.getInstance().uid!!
         FirebaseFirestore.getInstance().collection("users")
             .document(uid).set(user).await()
-    }
-
-    override suspend fun deleteUserData(uid: String) {
-        FirebaseFirestore.getInstance().collection("users")
-            .document(uid).delete()
     }
 
     override suspend fun updateUserData(user: HashMap<String, Any?>, uid: String) {
@@ -50,5 +43,35 @@ object FirestoreUser : UserInterface {
                             "profilePicture" to newUri.toString()))
             }
         }
+    }
+
+    suspend fun deleteUserData(uid: String) {
+        val db = FirebaseFirestore.getInstance()
+        val storage = FirebaseStorage.getInstance()
+        val posts = db.collection("posts")
+        val routes = db.collection("routesGlobalMap")
+
+        // Delete all user's posts
+        val query = posts
+            .whereEqualTo("postedBy", uid)
+            .get()
+            .await()
+
+        for (doc in query.documents) {
+            Log.i("1one", doc["postType"].toString())
+            if (doc.getLong("postType")?.toInt() == POST_ROUTE)
+                routes.document(doc.id).delete()
+
+            storage.getReference("posts/${doc.id}").delete()
+            posts.document(doc.id).delete()
+        }
+
+        // Delete board
+        db.document("boards/$uid").delete()
+        storage.getReference("boards/$uid").delete()
+
+        // Delete user
+        db.document("users/$uid").delete()
+        storage.getReference("profilePictures/$uid").delete()
     }
 }

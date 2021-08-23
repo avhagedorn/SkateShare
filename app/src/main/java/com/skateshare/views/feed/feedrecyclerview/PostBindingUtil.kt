@@ -105,7 +105,7 @@ fun formatExpectedTime(context: Context, route: RoutePost,
 fun getTimeString(context: Context, hours: Double) : String {
     return when {
         hours < 1.0 -> context.getString(R.string.minutes_time, hours*60.0)
-        hours < 2.0 -> context.getString(R.string.hour_time, hours-1.0, (hours-1.0)*60.0)
+        hours < 2.0 -> context.getString(R.string.hour_time, (hours-1.0).toInt(), (hours-1.0)*60.0)
         else -> {
             val truncatedHours = hours.toInt()
             context.getString(R.string.hours_time, truncatedHours, (hours-truncatedHours)*60.0)

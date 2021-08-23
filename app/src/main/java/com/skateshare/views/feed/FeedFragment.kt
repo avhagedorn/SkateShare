@@ -50,8 +50,8 @@ class FeedFragment : Fragment() {
         _adapter = FeedAdapter(FeedItemListener({ uid ->
             findNavController().navigate(
                 FeedFragmentDirections.actionFeedFragmentToProfileFragment(uid))
-        }, { postId, position ->
-            confirmDeleteModal(postId, position)
+        }, { postId, type, position ->
+            confirmDeleteModal(postId, type, position)
         }, { lat, lng ->
             findNavController().navigate(
                 FeedFragmentDirections.actionFeedFragmentToRoutesFragment(
@@ -113,11 +113,11 @@ class FeedFragment : Fragment() {
         viewModel.refreshData()
     }
 
-    private fun confirmDeleteModal(postId: String, position: Int) {
+    private fun confirmDeleteModal(postId: String, type: Int, position: Int) {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.confirm_delete_post)
             .setMessage(R.string.irreversible)
-            .setPositiveButton(R.string.delete) {_,_ -> viewModel.deletePost(postId, position) }
+            .setPositiveButton(R.string.delete) {_,_ -> viewModel.deletePost(postId, type, position) }
             .setNegativeButton(R.string.cancel) {_,_-> /* Alert dismissed */ }
             .show()
     }
