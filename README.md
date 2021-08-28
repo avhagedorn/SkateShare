@@ -19,7 +19,7 @@ Kotlin, Firebase, Dagger, the Google Maps APK, Room, and ❤️.
 
 1. Clone the project with the following:
 
-        git clone https://github.com/avhagedorn/SkateShare
+        git clone https://github.com/avhagedorn/SkateShare.git
     
 2. Make sure you have [Android Studio](https://developer.android.com/studio) installed.
 
