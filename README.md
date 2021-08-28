@@ -25,10 +25,14 @@ Kotlin, Firebase, Dagger, the Google Maps APK, Room, and ❤️.
 
 3. Open the project using Android Studio. When prompted to sync Gradle files, press "Sync Now".
 
-4. Build and run the app using Android Studio.
+4. If needed, get a [Google Maps API Key](https://developers.google.com/maps). To use the API key, paste the following into local.properties:
+
+        MAPS_API_KEY=[YOUR API KEY HERE]
+
+5. Build and run the app using Android Studio.
 
 ### Future Plans ###
 
-Add VESC BLE support to log raw ESC data.
+1. Add VESC BLE support to log raw ESC data.
 
-Add "like" support to posts.
+2. Add "like" support to posts.
