@@ -54,8 +54,7 @@ class DetailedPublicRouteFragment : Fragment() {
         }
 
         binding.unit = unit
-        // TODO
-        binding.route = RoutePost("", 0.0, 0.0, 0.0, 0.0, "", "", "", "", "", "", 0.0, "", 0.0, "", "", "", Timestamp.now(), false, "")
+        binding.route = RoutePost()
         binding.avgSpeed = avgSpeed
         binding.executePendingBindings()
 
@@ -89,7 +88,11 @@ class DetailedPublicRouteFragment : Fragment() {
                 .listener(object: RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?, model: Any?, target: Target<Drawable>?,
-                        isFirstResource: Boolean) = false
+                        isFirstResource: Boolean) : Boolean {
+                        binding.loading.visibility = View.GONE
+                        Toast.makeText(requireContext(), e?.message, Toast.LENGTH_SHORT).show()
+                        return false
+                    }
 
                     override fun onResourceReady(
                         resource: Drawable?, model: Any?, target: Target<Drawable>?,
@@ -100,6 +103,7 @@ class DetailedPublicRouteFragment : Fragment() {
                 }).into(postImage)
         } else {
             binding.loading.visibility = View.GONE
+            binding.postImage.visibility = View.GONE
         }
     }
 

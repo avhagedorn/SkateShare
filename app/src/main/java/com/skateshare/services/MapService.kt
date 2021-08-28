@@ -289,4 +289,8 @@ class MapService : LifecycleService() {
         notificationManager.createNotificationChannel(channel)
     }
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        notificationManager.cancel(NOTIFICATION_ID)
+    }
 }
