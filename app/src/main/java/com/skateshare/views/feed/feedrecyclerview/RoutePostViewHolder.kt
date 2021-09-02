@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
@@ -41,7 +42,11 @@ class RoutePostViewHolder private constructor(private val binding: RoutePostBind
                 .listener(object: RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?, model: Any?, target: Target<Drawable>?,
-                        isFirstResource: Boolean) = false
+                        isFirstResource: Boolean) : Boolean {
+                        hideImage()
+                        Toast.makeText(postImage.context, e?.message, Toast.LENGTH_SHORT).show()
+                        return false
+                    }
 
                     override fun onResourceReady(
                         resource: Drawable?, model: Any?, target: Target<Drawable>?,
@@ -50,12 +55,16 @@ class RoutePostViewHolder private constructor(private val binding: RoutePostBind
                         return false
                     }
                 }).into(postImage)
-        } else {
-            binding.loading.visibility = View.GONE
-        }
+        } else
+            hideImage()
 
         binding.deleteIcon.setOnClickListener {
             clickListener.deleteListener(route.id, POST_ROUTE, layoutPosition)
         }
+    }
+
+    private fun hideImage() {
+        binding.loading.visibility = View.GONE
+        binding.postImage.visibility = View.GONE
     }
 }
