@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,7 @@ class ProfileFragment : Fragment() {
     private lateinit var factory: ProfileViewModelFactory
     private var uid: String? = null
 
+    private val args: ProfileFragmentArgs by navArgs()
     private lateinit var unit: String
     private var avgSpeed: Float = 0f
     private var _adapter: FeedAdapter? = null
@@ -49,7 +51,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
-        uid = ProfileFragmentArgs.fromBundle(requireArguments()).profileUid
+        uid = args.profileUid
         getDataFromSharedPreferences()
         initViewModel()
 
