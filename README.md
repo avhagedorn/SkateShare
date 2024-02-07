@@ -31,6 +31,14 @@ Kotlin, Firebase, Dagger, the Google Maps APK, Room, and ❤️.
 
 5. Build and run the app using Android Studio.
 
+### Screenshots ###
+<img src="https://github.com/avhagedorn/SkateShare/assets/66842958/d1f6ecd6-8a44-487b-9783-b5203cdea0c0" width=250></img>
+<img src="https://github.com/avhagedorn/SkateShare/assets/66842958/c98d02f3-3df3-4c0c-8b47-c142a3eb94a6" width=250></img>
+<img src="https://github.com/avhagedorn/SkateShare/assets/66842958/08e90a9e-47d1-4ab6-9511-228236f1020f" width=250></img>
+<img src="https://github.com/avhagedorn/SkateShare/assets/66842958/0fca10c5-4591-49d5-b357-ce2e9962d810" width=250></img>
+<img src="https://github.com/avhagedorn/SkateShare/assets/66842958/2de183ce-9c54-4cb5-9fc6-a26c7697baee" width=250></img>
+
+
 ### Future Plans ###
 
 1. Add VESC BLE support to log raw ESC data.
